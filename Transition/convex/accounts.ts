@@ -168,7 +168,38 @@ export const saveAccountData = mutation({
       await ctx.db.patch(acc._id, { icons: list });
     }
 
-    return { id: acc.accountId, name: acc.name };
+
+    // Fetch and return full account data to satisfy frontend expectations
+    const allReminders = await ctx.db.query("reminders").collect();
+    const now = new Date();
+    const activeReminders = allReminders
+      .filter((r) => {
+        const isTarget = r.targetAccount === "ALL" || r.targetAccount === accountId;
+        let isStarted = true;
+        if (r.scheduledTime) if (new Date(r.scheduledTime) > now) isStarted = false;
+        let isValid = false;
+        if (r.isRecurring) {
+          const sTime = new Date(r.scheduledTime);
+          if (isStarted) {
+            if (r.recurrenceRule === "WEEKLY" && now.getDay() === sTime.getDay()) isValid = true;
+            if (r.recurrenceRule === "MONTHLY" && now.getDate() === sTime.getDate()) isValid = true;
+          }
+        } else if (isStarted) {
+          isValid = r.expiryTimestamp ? new Date(r.expiryTimestamp) > now : true;
+        }
+        return isTarget && isValid;
+      });
+
+    return {
+      id: acc.accountId,
+      name: acc.name,
+      categories: acc.categories,
+      icons: acc.icons,
+      announcements: acc.announcements,
+      notes: acc.notes,
+      users: acc.users,
+      activeReminders,
+    };
   },
 });
 
@@ -192,7 +223,38 @@ export const deleteAccountItem = mutation({
         icons: acc.icons.filter((i) => i.id !== itemId),
       });
     }
-    return true;
+
+    // Fetch and return full account data after item deletion
+    const allReminders = await ctx.db.query("reminders").collect();
+    const now = new Date();
+    const activeReminders = allReminders
+      .filter((r) => {
+        const isTarget = r.targetAccount === "ALL" || r.targetAccount === accountId;
+        let isStarted = true;
+        if (r.scheduledTime) if (new Date(r.scheduledTime) > now) isStarted = false;
+        let isValid = false;
+        if (r.isRecurring) {
+          const sTime = new Date(r.scheduledTime);
+          if (isStarted) {
+            if (r.recurrenceRule === "WEEKLY" && now.getDay() === sTime.getDay()) isValid = true;
+            if (r.recurrenceRule === "MONTHLY" && now.getDate() === sTime.getDate()) isValid = true;
+          }
+        } else if (isStarted) {
+          isValid = r.expiryTimestamp ? new Date(r.expiryTimestamp) > now : true;
+        }
+        return isTarget && isValid;
+      });
+
+    return {
+      id: acc.accountId,
+      name: acc.name,
+      categories: acc.categories,
+      icons: acc.icons,
+      announcements: acc.announcements,
+      notes: acc.notes,
+      users: acc.users,
+      activeReminders,
+    };
   },
 });
 
@@ -238,6 +300,21 @@ export const unregisterUser = mutation({
         users: acc.users.filter((u) => u.toLowerCase() !== email),
       });
     }
-    return true;
+    
+    // Return full registry after unregistering user
+    const allAccs = await ctx.db.query("accounts").collect();
+    const registry: Record<string, { name: string; users: { email: string; nickname: string }[] }> = {};
+    for (const a of allAccs) {
+      const usersList = [];
+      for (const uEmail of a.users) {
+        const profile = await ctx.db
+          .query("userProfiles")
+          .withIndex("by_email", (q) => q.eq("email", uEmail))
+          .first();
+        usersList.push({ email: uEmail, nickname: profile?.nickname ?? uEmail.split("@")[0] });
+      }
+      registry[a.accountId] = { name: a.name, users: usersList };
+    }
+    return registry;
   },
 });

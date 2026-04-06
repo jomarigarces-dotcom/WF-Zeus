@@ -55,13 +55,12 @@ const queries = new Set([
 ]);
 
 function convertArgsToObj(methodName, rawArgsStr) {
-  // We need to parse raw arguments and build an object to match the schema
-  const parts = rawArgsStr.split(',').map(s => s.trim());
-  if (parts.length === 1 && parts[0] === '') return `{}`;
+  const parts = rawArgsStr.split(',').map(s => s.trim()).filter(p => p !== '');
   
   // Custom mapping for each function based on schema
   if (methodName === 'getSessionInfo') return `{ email: state.userEmail || localStorage.getItem('zeus_user_email') || null }`;
   if (methodName === 'heartbeat') return `{ email: state.userEmail, currentAccountId: state.currentAccount?.id }`;
+  if (methodName === 'requestAccountAccess') return `{ email: state.userEmail, accountIds: ${parts[0]}, nickname: state.userNickname }`;
   if (methodName === 'requestAccountRemoval') return `{ email: state.userEmail, accountId: ${parts[0]} }`;
   if (methodName === 'fetchPersonalUpdates') return `{ email: state.userEmail }`;
   if (methodName === 'fetchWorkspaceUpdates') return `{ accountId: ${parts[0]} }`;
@@ -96,9 +95,10 @@ function convertArgsToObj(methodName, rawArgsStr) {
   if (methodName === 'deleteReminder') return `{ callerEmail: state.userEmail, reminderId: ${parts[0]} }`;
   
   if (methodName === 'submitFeedback') return `{ email: state.userEmail, nickname: state.userNickname, message: ${parts[0]} }`;
-  if (methodName === 'requestAccountAccess') return `{ email: state.userEmail, accountIds: ${parts[0]}, nickname: state.userNickname }`;
   if (methodName === 'approveAccountAccess') return `{ callerEmail: state.userEmail, requestId: ${parts[0]} }`;
   if (methodName === 'rejectAccountAccess') return `{ callerEmail: state.userEmail, requestId: ${parts[0]} }`;
+
+  if (parts.length === 0) return `{}`;
 
   // Fallback
   return `{ args: [${rawArgsStr}] }`;
@@ -121,9 +121,8 @@ function getBalanced(str, startChar, endChar, startIndex) {
   return -1;
 }
 
-let i = 0;
 while (true) {
-  const startIdx = code.indexOf('google.script.run', i);
+  const startIdx = code.indexOf('google.script.run');
   if (startIdx === -1) break;
 
   let currentIdx = startIdx + 'google.script.run'.length;
@@ -133,69 +132,56 @@ while (true) {
   let rawArgs = null;
   let fullMatchEnd = -1;
 
-  // Scan for .withSuccessHandler or .withFailureHandler or .method
   while (true) {
-    const nextDot = code.indexOf('.', currentIdx);
-    if (nextDot === -1 || nextDot > currentIdx + 5) break; 
+    const dotMatch = code.substring(currentIdx).match(/^\s*\.\s*/);
+    if (!dotMatch) break;
+    const afterDot = currentIdx + dotMatch[0].length;
 
-    if (code.startsWith('.withSuccessHandler(', nextDot)) {
-      const openParen = nextDot + '.withSuccessHandler('.length - 1;
+    if (code.startsWith('withSuccessHandler', afterDot)) {
+      const openParen = code.indexOf('(', afterDot);
       const closeParen = getBalanced(code, '(', ')', openParen);
       successCallback = code.substring(openParen + 1, closeParen);
       currentIdx = closeParen + 1;
-    } else if (code.startsWith('.withFailureHandler(', nextDot)) {
-      const openParen = nextDot + '.withFailureHandler('.length - 1;
+    } else if (code.startsWith('withFailureHandler', afterDot)) {
+      const openParen = code.indexOf('(', afterDot);
       const closeParen = getBalanced(code, '(', ')', openParen);
       failureCallback = code.substring(openParen + 1, closeParen);
       currentIdx = closeParen + 1;
     } else {
-      // Must be the method name
-      const methodMatch = code.substring(nextDot + 1).match(/^([a-zA-Z0-9_]+)\(/);
+      const methodMatch = code.substring(afterDot).match(/^([a-zA-Z0-9_]+)\s*\(/);
       if (methodMatch) {
         methodName = methodMatch[1];
-        const openParen = nextDot + 1 + methodName.length;
+        const openParen = code.indexOf('(', afterDot);
         const closeParen = getBalanced(code, '(', ')', openParen);
         rawArgs = code.substring(openParen + 1, closeParen);
         fullMatchEnd = closeParen + 1;
         break;
-      } else {
-        break;
-      }
+      } else break;
     }
   }
 
   if (methodName && fullMatchEnd !== -1) {
-    const fullMatch = code.substring(startIdx, fullMatchEnd);
-    
-    // getRosterData check
+    const funcPath = moduleMap[methodName] || ('unknown:' + methodName);
     if (methodName === 'getRosterData') {
         const repl = `fetch('/orgchart.json').then(r=>r.json()).then(data => { Promise.resolve().then(() => { const _cb = (${successCallback}); if(typeof _cb === 'function') _cb(data); }); }).catch(err => { Promise.resolve().then(() => { const _fc = (${failureCallback}); if(typeof _fc === 'function') _fc(err); }); })`;
         code = code.substring(0, startIdx) + repl + code.substring(fullMatchEnd);
-        i = startIdx + repl.length;
         continue;
     }
-
-    const funcPath = moduleMap[methodName] || ('unknown:' + methodName);
     const isQuery = queries.has(methodName);
     const convexType = isQuery ? 'runQuery' : 'runMutation';
     const argsObj = convertArgsToObj(methodName, rawArgs);
 
     let repl = `(async () => { try { const res = await ${convexType}("${funcPath}", ${argsObj});`;
-    if (successCallback) {
-      repl += ` Promise.resolve().then(() => { const _cb = (${successCallback}); if(typeof _cb === 'function') _cb(res); });`;
-    }
+    if (successCallback) repl += ` Promise.resolve().then(() => { const _cb = (${successCallback}); if(typeof _cb === 'function') _cb(res); });`;
     repl += ` } catch(err) { console.error(err);`;
-    if (failureCallback) {
-      repl += ` Promise.resolve().then(() => { const _fc = (${failureCallback}); if(typeof _fc === 'function') _fc(err); else alert(err.message || String(err)); });`;
-    } else {
-      repl += ` alert(err.message || String(err));`;
-    }
+    if (failureCallback) repl += ` Promise.resolve().then(() => { const _fc = (${failureCallback}); if(typeof _fc === 'function') _fc(err); else alert(err.message || String(err)); });`;
+    else repl += ` alert(err.message || String(err));`;
     repl += ` } })()`;
 
     code = code.substring(0, startIdx) + repl + code.substring(fullMatchEnd);
-    i = startIdx + repl.length;
   } else {
-    i = currentIdx;
+    // If not a valid method call, replace 'google.script.run' with 'console.warn("Invalid GS call")' to avoid infinite loop
+    code = code.substring(0, startIdx) + '/* google.script.run skip */' + code.substring(startIdx + 17);
   }
 }
 

@@ -49,11 +49,10 @@ export const getSessionInfo = query({
     const role = isSuperAdmin ? "SUPER_ADMIN" : userAccounts.length > 0 ? "ACCOUNT_USER" : "GUEST";
     const checklist = profile?.checklist?.filter((t) => !t.isArchived) ?? [];
 
-    // Grab and clear notifications
+    // Grab notifications (do NOT clear in a query)
     let notifications: any[] = [];
     if (profile?.notifications?.length) {
       notifications = [...profile.notifications];
-      await ctx.db.patch(profile._id, { notifications: [] });
     }
 
     // Maintenance mode
@@ -102,8 +101,8 @@ export const registerUserToAccounts = mutation({
   args: { callerEmail: v.string(), accountIds: v.array(v.string()), nickname: v.string() },
   handler: async (ctx, { callerEmail, accountIds, nickname }) => {
     callerEmail = callerEmail.toLowerCase().trim();
-    const isSuperAdmin = SUPER_ADMINS.includes(callerEmail);
-    if (!isSuperAdmin) throw new Error("Unauthorized");
+    const isSuperAdminCaller = SUPER_ADMINS.includes(callerEmail);
+    if (!isSuperAdminCaller) throw new Error("Unauthorized");
 
     // Ensure profile exists
     let profile = await ctx.db
@@ -128,6 +127,36 @@ export const registerUserToAccounts = mutation({
         await ctx.db.patch(acc._id, { users: [...acc.users, callerEmail] });
       }
     }
+
+    // Return the updated session info
+    const allAccounts = await ctx.db.query("accounts").collect();
+    const visibleAccounts = allAccounts.map((a) => ({ id: a.accountId, name: a.name }));
+    const userAccounts = allAccounts
+      .filter((a) => a.users.map((u) => u.toLowerCase()).includes(callerEmail))
+      .map((a) => ({ id: a.accountId, name: a.name }));
+
+    const isSuperAdminUser = SUPER_ADMINS.map((e) => e.toLowerCase()).includes(callerEmail);
+    const role = isSuperAdminUser ? "SUPER_ADMIN" : userAccounts.length > 0 ? "ACCOUNT_USER" : "GUEST";
+    const checklist = profile?.checklist?.filter((t) => !t.isArchived) ?? [];
+    
+    // Maintenance mode
+    const maintenance = await ctx.db.query("maintenanceMode").first();
+    const isMaintenanceMode = maintenance?.enabled ?? false;
+    const canToggleMaintenance = MAINTENANCE_AUTHORIZED.includes(callerEmail);
+
+    return {
+      email: callerEmail,
+      nickname: nickname,
+      role,
+      accounts: isSuperAdminUser || role === "GUEST" ? visibleAccounts : userAccounts,
+      userAccounts,
+      assignedAccount: userAccounts.length > 0 ? userAccounts[0].id : null,
+      checklist,
+      notes: profile?.notes ?? [],
+      notifications: [],
+      isMaintenanceMode,
+      canToggleMaintenance,
+    };
   },
 });
 
