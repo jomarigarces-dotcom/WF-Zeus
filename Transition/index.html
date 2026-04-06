@@ -988,6 +988,26 @@
   </div>
   <!-- Lightning Effect Canvas -->
   <canvas id="lightning-canvas" class="fixed inset-0 pointer-events-none z-[9999] hidden"></canvas>
+  <!-- Custom Zeus Alert Toast Container (Top Slide) -->
+  <div id="zeus-toast-container" class="fixed top-0 left-1/2 -translate-x-1/2 mt-4 z-[10000] flex flex-col gap-2 pointer-events-none w-full max-w-sm px-4"></div>
+
+  <!-- Custom Zeus Confirm Modal (Center Popup) -->
+  <div id="zeus-confirm-overlay" class="hidden fixed inset-0 bg-slate-900/60 dark:bg-slate-900/80 backdrop-blur-sm z-[10000] flex items-center justify-center p-4">
+    <div id="zeus-confirm-box" class="bg-white dark:bg-slate-900 w-full max-w-sm rounded-[24px] shadow-2xl p-6 border border-slate-200/50 dark:border-slate-700/50 transform scale-95 opacity-0 transition-all duration-200">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
+          <span class="material-icons text-blue-600 dark:text-blue-400">help_outline</span>
+        </div>
+        <h3 class="text-sm font-black uppercase tracking-widest text-slate-800 dark:text-white">Confirm Action</h3>
+      </div>
+      <p id="zeus-confirm-msg" class="text-sm font-medium text-slate-600 dark:text-slate-400 mb-8 leading-relaxed"></p>
+      <div class="flex items-center justify-end gap-3">
+        <button id="zeus-confirm-cancel-btn" class="px-5 py-2.5 rounded-xl font-bold uppercase tracking-widest text-[10px] text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Cancel</button>
+        <button id="zeus-confirm-ok-btn" class="px-5 py-2.5 rounded-xl font-bold uppercase tracking-widest text-[10px] text-white bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg transition-all">Confirm</button>
+      </div>
+    </div>
+  </div>
+
   <script type="module" src="app.js"></script>
 </body>
 

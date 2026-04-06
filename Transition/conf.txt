@@ -1,0 +1,12 @@
+﻿81: if(window.confirm(msg)) onConfirm();
+104: if (typeof onConfirm === 'function') onConfirm();
+141: if (!confirm('Send a request to remove this account?')) return;
+806: if (!confirm(`Are you sure you want to ${action} Maintenance Mode? This will affect all users.`)) return;
+1087: if (confirm(`Remove ${email}?`)) {
+1328: if (confirm(`Delete this workspace?`)) {
+1339: if (confirm("Remove item?")) (async () => { try { const res = await runMutation("accounts:deleteAccountItem", { accountId: state.currentAccount?.id, type: state.context.type, itemId: state.context.id }); Promise.resolve().then(() => { const _cb = (d => {
+1411: if (confirm("Delete announcement?")) {
+1754: if (!confirm("Delete?")) return;
+1997: if (!confirm("Delete this note?")) return;
+2084: if (!confirm("Delete note?")) return;
+2452: if (!confirm("Delete this reminder?")) return;
