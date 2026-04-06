@@ -1,0 +1,1266 @@
+Walmart Support SOP 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+Walmart Support SOP: Table of contents 
+Subtab 1: Leaves SOP 
+Guidelines and filing procedures for planned time off, medical leaves, and emergency absences 
+to ensure proper coverage. 
+Subtab 2: Overtime SOP 
+The end-to-end process for requesting, authorizing, and documenting additional work hours 
+beyond the standard shift. 
+Subtab 3: Schedule Change SOP 
+Procedures for shift swaps, permanent schedule adjustments, and aligning Zoho schedules with 
+the Master Transition Sheet. 
+Subtab 4: Attendance Notification SOP 
+Communication protocols for reporting late logins, early departures, or unscheduled absences 
+to RTA and Management. 
+Subtab 5: Workforce Ticketing SOP 
+Instructions for submitting formal tickets to the WFM team regarding profile updates, headcount 
+changes, or data corrections. 
+Subtab 6: Disputes SOP 
+The formal method for agents to contest errors in attendance logs, payroll hours, or 
+performance metrics. 
+Subtab 7: Issue Logs SOP 
+Standardized steps for documenting daily operational challenges, workflow blockers, and 
+real-time agent concerns. 
+Subtab 8: Suspension SOP 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+The administrative workflow for managing temporary suspension of duties or system access due 
+to disciplinary or security reasons. 
+Subtab 9: REST SOP 
+Compliance guidelines regarding mandatory break intervals, rest periods, and maintaining login 
+adherence during downtime. 
+Subtab 10: Client Tool SOP 
+A technical overview and troubleshooting guide for specific client-side platforms such as 
+ServiceNow and the LATTE tool. 
+Subtab 11: System Issue Reporting 
+Critical escalation paths for reporting technical outages, hardware malfunctions, or software 
+bugs that prevent production. 
+ 
+
+ 
+Leaves SOP 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+Standard Operating Procedure (SOP) for Walmart Support 
+| Employee Leave Management 
+Objective: To define the responsibilities of Support Staff in managing leave requests for their 
+direct reports and themselves, ensuring operational stability and policy compliance. 
+ 
+ 
+Click the “Leave Request” tab on the upper right tab to access the general view of the 
+leave request dashboard.
+ 
+1. Vacation Leave (VL) Process: 
+Support focuses on workload balancing and advanced scheduling. 
+●​ Lead Time: Must be filed at least 7 days in advance with a maximum range of 30 days 
+before the target date. To remain equal on slot application, leave requests beyond 30 
+days of creation date shall be disapproved by the RTA’s. 
+●​ Support Action:  
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+1.​ Quota Check: Open the Walmart VL Dashboard on Zoho and fill in the dates 
+that are planned for Vacation Leave. If the date is at capacity, Support must 
+suggest alternative dates to the agent before filing. 
+2.​ Performance Review: Support checks if the agent has any pending deliverables 
+or "Critical Support" shifts during the requested period. 
+3.​ Submission: Support informs the agent that he/she may now apply for vacation 
+leave. 
+4.​ RTA Sync: Once Support "Endorses," RTA will now review leave applications. ​
+Note: After pre-qualifying for leaves with support, approval still remains on the decision 
+with the RTA if slots are available on the date of request.  
+ 
+2. Sick Leave (SL) Process: 
+Support focuses on immediate communication and documentation. 
+●​ Notification: Agent must notify Support and/or via attendance notification form on Zoho 
+at least 2 hours before shift start or 2 hours after the scheduled start shift. This is to 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+avoid being marked as NCNS which would prevent additional points on APS. 
+ 
+●​ Support Action: 
+1.​ Acknowledge: Confirm receipt and tell the agent to "Rest well" (Empathy first). 
+2.​ The "2-Day Rule": If the SL exceeds 2 or more days, Support must remind the 
+agent that a Medical Certificate is required upon return. 
+3.​ System Entry: After recovery of the agent, Support may advise the agent to file 
+Sick Leave via leave requests form. Medical documents shall be required for SL 
+application.  
+ 
+3. Bereavement Leave Process:  
+Support focuses on sensitivity and long-term coverage. 
+●​ Eligibility: Standard is 3–5 days (depending on company policy) for immediate family. 
+●​ Support Action: 
+1.​ Immediate Leave: If the agent is currently on shift, Support should advise the 
+agent to communicate with RTA and/or higher operations for an immediate 
+"Emergency leave” via Email. 
+2.​ Document Grace Period: Inform the agent that the Death Certificate should be 
+submitted on Zoho for approval of bereavement leave by HR. Agent may also 
+apply for BL on Zoho via the Leave request page. 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+ 
+3.​ Team Handoff: Support reassigns the agent’s tasks to other team members if 
+there are any, to ensure no "pings" reach the agent during their mourning. 
+ 
+4. Solo Parent Leave Process:  
+Support focuses on legal entitlement and validity. 
+●​ Eligibility: Usually 7 days per year, provided the agent has served for at least 6 months  
+●​ Support Action: 
+1.​ ID Validation: Before filing, Support must verify the Solo Parent ID is not 
+expired.  
+2.​ System Tagging: Ensure the leave is tagged specifically as "Solo Parent Leave" 
+and not "VL," as these are separate credits. 
+3.​ Planning: Since these can be used for school events or child medical needs, 
+Support should encourage agents to provide at least 48 hours notice when 
+possible, though RTA must prioritize these requests as a legal right. 
+If qualifications are valid, assist the agent in filing the leave via Zoho on the leave request page. 
+Select SPL on the dropdown as follows and file the remaining information needed on the leave 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+request. RTA may now review and be subject for approval. ​
+ 
+5. Maternity Leave Process:  
+Support focuses on long-term resource planning and the "Return-to-Work" plan. 
+●​ Duration: Usually 60–105 days (depending on local law). 
+●​ Support Action: 
+1.​ Advance Notice: Support should be notified at least 30–60 days before the 
+expected delivery date (EDD) to allow RTA to move resources. 
+2.​ HR Liaison: Support ensures the agent has submitted the "Notification of 
+Pregnancy" to HR via email for government/insurance benefit processing. 
+3.​ The "Hard Stop": Coordinate with RTA for the agent’s last day. Ensure login 
+credentials are set to "Inactive" or “Maternity Leave” status during the leave. 
+4.​ Filing: Agent must file the maternity leave notification form to proceed with the 
+maternity leave. The form can be found under HR>Maternity Leave Notification 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+on zoho. 
+6. Paternity Leave Process: 
+Support focuses on flexibility, as the exact start date is often unpredictable. 
+●​ Duration: Usually 7–14 days. 
+●​ Support Action: 
+1.​ The "Window" Period: Support notes the spouse's due date. Unlike VL, RTA 
+must allow for a "floating start date." This would mean that there would be an 
+estimation of the start date of leave.  
+2.​ Activation: Once the child is born, the agent notifies Support and proceeds to 
+file Paternity leave via Leave request form on Zoho. ​
+Documentation: Support ensures the agent provides a copy of the Birth 
+Certificate upon return to validate the paid leave.​
+ 
+Process Breakdown by Category 
+Leave Type 
+Support Action 
+RTA Visibility 
+VL 
+Check RTA View for slots. 
+High (Planning required) 
+SL 
+Notify RTA via "Urgent" chat immediately. 
+Immediate (Intraday) 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+​
+7. Leave Retraction Process: 
+Support focuses on restoring headcount and updating the RTA Real-Time View. 
+A retraction occurs when a leave that was already approved needs to be cancelled. This is 
+different from a "denial" because the schedule has already been adjusted. 
+Agent-Initiated Retraction 
+1.​ Notification: Agent must notify TL and RTA at least 24 hours before the leave start 
+date. Same day retraction is not allowed and is subject to disapproval.  
+2.​ Support Action: 
+○​ Verify Intent: Confirm if the agent wants to retract the entire leave or just specific 
+days. 
+○​ System Reversal: Agent must go into the Leave Request System > My Records 
+>  For Approval and select "Retract" . 
+3.​ RTA Action: RTA approves retraction in a condition where the application of retraction is 
+before the date of the requested date of leave.  
+
+ 
+Overtime SOP 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+Standard Operating Procedure (SOP) for Walmart Support  
+| Client-Mandated Overtime (OT) Recruitment and Cascade 
+ 
+1. Purpose/ Scope 
+This procedure outlines the process for managing Overtime (OT) requests triggered by 
+a Client Mandate. It is designed to address spikes in volume by ensuring a seamless 
+flow of information from the Client to the Real-Time Analysts (RTA), through the Team 
+Leads (TL), and finally to the Agents (OT Takers). This applies to all Lines of Business 
+(LOB) under the Operations. 
+2. Roles & Responsibilities 
+Role: 
+Responsibility: 
+Client 
+Initiates the mandate based on volume spikes and SLA 
+requirements. 
+RTA 
+(Real-Time 
+Analyst) 
+Monitors volume, validates the need for OT. 
+Team Lead (TL) 
+Cascades the OT requirement to their specific LOB and 
+recruits "OT Takers." 
+Support Agent 
+Volunteers as an "OT Taker" and executes the additional 
+hours. 
+ 
+3. Tools / Requirements 
+●​ Workforce Management (WFM) Tool: Incontact tool, ECE IRR Realtime 
+Dashboard.  
+●​ Internal Communication Tool: Cliq, Email, MS Teams.  
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+4. Procedure (Steps) 
+Step 1: Receipt of Client Mandate 
+●​ The Client or LOB Manager identifies a spike in volume that cannot be handled 
+by the current headcount. 
+●​ They issue a mandate for OT. 
+●​ Action: RTA and higher Operations receives the notification and assesses the 
+required headcount to stabilize the queue. 
+Step 2: Cascade to Team Leads (TLs) 
+●​ Higher operations send a priority notification to all TLs within the affected LOB. 
+●​ Action: The message must include the reason (Volume Spike) and the number 
+of agents needed. 
+Step 3: Internal Team Cascade and Recruitment 
+●​ TLs immediately post the OT requirement in their respective team channels. 
+●​ Action: TLs solicit "OT Takers." 
+Step 4: Roster Collection and Validation 
+●​ TLs gather the names of the "OT Takers" and submit the list back to the RTA. 
+●​ Action: RTA and/or Operations updates the roster and informs the Client that the 
+additional headcount is being deployed. 
+Step 5: Execution and Monitoring 
+●​ Agents begin their OT. RTA monitors Adherence to ensure OT takers are actually 
+in production using the InContact Tool.  
+●​ Action: If the volume spike subsides, RTA notifies TLs to cease OT recruitment. 
+Notes / Tips: 
+●​ Always prioritize agents with high proficiency in the specific queue experiencing 
+the spike. 
+●​ Ensure agents take their mandatory rest breaks if the OT extends their shift 
+significantly.​
+​
+​
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+​
+ 
+5. Exceptions & Escalation 
+​
+Volume Spike persists: OT is insufficient to clear the queue. Inform RTA to request 
+"Cross-LOB" support.  
+Queue Monitoring: Monitor Agents that are still on shift and the OT takers to ensure 
+100% productivity within the day. ​
+​
+6. Records / Outputs 
+●​ OT Tracker: A log of all agents who worked the mandate. 
+●​ Post-Shift Report: A brief summary showing how the OT impacted the volume 
+spike. 
+●​ Payroll Export: Adjusted timesheets reflecting the approved OT hours. 
+7. References 
+●​ Employee Handbook (Overtime Pay Policies). 
+●​ Client Service Level Agreement (SLA) Documentation. 
+ 
+
+ 
+Schedule Change SOP 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+ 
+Standard Operating Procedure (SOP) for Walmart Support  
+| Operations Schedule Synchronization & Agent Assistance (Schedule 
+Changes) 
+ 
+1. Purpose/ Scope 
+This procedure ensures that all schedule updates made in the Transition Scheduling 
+Sheet are correctly updated in Zoho. Because the scheduling sheet does not 
+automatically sync with Zoho, Team Leads must monitor for changes and prompt agents 
+to manually request the shift update in Zoho to ensure time-tracking and payroll 
+accuracy. 
+2. Roles & Responsibilities 
+Workforce/RTA: Updates the Master Transition Scheduling Sheet with new 
+event-based shifts, meetings, or coverage requirements. 
+Team Lead (TL): Regularly monitors the Transition Scheduling Sheet for any updates 
+and informs the affected agents to initiate the change in Zoho. 
+Agent: Responsible for submitting the "Shift Change Request" in Zoho once notified by 
+their TL to ensure their check-in/out aligns with the new schedule. 
+ 
+3. Tools / Requirements 
+●​ Transition Scheduling Sheet: The source of truth for Schedules and shift view. 
+●​ Zoho: The official tool for time-tracking and attendance. 
+●​ Communication Tool: (Email/Cliq) For supervisory notifications. 
+4. Procedure (Steps) 
+Step 1: Monitor the Transition Scheduling Sheet 
+●​ Daily/Weekly, TLs must review the "Monthly Events/Meetings" tab in the 
+Transition Scheduling Sheet. 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+ 
+●​ Action: Identify any agents under your supervision whose shift has been moved 
+to cover for event attendees. 
+Step 2: Validate Against Zoho 
+●​ Open Zoho and check the agent’s current assigned shift. 
+●​ Action: Confirm if the change from the Transition Sheet is reflected. If not (which 
+is typical), take note of the variance to prevent "Late" or "Absent" tags in the 
+system. 
+Step 3: Direct Agent Notification (The Cascade) 
+●​ Contact the affected agent immediately via cliq or any communication platform.  
+●​ Action: Inform them of the specific change (e.g., "Shift moved from 8 AM to 10 
+AM to cover"). 
+●​ Note: This must be done as soon as the change is spotted to ensure the agent is 
+aware before their next login. 
+Step 4: Manual Zoho Assistance 
+●​Pre-Shift Action: Assist the agent in updating their schedule following “Zoho> 
+Daily Schedule> My Daily Schedule” Click “Request Sched change” on the 
+mismatched date to match the Transition Sheet before the start of their shift. 
+This pop up should show and TL must assist the agent to avoid further complications on review.  
+ 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+ 
+●​Agent Action: Instruct the agent to log their time based specifically on the 
+Transition Sheet schedule. 
+●​RTA review: RTA may review the schedule request and is subject for approval. ​
+TL’s are not authorized to approve schedule changes from their cluster. 
+Step 5: Confirmation and Log 
+●​ Action: Ensure the agent reacts or responds to the notification to confirm they 
+have seen the new schedule. 
+5. Exceptions & Escalation 
+ 
+Issue: Zoho Schedule does not match transition schedule which causes confusion on 
+the agent side. Due to this, agent may adhere to the official schedule without updating 
+the zoho schedule causing undertime, login errors, RDOT pop ups on regular shift, and 
+late logins. ​
+​
+Escalate: TL and RTA 
+ 
+6. Quality Check / Expected Result​
+ 
+Minimize Discrepancies: Minimal discrepancies during payroll, and lessen possible 
+disputes. ​
+​
+ 
+ 
+
+ 
+Attendance notification SOP 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+ 
+Standard Operating Procedure (SOP) for Walmart Support  
+| Operations Schedule Synchronization & Agent Assistance (Schedule 
+Changes) 
+ 
+1. Purpose/ Scope 
+The purpose of this SOP is to establish a standardized process for documenting agent 
+absences. Ensuring every absence is logged in Zoho allows for real-time visibility for the 
+Real-Time Analysts (RTA) and accurate record-keeping for Operations. This procedure 
+applies to all Team Leaders (TLs), Senior Team Leaders (STLs), and Operations 
+Managers (OMs) when assisting agents with attendance reporting.​
+​
+2. Roles & Responsibilities 
+●​ Agent: Responsible for notifying their TL immediately and filing the attendance 
+notification in Zoho. If unable to file, they must provide all necessary details and 
+documentation to their supervisor. 
+●​ Team Leader (TL): Responsible for guiding the agent through the process or 
+filing on the agent's behalf if they face technical or personal issues. Ensures all 
+data is accurate and visible to Ops. 
+●​ STL / OM: Responsible for overseeing compliance and stepping in if the TL is 
+unavailable to ensure no gaps in attendance reporting. 
+●​ RTA Team: Responsible for monitoring Zoho entries to adjust staffing levels and 
+manage real-time service levels. 
+3. Tools / Requirements 
+●​ Zoho 
+●​ Internal Communication Tool: Zoho Cliq,Batphone via Messenger, Email. 
+●​ Supporting Documentation (e.g., Medical Certificates, if applicable) 
+4. Procedure (Steps) 
+Step 1: Receipt of Absence Notification The process begins when an agent contacts 
+the TL via any communication channel to report an absence. 
+●​ Action: Acknowledge the message and confirm the reason for the absence. 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+ 
+Step 2: Verification of Agent Access The TL must instruct the agent to log into Zoho 
+to plot their attendance notification. 
+●​ Action: Ask the agent: "Are you able to access Zoho right now to file your 
+notification?" 
+●​ If Yes: Provide the agent with the internal link and monitor for the entry. 
+●​ If No: Proceed to Step 3. 
+Step 3: Support Intervention (Filing on Behalf) If the agent cannot file due to 
+technical issues, lack of internet, or medical emergency, the TL must take over. 
+●​ Action: Collect necessary details from the agent (Reason, Duration, 
+Documentation/Screenshots). 
+●​ Action: Navigate to the Zoho>Attendance Notification>Attendance 
+Notification Form and find the name of the agent on the list, and fill out the form 
+for attendance notification. This serves as a visual for the absence of any 
+employee.  
+ 
+Step 4: Confirmation and Visibility Once submitted, the notification is now visual for 
+the Operations and Workforce Team. ​
+​
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+ 
+Notes / Tips: > * Documentation: Always encourage agents to provide a Medical 
+Certificate (MC) or screenshots of technical errors to strengthen the filing. 
+●​ Timeliness: Aim to have the Zoho notification completed within 2 
+hours before or after the expected shift of the agent's initial 
+notification to avoid being tagged as NCNS.  
+5. Exception and Escalation  
+Issue 
+Action 
+Escalate To 
+Zoho System is down 
+for everyone. 
+Log the absence in a manual tracker 
+(Excel/Google Sheets). 
+RTA 
+Agent is 
+unreachable/AWOL. 
+Attempt contact; if no response by 
+after 2 hours of schedule shift, file as 
+NCNS. 
+RTA 
+6. Quality Check / Expected Result 
+●​ Expected Result: Every absent agent has a corresponding entry in Zoho for their 
+absence.  
+●​ Quality: lessen NCNS tagging for agents.  
+7. Records / Outputs 
+●​ Zoho Attendance Logs: The primary source of truth for RTA and Payroll. 
+●​ Support Documentation: Digital copies of MCs or error screenshots attached to the 
+Zoho entry. 
+
+ 
+Workforce Ticketing SOP 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+ 
+Standard Operating Procedure (SOP) for Walmart Support 
+| Workforce Ticketing & Offline Activity Requests 
+​
+​
+1. Purpose/ Scope 
+This procedure outlines the process for Support Staff (TL/STL/OM) to request schedule 
+adjustments and data reports from the Workforce/RTA team. This ensures all offline activities 
+and capacity changes are documented, approved, and tracked to maintain service level targets. 
+2. Roles & Responsibilities 
+●​ Team Leader (TL) / Support: Responsible for submitting tickets at least one hour in 
+advance and informing agents once approvals are received. 
+●​ RTA Team: Responsible for reviewing tickets, checking service level impact, and 
+providing an "Approved" or "Denied" response. 
+●​ Agent: Responsible for plotting the approved activity in their schedule only after being 
+notified by their TL. 
+3. Tools / Requirements 
+●​ Zoho / WFM Ticketing System 
+●​ Workforce Rest 
+●​ Other reporting tools, etc.  
+ 
+4. Procedure (Steps) 
+Step 1: Determine Requirement & Timeline Identify the need for an offline activity (Coaching, 
+Huddle, Training) or a data request (FTE Capacity/Reports). 
+●​ Action: Ensure the request is being made at least 60 minutes (1 hour) before the 
+intended start time. 
+Step 2: Create a Workforce Ticket Access the Zoho Ticketing module to file the formal 
+request. 
+ 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+ 
+●​ Action: Fill in the mandatory fields:
+ 
+○​ Topic: (e.g., Offline Activity, Data Request, Break Adjustment). 
+○​ Reason: Specify the activity (e.g., "Weekly Coaching," "Team Huddle," "System 
+Issue"). 
+○​ Affected Staff: List the Name(s) of the Agent(s). 
+○​ Timeframe: Start and End time of the activity. Using Military time is 
+recommended in time format 
+○​ Duration: Total Minutes of the activity (for Offline Activity) 
+○​ Additional Documents to support requests but not mandatory. 
+ 
+Step 3: Await RTA Review The RTA assigned to the ticket will analyze the current floor volume 
+and FTE capacity. 
+●​ Action: Wait for a notification or comment on the ticket. Do not pull the agent offline until 
+the ticket status is marked as "Approved." 
+Step 4: Agent Notification & Plotting Once the ticket is approved, the TL must close the loop 
+with the agent. 
+●​ Action: Inform the agent that the request is granted and prepare for the planned offline 
+activity.  
+Step 5: Ticket Closure 
+●​ Action: Ensure the ticket is closed or updated according to the final outcome for 
+historical data tracking. 
+ 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+ 
+Notes / Tips 
+●​ Advance Notice: Tickets filed less than an hour before the activity are 
+subject to immediate denial if the volume is high. 
+●​ Specifics Matter: Avoid vague reasons like "Meeting"; use "Q3 
+Performance Review" or "Process Update Huddle." 
+5. Exceptions & Escalation 
+Issue 
+Action 
+Escalate To 
+Ticket not responded to within 30 
+mins 
+Send a follow-up ping in the RTA 
+Channel. 
+Available RTA 
+Ticket Denied but activity is critical 
+Provide business justification for 
+the exception. 
+RTA Lead 
+6. Quality Check / Expected Result 
+●​ Expected Result: All offline activities are visible in the RTA dashboard with 0% 
+"Unaccounted" time for agents. 
+●​ Compliance: Tickets are consistently filed 1 hour in advance. 
+7. Records / Outputs 
+●​ Zoho Support Tickets: Historical log of all offline requests. 
+●​ Adherence Reports: Generated by RTA to show scheduled vs. actual activity. 
+ 
+ 
+
+ 
+Disputes SOP 
+ 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+ 
+Standard Operating Procedure (SOP) for Walmart Support  
+| Attendance and Log Dispute Management 
+ 
+1. Purpose/ Scope 
+This SOP defines the process for handling agent disputes regarding attendance and shift logs. 
+The goal is to ensure that all disputes filed in Zoho are verified through a hierarchy of evidence. 
+This procedure clarifies when an agent can file independently and when a TL’s "vouch" or 
+mandatory approval is required to validate a claim. 
+2. Roles & Responsibilities 
+●​ Agent: Responsible for identifying discrepancies and filing the dispute in Zoho with the 
+highest priority evidence available. 
+●​ Team Leader (TL): Responsible for reviewing and "vouching" for disputes only when the 
+agent lacks primary visual evidence (Screenshots/Docs). 
+●​ RTA Lead: Acts as an escalation point for complex disputes or cases where evidence 
+and TL vouching are both missing. 
+●​ RTA / HR Team: Responsible for the final processing of the Zoho dispute based on the 
+evidence hierarchy provided. 
+3. Tools / Requirements 
+●​ Zoho (Dispute logs) 
+●​ Evidence Hierarchy: 
+1.​ IC Timestamp (Primary Priority) 
+2.​ Work Stamp (Activity logs/System docs) 
+3.​ Attendance Thread (SOS/EOS posts) 
+4.​ TL Vouch (Required only if options 1-3 are unavailable) 
+4. Procedure (Steps) 
+Step 1: Discrepancy Identification The agent identifies an error in their logs and prepares the 
+necessary evidence for filing. 
+Step 2: Determining Evidence Priority (The "Vouch" Rule) Before filing in Zoho, the 
+agent/TL must check for evidence in the following order of priority: 
+ 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+ 
+●​ Priority 1: IC Timestamp – A screenshot showing the Incontact timestamp of activity. 
+Request for IC stamps: Navigate on Cliq and find the specific thread for IC screenshot 
+request.​
+​
+​
+Format for request:​
+​
+Requesting IC Stamp:​
+​
+Date:​
+​
+Shift:​
+​
+Reason: 
+●​ Priority 2: Work Stamp – Any digital document or log validating the employee was 
+active/working during the disputed time. 
+●​ Priority 3: SOS/EOS Thread – A screenshot of the agent’s Start of Shift (SOS) or End 
+of Shift (EOS) post in the official attendance thread. 
+●​ Priority 4: TL Vouch – Mandatory only if Priorities 1, 2, and 3 are missing. The TL must 
+review the claim and provide a formal approval/statement to act as the validation. 
+Step 3: Filing the Dispute in Zoho 
+●​ If Priority 1, 2, or 3 exists: The agent may proceed with filing the dispute in Zoho, 
+attaching the screenshot as proof. TL review is encouraged for the filing to proceed. 
+●​ If No Evidence exists: The agent must present the case to the TL. The TL must audit 
+the shift and, if satisfied, provide a "vouch." 
+Step 4: Support Documentation Entry 
+●​ Action: When filing in Zoho, the evidence must be attached to the ticket. 
+●​ Action: If it is a "TL Vouch" case, the TL must add a comment or note in the filing: "No 
+visual evidence available; claim verified and vouched by TL [Name] based on 
+[Reason/Internal Audit]." 
+Step 5: Monitoring & Verification The TL monitors the Zoho dashboard to ensure the dispute 
+is picked up by RTA. 
+●​ Action: Confirm that the dispute status moves from "Pending" to "Approved." 
+Notes / Tips 
+●​ Screenshot Quality: Ensure the full desktop clock/date is visible in IC or 
+Work Stamp screenshots to avoid rejection. 
+ 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+ 
+●​ The Vouch Limit: A TL Vouch should be used as a last resort. Frequent 
+"vouching" for the same agent without screenshots may be flagged for 
+operational review and be subject to fraud.  
+5. Exceptions & Escalation 
+Issue 
+Action 
+Escalate To 
+Agent has no evidence and TL 
+refuses to vouch. 
+Review shift activity logs via RTA tools for 
+a final decision. 
+RTA 
+RTA rejects a "Vouched" dispute. 
+TL must provide further context on why 
+the vouch was granted. 
+RTA Lead 
+Evidence is blurry or cropped. 
+Request a new, full-screen capture from 
+the agent. 
+Agent 
+6. Quality Check / Expected Result 
+●​ Expected Result: Every dispute in Zoho contains either a high-priority screenshot 
+(Priority 1-3) or a documented TL Vouch (Priority 4). 
+●​ Outcome: Accurate payroll and attendance records with minimal rejections and 
+discrepancies 
+7. Records / Outputs 
+●​ Zoho Dispute Entries: The official audit trail for the adjustment. 
+●​ Attendance Threads: Secondary proof stored in communication channels (Cliq/Email). 
+ 
+ 
+
+ 
+Issue Logs SOP 
+ 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+ 
+Standard Operating Procedure (SOP) for Walmart Support  
+| Incident Logging (System, Power, & Internet) 
+ 
+1. Purpose/ Scope 
+This SOP provides guidelines for Team Leaders (TLs) and Support Staff on how to manage and 
+document agent downtime caused by Power Outages, Internet Connectivity issues, or System 
+Errors. It ensures that agents are moved to the correct Aux status in Zoho and that payroll 
+impact is correctly applied based on the agent's work setup (Office vs. WFH). 
+2. Roles & Responsibilities 
+●​ Agent: Responsible for reporting the issue immediately to the TL and providing proof 
+(ISP outage notice, photos of power loss, or IT ticket numbers). 
+●​ Team Leader (TL): Responsible for determining the "Resolvability" of the issue, 
+directing WFH agents to report to the office if needed, and filing/verifying the Zoho Break 
+Logs. 
+●​ RTA Team: Responsible for monitoring the floor's real-time capacity and ensuring the 
+break logs match the actual downtime. 
+3. Tools / Requirements 
+●​ Zoho Attendance (Break Logs Module) 
+●​ WFM Ticketing System 
+●​ Outage Aux Categories: 
+○​ System Error: Internal tool/PC issues (Non-deductible). 
+○​ Lost Power: Electricity outage. 
+○​ Lost Internet: Connectivity outage. 
+ 
+4. Procedure (Steps) 
+Step 1: Incident Reporting & Identification 
+When an agent encounters an issue, the TL must categorize the outage immediately to 
+determine the next steps. 
+ 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+ 
+●​ Action: Identify if the issue is System Error, Lost Power, or Lost Internet. 
+Step 2: Processing Office-Based Employees 
+For agents working on-site, outages are considered company-controlled. 
+●​ Action: File the respective break log in Zoho. 
+●​ Mandatory Requirement: You MUST TICK the "Not Payroll Deductible" checkbox. 
+The agent should not lose pay for office-wide issues. 
+Step 3: Processing WFH Employees (Outage Management) 
+If a WFH agent reports an Internet or Power outage, follow the 1-Hour Rule: 
+●​ If resolved within 1 hour: Log the duration in Zoho from start to finish. 
+●​ If NOT resolved within 1 hour: Instruct the agent to report to the Office. 
+○​ If Agent can report: Log the outage from the start of the issue until they arrive at 
+the office. DO NOT tick "Not Payroll Deductible" (this time is docked). 
+○​ If Agent cannot report: Logout the agent and log the outage from the start of 
+the issue until the End of Shift (EOS). DO NOT tick "Not Payroll Deductible." 
+Step 4: Processing WFH Employees (System Issues) 
+If the issue is a technical/tool error: 
+●​ Action: Direct the agent to IT Support. 
+●​ If IT Resolvable: Log the "System Error" for the duration of the fix. 
+●​ If NOT Resolvable: Instruct the agent to report to the office. Follow the same docking 
+rules as Step 3 if they cannot/do not report to the office. 
+Step 5: Zoho Entry & Documentation 
+●​ Action: Navigate to the agent's Zoho profile → Add Break Log. 
+●​ Action: Select the correct Type. Ensure the "Not Payroll Deductible" box is handled 
+correctly based on the rules above. 
+ 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+ 
+●​ Action: Add a note: "WFH Outage - Did not report to office" or "Office-wide Power 
+Outage." Reference below: ​
+ 
+Notes / Tips 
+●​ The 1-Hour Threshold: The decision to send an agent to the office must be 
+made as soon as it is clear the outage is not a "flicker" or quick reset. 
+●​ Double Check Checkbox: The most common error is forgetting to 
+uncheck/check the "Not Payroll Deductible" box. Always verify this before 
+hitting save. 
+5. Exceptions & Escalation 
+Issue 
+Action 
+Escalate To 
+WFH agent claims "Total Area 
+Blackout"  
+Verify via local news/power company 
+maps; file as docked. 
+TL 
+ 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+ 
+System Issue is a "Global" Client 
+outage. 
+Treat as "Not Payroll Deductible" for 
+everyone. 
+RTA Lead 
+​
+6. Quality Check / Expected Result 
+●​ Expected Result: Break logs are accurately categorized and payroll settings (deductible 
+vs. non-deductible) match the agent's work location and reporting status. 
+●​ Audit: RTA will cross-reference "Not Deductible" logs against known office outages. 
+7. Records / Outputs 
+●​ Zoho Break Logs: Updated daily. 
+●​ IT Ticket Logs: Reference for "System Error" validity. 
+ 
+
+ 
+Suspension SOP 
+ 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+ 
+​
+Standard Operating Procedure (SOP) for Walmart Support  
+| Employee Suspension Management & Coordination
+​
+ 
+1. Purpose/ Scope 
+This procedure establishes the workflow for documenting and enforcing employee suspensions. 
+It ensures that the Operations and RTA teams are aligned to maintain accurate staffing levels, 
+restrict system access during disciplinary periods, and prevent the misuse of leave credits 
+(SL/VL) to offset suspension dates. 
+2. Roles & Responsibilities 
+●​ Operations (TL/STL/OM): Files the suspension request via WFM ticket, provides the 
+required Notice of Decision (NOD), and ensures the agent complies with the "no-work" 
+directive. 
+●​ APS POC: Coordinates and logs suspensions specifically resulting from Attendance 
+Pointing System violations. 
+●​ RTA Team: Reviews staffing impact, plots the dates in the specialized Zoho Suspension 
+form, and monitors for unauthorized login attempts. 
+3. Tools / Requirements 
+●​ Zoho Desk: For WFM Ticketing and submission of suspension requests. 
+●​ Zoho (Suspension Module): The specific form used for plotting (distinct from the 
+standard leave form). 
+●​ Notice of Decision (NOD): Documentation required to validate the disciplinary action. 
+ 
+4. Procedure (Steps) 
+Step 1: Submission of Request 
+Once a handbook violation or APS threshold is met, the Support Team must initiate the process. 
+●​ Action: Create a Workforce Management (WFM) ticket under "Suspension Request." 
+●​ Details: Include Agent Name, Reason for Suspension, Proposed Dates, and attach the 
+NOD or supporting evidence. 
+Step 2: RTA Staffing Assessment 
+The RTA team evaluates the proposed dates against the program’s capacity requirements. 
+ 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+ 
+●​ Action: RTA will either confirm the dates or suggest a shift in schedule to avoid service 
+level gaps. Support must coordinate with RTA to find the balance between disciplinary 
+timelines and floor needs. 
+Step 3: Formal Plotting in Zoho 
+Once dates are agreed upon, the official entry is made in Zoho. 
+●​ Process: * Handbook/General Violations: The RTA logs the entry. 
+○​ APS Violations: The APS POC logs the entry. 
+●​ Requirement: Entries must be filed using the Zoho Suspension Form, not the 
+standard leave request tool, to ensure system access is restricted.
+ 
+Step 4: Compliance Enforcement 
+Support must communicate the suspension terms clearly to the agent. 
+●​ Action: Ensure the agent understands they are barred from logging in and cannot use 
+VL/SL during these dates. 
+ 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+ 
+●​ Action: RTA monitors real-time logs. If an agent attempts to log in, RTA alerts the 
+TL/OM immediately for corrective intervention. 
+Step 5: Completion & Archiving 
+●​ Action: RTA provides final confirmation to Support once the dates are secured. Support 
+ensures the WFM ticket is closed and all documentation is retained for audit purposes.​
+ 
+5. Quality Check / Expected Result 
+●​ Result: All suspensions are visible in Zoho through the correct disciplinary category. 
+●​ Success Metric: Zero instances of agents bypassings suspensions via leave credits or 
+unauthorized system use. 
+6. Records / Outputs 
+●​ WFM Ticket History: Records of the request and coordination. 
+●​ Zoho Suspension Logs: Official record for payroll and 201 file purposes. 
+●​ NOD Documentation: Evidence of the disciplinary process. 
+ 
+ 
+
+ 
+REST SOP 
+ 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+ 
+Standard Operating Procedure (SOP) for Walmart Support  
+| Workforce Rest Adjustment and Ticket Filing 
+​
+1. Purpose/ Scope 
+This SOP ensures that agents who sacrifice their scheduled breaks/rest periods for work-related 
+activities (Coaching, Meetings, Clinic) are properly compensated with an adjusted rest period. 
+This prevents labor violations and maintains accurate Real-Time Adherence (RTA) tracking. 
+2. Roles & Responsibilities 
+●​ Team Leader (TL): Validates the overlap, creates the Zoho ticket in EST, and assigns 
+the new rest schedule to the agent. 
+●​ Workforce (RTA): Audits the request against the agent's actual shift and 
+approves/denies the adjustment based on documentation. 
+●​ Agent: Attends the required activity and ensures they use the correct status/Aux code 
+as instructed. 
+3. Tools / Requirements 
+●​ Zoho WFM Ticketing 
+●​ Communication Channels (Cliq/Email)  
+●​ Required Evidence: Calendar invites or Meeting endorsements. 
+ 
+4. Procedure (Steps) 
+Step 1: The "Overlap" Audit Before filing, the TL must verify that the activity 
+(Coaching/Meeting) physically prevents the agent from taking their break at the scheduled time. 
+●​ Note: If the meeting ends before the break starts, no ticket is needed. 
+Step 2: Ticket Creation & Categorization Log into Zoho Desk → RTA/WFM Ticketing. 
+●​ Category: Select Meeting, Coaching, or Clinic. 
+●​ Issue Type: Select Rest Adjustment / Rest Ticket. 
+ 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+ 
+Step 3: Data Entry (The "Precision" Step) All times must be logged in EST. Use the following 
+template in the description box to ensure 100% approval: 
+REST ADJUSTMENT REQUEST 
+●​ Agent Name: [Name] 
+●​ Activity Type: [Coaching/Meeting/Clinic] 
+●​ Activity Time: [Start Time] - [End Time] EST Military Time  
+●​ Affected Break: [e.g., 1st 15-min Break] 
+●​ Requested New Break Time: [Start Time] - [End Time] EST Military Time  
+Step 4: Evidence Attachment You must attach proof to the ticket based on the following 
+priority: 
+1.​ Calendar Invite: Screenshot of the Outlook/Zoho calendar invite showing the time. 
+2.​ Meeting Endorsement: Screenshot of the Slack/Teams message from the OM or Client. 
+3.​ Clinic Slip: Digital endorsement from the Medical Team.​
+​
+Evidences are required but not mandatory 
+Step 5: RTA Approval & Real-Time Tracking Once the ticket is submitted, the TL must 
+monitor the status. 
+●​ Approved: Notify the agent of their new time schedules.  
+●​ Action: Instruct the agent to remain on the "Coaching" or "Meeting" Aux during the 
+activity, then move to "Break" Aux during their new adjusted time. 
+5. Exceptions & Escalation 
+Issue 
+Action 
+Escalate To 
+Late Filing 
+If filed <30 mins before the activity, add a "Reason for 
+Delay" in the description. 
+RTA  
+Overlap Conflict If a meeting is extended, update the existing ticket 
+instead of creating a new one. 
+RTA  
+ 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+ 
+System 
+Downtime 
+Send the Rest Adjustment details via the Cliq/Email 
+channel. 
+RTA Lead 
+​
+6. Quality Check / Expected Result 
+●​ Sync Check: The agent’s Zoho timeline should show the activity Aux (Coaching) 
+followed by the Break Aux without any "Unaccounted" gaps. 
+●​ Payroll Accuracy: No deductions should occur for rest periods consumed by work 
+activities. 
+7. Records / Outputs 
+●​ Zoho Rest Ticket ID: To be kept by the TL for end-of-week reporting. 
+●​ RTA Adherence Report: Shows the updated schedule. 
+ 
+TL Pro-Tips for Success: 
+●​ EST Conversion: Double-check your time conversion. 90% of rejections are due to 
+PST/Local time errors in the description. 
+●​ Don't Double-Plot: Never tell an agent to plot their own break if a ticket is still 
+"Pending." Wait for the RTA "Approved" status. 
+ 
+ 
+
+ 
+Client Tool SOP 
+ 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+ 
+ 
+Standard Operating Procedure (SOP) for Walmart Support  
+| Client Tool Management & Operational Access 
+ 
+​
+1. Purpose/ Scope 
+To establish a standardized process for managing the primary client tools (VDI, IC, and 
+ServiceNow). This SOP ensures that the Support Team can maintain uninterrupted operations, 
+verify accurate agent tracking, and uphold client-specific workload compliance. 
+2. Roles & Responsibilities 
+●​ Agent: Must utilize VDI as the entry point for all work and report any tool-specific 
+blockers immediately via the official tracker. 
+●​ Team Leader (TL): Responsible for verifying that agents are logged into all three tools, 
+auditing IC status vs. Zoho status, and documenting technical downtime for their team. 
+●​ RTA Team: Monitors real-time status in IC and workload volume in ServiceNow; 
+performs forced logouts during technical emergencies. 
+●​ Operations Manager (OM): Oversees tool compliance and reviews ServiceNow data to 
+ensure SLA targets are met. 
+3. Tools / Requirements 
+●​ VDI (Virtual Desktop Infrastructure) 
+●​ InContact (IC) 
+●​ ServiceNow (SNow) 
+●​ Internal VDI/PC Issue Tracker 
+ 
+4. Procedure (Steps) 
+Step 1: Access Verification (VDI) 
+Support must ensure all agents enter the "Virtual Environment" first. 
+●​ Action: Confirm the agent is logged into the VDI. 
+●​ Critical Rule: Without VDI, agents have zero access to the client network. If VDI fails, 
+the agent is effectively "System Down." 
+Step 2: Time & Activity Synchronization (InContact) 
+ 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+ 
+Once in VDI, agents must launch InContact (IC). 
+●​ Tracking: TLs must check that agents are using the correct Aux codes for productive 
+and offline work. 
+●​ Comparison: IC is the Client's Source of Truth. TLs should spot-check to ensure IC 
+status matches the agent's Zoho status. 
+●​ Supervisory Action: If an agent is "stuck" in a status due to a crash, the TL must 
+coordinate with the RTA to perform a forced logout. 
+Step 3: Workload & SLA Monitoring (ServiceNow) 
+SNow is the "Source of Truth" for production. Support uses this to monitor output. 
+●​ Action: Ensure agents are checking SNow for claim/line assignments. 
+●​ Monitoring: Support monitors SNow to track volume inflow and ensure claims are being 
+closed within the agreed-upon SLA. 
+Step 4: Technical Issue Documentation (SOI/EOI) 
+In the event of a tool failure (VDI, IC, or SNow), Support must enforce the reporting protocol. 
+●​ Action: Direct the agent to log the incident in the VDI/PC Issue Tracker Channel. 
+●​ Required Data: 
+○​ SOI (Start of Issue): The exact minute the access was lost. 
+○​ EOI (End of Issue): The exact minute access was restored. 
+●​ Verification: TLs must review these logs daily to protect agent productivity metrics. 
+ 
+5. Exceptions & Escalation 
+Issue 
+Action 
+Escalate To 
+Total VDI Blackout 
+Move all affected agents to "System Down" in 
+Zoho. 
+Client IT / RTA  
+IC/Zoho Mismatch 
+Inform TL to issue a corrective reminder to the 
+agent to sync statuses. 
+TL 
+ 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+ 
+SNow Assignment 
+Errors 
+Manually reassign claims or lines if the 
+auto-assigner (Latte)  fails. 
+RTA  
+ 
+6. Quality Check / Expected Result 
+●​ Data Integrity: All agents should show as "Active" in both IC and SNow simultaneously. 
+●​ Productivity: ServiceNow "Closed Claims" count should align with the agent’s 
+productive hours logged in InContact. 
+7. Records / Outputs 
+●​ VDI/PC Issue Tracker Logs: Used for uptime reporting. 
+●​ InContact Activity Reports: Used for client-side attendance auditing. 
+●​ ServiceNow SLA Reports: Used for performance reviews. 
+ 
+Support Pro-Tips: 
+●​ VDI Priority: Always troubleshoot the VDI first. If VDI is broken,agent remains 
+unproductive since the majority of the client tools are inside VDI.  
+●​ SOI/EOI Importance: Without a documented SOI/EOI, the client will consider the 
+downtime as "Unaccounted," which negatively impacts the program's performance 
+score. 
+Remember, No evidence means it never happened.  
+ 
+ 
+
+ 
+👏 System Issue Reporting 
+ 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+ 
+ 
+Standard Operating Procedure (SOP) for Walmart Support  
+| System Issue Reporting & Item Transfer Protocol 
+ 
+1. Purpose/ Scope 
+To establish a clear workflow for Support staff when agents encounter "stuck" or "erroring" items 
+in ServiceNow (SNW). This SOP ensures that non-actionable items (Ghost items) are properly 
+documented via Google Forms and transferred to the RTA team to prevent queue inflation and 
+maintain accurate productivity reporting. 
+2. Roles & Responsibilities 
+●​ Team Leader (TL): Validates the agent's report, ensures the Google Form is submitted, 
+and oversees the transfer of the item to an on-shift RTA. 
+●​ Agent: Identifies the error and provides the necessary item identifiers and screenshots 
+to the TL. 
+●​ On-shift RTA: Receives the transferred items and validates that the handoff was 
+successful in the system. 
+●​ RTA Lead: Serves as the escalation point for recurring system bugs or items that refuse 
+to transfer. 
+3. Tools / Requirements 
+●​ SNW (ServiceNow): For item review and the actual transfer action. 
+●​ Google Reporting Form: Official Link 
+●​ Internal Chat (Cliq/Slack): For immediate coordination with the RTA. 
+ 
+ 
+4. Procedure (Steps) 
+Step 1: Item Identification & Categorization 
+Support must verify if the item reported by the agent meets the "Non-Actionable" criteria: 
+●​ Ghost Items: Items that stay in the bucket despite being completed. 
+●​ Erroring Items: Items displaying system failures or abnormal processing behavior. 
+●​ Non-Actionable: Items marked "Done" but still appearing in the agent's active queue. 
+ 
+ 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+ 
+Step 2: Technical Validation 
+Before escalating, the TL must perform a "Quick Audit": 
+●​ Action: Refresh the SNW workspace. 
+●​ Action: Verify if the item is simply pending a delay from another department. 
+●​ Requirement: If the issue persists after a refresh, proceed to Step 3. 
+Step 3: Filing the Official Report 
+Documentation must occur before or during the transfer. 
+●​ Action: Access the Google Form. 
+●​ Required Data: Agent Name, Item ID, Screenshot of the error, and a brief description. 
+●​ Critical: Do not skip the form; this is the only way the RTA team can track system bugs 
+for the client. 
+Step 4: Item Transfer in SNW 
+The TL or Agent (under TL supervision) must move the item out of the agent's queue. 
+●​ Action: Open the item in SNW and initiate the Transfer action. 
+●​ Target: Select an On-shift RTA. 
+●​ Fallback: If no RTA is online, transfer to John Vergara – Vendor (vn5774u). 
+●​ Warning: If the system prevents a transfer, contact the RTA channel immediately. 
+Step 5: Coordination & Confirmation 
+●​ Action: Reach out to the receiving RTA via Cliq. 
+●​ Confirmation: "I have transferred Item ID [Number] to you; please confirm if visible." 
+●​ Finality: Ensure the agent's queue is now clear of the reported item. 
+ 
+ 
+5. Exceptions & Escalation 
+Issue 
+Support Action 
+Escalate To 
+ 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+ 
+Item cannot be 
+transferred 
+Attempt to "Allow" or "Block" the item; if it fails, 
+take a screenshot of the error. 
+RTA  
+Google Form is 
+Down 
+Document all details (Item ID/Reason) in a manual 
+log/email. 
+RTA Team 
+RTA cannot see item 
+Re-verify the Item ID and ensure the transfer was 
+"Submitted" in SNW. 
+RTA Lead 
+Recurring Bug 
+Flag the specific Item IDs that repeatedly reappear. RTA Lead 
+ 
+6. Quality Check / Expected Result 
+●​ Successful Outcome: The "Ghost" item is removed from the agent's view, and a 
+corresponding Google Form entry exists for the RTA's audit. 
+●​ Traceability: Every transferred item has a documented "Ticket/Form" trail. 
+7. Records / Outputs 
+●​ Google Form Responses: Serves as the master log for system issues. 
+●​ SNW Audit Trail: Shows the transfer from Agent to RTA. 
+ 
+ 
+

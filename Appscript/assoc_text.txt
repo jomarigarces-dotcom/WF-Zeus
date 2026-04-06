@@ -1,0 +1,961 @@
+Agent SOP 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+Walmart Associates SOP: Table of contents​
+Subtab 1: Leaves Filing SOP 
+Steps for agents to submit time-off requests, including the required notification windows for both 
+planned and emergency absences. 
+Subtab 2: Overtime Filing SOP 
+The process for agents to volunteer for OT and the specific steps required to log those extra 
+hours for payroll accuracy. 
+Subtab 3: Schedule Request SOP 
+How to request shift swaps or temporary schedule changes and how to confirm they are 
+reflected correctly on the Transition Sheet. 
+Subtab 4: Attendance SOP 
+Clear guidelines on punctuality, login expectations, and the proper way to notify RTA of any shift 
+deviations. 
+Subtab 5: Disputes Filing SOP 
+Instructions for agents on how to file a formal dispute if they notice errors in their attendance 
+logs or "Missing Punches" in Zoho. 
+Subtab 6: Line Assignment SOP 
+The manual process for requesting work in the team chat and interpreting emoji reactions for 
+US, CA, or Pre-Item tasks. 
+Subtab 7: RO Line Assignment SOP 
+Specific procedures for the Read-Only workflow, detailing how these specific tasks are assigned 
+and prioritized. 
+Subtab 8: System Issue Notification SOP 
+Protocol for reporting technical blockers or tool outages, including the exact information needed 
+by the RTA to document the downtime. 
+ 
+
+ 
+Leave Management 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+Standard Operating Procedure (SOP) for Walmart 
+Associates | Leave Management & Attendance 
+Objective: To provide you with a clear, step-by-step guide on how to manage your time off, ensure your 
+leaves are documented correctly, and maintain a healthy work-life balance while supporting our 
+operations. 
+ 
+ 
+1. Vacation Leave (VL): Planning Your Time Off 
+Use this for planned trips, rest, or personal errands. 
+●​ Timeline: Submit your request at least 7 days in advance. You can plan up to 14 days 
+ahead. 
+○​ Note: To keep things fair for the whole team, any requests filed more than 14 
+days before the start date will be automatically disapproved by RTA. 
+●​ Availability Check: Before filing, check the Walmart VL Dashboard on Zoho. If a date 
+is "at capacity" (full), look for alternative dates.​
+ 
+●​ The Process: ​
+1. Check the dashboard for open slots.​
+2. Sync with your Team Lead (TL) to ensure no critical tasks or "Critical Support" shifts 
+are missed.​
+3. Once your TL gives the "OK," submit your application on Zoho. Click on Status and 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+select VL in Hours and fill in the information needed such as reason and remarks, do not 
+forget to upload supporting documents.​
+​
+Note that if the VL’s are in 3 or more days consecutive, supporting documents are 
+mandatory revealing the STL or OM approval of your leave.  
+ 
+●​ Note: You will file your leave in zoho with the attachment of approval from STL or OM, 
+but final approval depends on the RTA based on real-time slot availability. 
+2. Sick Leave (SL): Prioritizing Your Health 
+Use this when you are unwell and unable to perform your duties. 
+●​ Notification: You must notify your TL and/or fill out the Attendance Notification Form 
+on Zoho at least 2 hours before your shift starts (or no later than 2 hours after it starts). 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+○​ Why? This prevents you from being tagged as NCNS (No Call, No Show), which 
+protects your APS points.
+●​ The 2-Day Rule: If you are sick for 2 or more consecutive days, you must provide a 
+Medical Certificate when you return to work. 
+●​ Filing: Once you have recovered, file your SL via the Zoho Leave Request form. Be 
+ready to upload your medical documents for the application to be processed. 
+ 
+3. Bereavement Leave: Support in Times of Loss 
+Use this for the passing of an immediate family member. 
+●​ Entitlement: Typically 3–5 days, depending on current policy. 
+●​ Immediate Needs: If you are currently on shift and receive the news, notify your TL 
+immediately. They will help you coordinate with RTA/Ops for an Emergency Leave so 
+you can log off right away. 
+●​ Documentation: You can file for Bereavement Leave on Zoho via the Leave Request 
+page. Please upload the Death Certificate to Zoho for HR approval.  
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+4. Solo Parent Leave: Parental Support 
+Specifically for our colleagues registered as solo parents. 
+●​ Eligibility: 7 days per year, available once you have reached regularization on the 
+company.  
+●​ Validation: Ensure your Solo Parent ID is updated and not expired before you file. 
+●​ Filing: Always tag your leave as "Solo Parent Leave" in the system—do not use the VL 
+category, as these are separate credits. 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+​
+ 
+●​ Notice: For planned events (school meetings, etc.), please give at least 48 hours' 
+notice so the team can adjust. 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+ 
+Leave Type Quick-Reference 
+Leave Type 
+Your Primary Responsibility 
+Timeline 
+VL 
+Check Dashboard & consult TL 
+7-14 days notice 
+SL 
+Notify TL & file upon recovery 
+Post absence 
+Bereavement 
+Notify TL & upload Death Cert 
+Immediate (for exit) 
+Solo Parent 
+Keep ID updated & tag correctly 
+48 hours notice preferred 
+ 
+ 
+6. Retracting a Leave 
+If your plans change and you no longer need the time off. 
+●​ When to Act: You must notify your TL and RTA at least 24 hours before the leave was 
+supposed to start. 
+●​ System Steps: 1. Go to Leave Request System > My Records > For Approval.​
+2. Select "Retract." 
+●​ Requirement: RTA can only approve retractions if the request is made before the actual 
+date of the leave. 
+ 
+ 
+
+ 
+Overtime Filing SOP 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+Standard Operating Procedure (SOP) for Walmart 
+Associates | Client-Mandated Overtime (OT): Agent Participation & 
+Execution
+ 
+ 
+1. Purpose/ Scope 
+This procedure outlines how Agents can volunteer for and execute Client-Mandated Overtime 
+(OT). It ensures that when there is a sudden spike in customer volume, you know exactly how to 
+sign up, where to monitor for instructions, and how to ensure your extra hours are recorded for 
+payroll. 
+2. Roles & Responsibilities 
+Role 
+Responsibility 
+Agent (OT 
+Taker) 
+Monitors communication channels, volunteers for slots, and maintains 
+100% productivity during OT hours. 
+Team Lead (TL) 
+Announces OT needs to the team and collects the list of volunteers. 
+RTA / 
+Operations 
+Validates the roster and ensures OT hours are active in the monitoring 
+tools. 
+ 
+3. Tools / Requirements 
+●​ Workforce Management: InContact Tool (to remain in production). 
+●​ Communication: Zoho Cliq, MS Teams, or Email. 
+●​ Monitoring: ECE IRR Realtime Dashboard (monitored by RTA). 
+ 
+ 
+ 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+4. Procedure (Steps) 
+Step 1: Monitor the OT Announcement 
+When the Client identifies a volume spike, your Team Lead will post an "OT Call" in your team's 
+chat group or via email. 
+●​ Action: Check the message for the specific Line of Business (LOB) affected and the 
+number of hours/agents needed. 
+Step 2: Volunteer for the Shift 
+If you are available to work, reply to the TL's post immediately. 
+●​ Action: Provide your name and the specific hours you are available to extend. 
+●​ Example: "I am available for 2 hours of OT after my shift ends at 5:00 PM." 
+●​ Note: Selection is often based on your proficiency in the specific queue experiencing the 
+spike. 
+Step 3: Confirmation and Log-in 
+Wait for a "Go Signal" from your TL before beginning work. 
+●​ Action: Log into the InContact Tool. Stay in a working aux status to ensure the volume 
+is being cleared. 
+Step 4: Execution & Mandatory Breaks 
+While on OT, you must maintain high productivity. 
+●​ Action: If your OT extends your total workday significantly, coordinate with your TL to 
+schedule any additional rest breaks. Do not log out until your approved OT window is 
+complete or until you receive a "Cease OT" notification.​
+Note: There is a 4 hour max limit every shift date.  
+Notes / Tips: 
+●​ Productivity is Key: RTAs monitor adherence in real-time. Being on OT means being 
+"in production." 
+ 
+ 
+ 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+5. Exceptions & Escalation 
+Issue 
+Action 
+Escalate 
+Queue remains high 
+after OT 
+Continue production as usual. 
+TL will coordinate with RTA for 
+"Cross-LOB" support. 
+Personal 
+Emergency 
+If you must leave during your OT, 
+notify your TL immediately. 
+TL will update RTA to find a 
+replacement. 
+ 
+6. Quality Check / Expected Result 
+●​ Verification: Check your InContact status to ensure you are correctly logged in and 
+"Active." 
+●​ Result: The volume spike (backlog) decreases, and Service Level Agreements (SLA) 
+return to green. 
+7. Records / Outputs 
+●​ Payroll Export: This process ensures your approved OT hours are reflected in your 
+adjusted timesheet. 
+ 
+ 
+
+ 
+Schedule Request SOP 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+Standard Operating Procedure (SOP) for Walmart 
+Associates | Operations Schedule Synchronization & Shift Updates 
+(Schedule Change Request)
+ 
+1. Purpose/ Scope 
+To provide Agents with a streamlined process for updating their official schedules in Zoho. This 
+procedure ensures that your attendance records, payroll, and adherence metrics accurately 
+reflect the shifts assigned in the Transition Workbook, preventing unnecessary attendance 
+points or "Mismatch" errors. 
+2. Roles & Responsibilities 
+Role 
+Responsibility 
+Agent 
+Initiates the formal request in Zoho and ensures all shift details match the 
+Transition Workbook. 
+Team 
+Lead (TL) 
+Reviews and approves the request to validate it against operational needs. 
+WFM / 
+RTA 
+Performs final validation and plots the approved schedule into the master 
+system. 
+ 
+3. Tools / Requirements 
+●​ Zoho People: The primary system for filing shift change requests. 
+●​ Transition Workbook: The source of truth for your assigned schedule and rest days. 
+●​ Imgur: (Optional) For hosting and linking supporting screenshots. 
+4. Procedure (Steps) 
+Step 1: Initiate the Schedule Change Request 
+Navigate to the My Schedule Change Request page within Zoho/ECETrack. 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+●​ Action: Click the green plus sign (+) located in the upper right-hand corner to open a 
+new request form. 
+Step 2: Complete Shift Details with Precision 
+Fill out the form accurately. Discrepancies between this form and the Transition Workbook will 
+lead to a rejection. 
+●​ Full Name: Enter your registered name. 
+●​ Requested Date Range: Specify the FROM and TO dates for the new schedule. 
+●​ Working Hours: Select either 8 or 10 hours based on your specific LOB requirement. 
+●​ New Time Schedule: Enter the START and END times. Crucial: These must mirror the 
+times listed in the Transition Workbook. 
+●​ Rest Days: Check the boxes for your assigned days off according to the Workbook. 
+●​ Reason/Note: Provide a clear explanation for the change. You may include an Imgur 
+link for any supporting screenshots. 
+Step 3: Submission and Interim Period 
+Double-check all entries before hitting Submit. 
+●​ Action: Continue to follow your current/old schedule until you receive a notification 
+that the new request has been officially approved. 
+●​ Monitoring: Regularly check your Zoho notifications or official communication channels 
+(Cliq/Email) for status updates. 
+Step 4: Execute the Approved Schedule 
+Once the status changes to "Approved," strictly adhere to the new timings. 
+●​ Action: Update your personal alarms or reminders. Any deviation from this approved 
+window must be reported to your Team Lead immediately to avoid disciplinary action. 
+Notes / Tips: 
+●​ Timelines: Always submit requests within the prescribed window to allow WFM enough 
+time for validation. 
+●​ Accuracy: One wrong digit in the "Start Time" can result in a "Late" tag. Cross-reference 
+with the Transition Workbook twice! 
+ 
+ 
+5. Exceptions & Escalation 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+Issue 
+Action 
+Escalate 
+Request Rejected 
+Review the rejection note (usually a 
+data mismatch). 
+Re-file or consult your 
+TL. 
+System Glitch/No Plus 
+Sign 
+Refresh the page or clear browser 
+cache. 
+Report to IT/Support. 
+Urgent/Last Minute 
+Move 
+File the request immediately after the 
+verbal instruction. 
+Notify RTA for manual 
+override. 
+ 
+6. Quality Check / Expected Result 
+●​ Successful Sync: Your "Shift" view in Zoho should match the Transition Workbook, and 
+your check-in/out times should no longer trigger "Mismatch" alerts. 
+7. Records / Outputs 
+●​ Approved Shift Change Log: Digital record in Zoho used for payroll auditing. 
+●​ WFM Validation Report: Final roster update in the master scheduling tool. 
+8. References 
+●​ Employee Handbook: Section on Attendance and Punctuality. 
+●​ Attendance Policy: Guidelines on unauthorized schedule changes and penalty points. 
+ 
+
+ 
+Attendance SOP 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+Standard Operating Procedure (SOP) for Walmart 
+Associates | How to Submit an Attendance Notification in Zoho 
+Step-by-step Guide for Submitting of Attendance Notification​
+ 
+1. Purpose/ Scope 
+This procedure ensures that all absences and tardiness are communicated and documented 
+formally. Following this guide prevents you from being tagged as No Call, No Show (NCNS), 
+protects your attendance record from unnecessary disciplinary points, and allows the RTA team 
+to adjust staffing levels in real-time. 
+2. Roles & Responsibilities 
+Role 
+Responsibility 
+Agent 
+Provides timely notice of absence/lateness and submits the Zoho 
+form accurately. 
+Immediate 
+Supervisor / RTA 
+Acknowledges the notification and coordinates coverage; may file 
+on behalf of the agent in emergencies. 
+WFM / RTA 
+Plots the notification into the master schedule for real-time 
+tracking. 
+ 
+3. Tools / Requirements 
+●​ Zoho Creator: The official platform for the Attendance Notification Form. 
+●​ Communication Channels: Batphone, Cliq/Direct Message, or Email. 
+4. Procedure (Steps) 
+Step 1: The Initial Alert (Communication) 
+As soon as you realize you will be late or absent, you must inform your immediate supervisor or 
+RTA. 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+●​ Timeline: Notifications must be made within the window of 2 hours before up to 2 
+hours after your scheduled shift start. 
+●​ Warning: Failure to communicate within this window is automatically considered an 
+NCNS, which carries heavier disciplinary consequences. 
+Step 2: Access the Zoho Attendance Notification Form 
+Formalize your notification by recording it in the system. 
+●​ Action: Log in to Zoho Creator / Zoho Attendance Tool and select the Attendance 
+Notification Form. 
+●​
+ 
+Step 3: Complete the Required Details 
+Ensure all fields are filled out accurately to avoid your submission being tagged as "Unexcused": 
+●​ Employee Name: Your full registered name. 
+●​ Channel of Notification: Select how you first reached out (e.g., Batphone, Direct 
+Message, Email). 
+●​ Type of Notification: Choose Absent or Late. 
+●​ Reason: Select the most accurate category (Personal, Medical, Emergency, etc.). 
+●​ Expected Return Date: Specify when you will be back in production. 
+●​ Additional Notes: Add specific details or mention if you have supporting documents 
+(like a Medical Certificate) to upload later. 
+ 
+ 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+ 
+Step 4: Post-Submission Responsibilities 
+Submitting the form is only the first half of the process. 
+●​ Action: Stay reachable via your chosen communication channel for any follow-up 
+questions from your TL or Operations. 
+●​ Action: Follow any specific instructions given by your TL regarding shift make-ups or 
+documentation requirements. 
+Notes / Tips: 
+●​ Emergency Filing: If you are physically unable to access Zoho (e.g., no internet or 
+medical emergency), ensure your supervisor is aware so they can file the form on your 
+behalf. 
+●​ Audit Ready: All records are audited daily. Ensure your "Reason" matches the 
+documentation you provide later. 
+5. Exceptions & Escalation 
+Issue 
+Action 
+Escalate 
+Zoho System is 
+Down 
+Take a screenshot of the error and notify 
+your TL immediately. 
+RTA for manual logging. 
+Extended Absence 
+If you will be out for more than one day, 
+update your "Expected Return" in the 
+form. 
+TL / STL / OM 
+Missed Notification 
+Window 
+If you notify after the 2-hour post-shift 
+window, explain the delay clearly. 
+Operations / WFM for 
+case-by-case review. 
+ 
+6. Quality Check / Expected Result 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+●​ Successful Notification: You receive a confirmation of submission, and your status is 
+updated in the RTA's real-time tracker, preventing an NCNS tag. 
+ 
+7. Records / Outputs 
+●​ Attendance Notification Log: A digital record in Zoho used for attendance audits. 
+●​ RTA Intraday Report: Real-time headcount adjustment based on your submission. 
+8. References 
+●​ Employee Handbook: Section on Attendance and NCNS Policies. 
+●​ APS (Attendance Points System) Guidelines. 
+ 
+ 
+
+ 
+Disputes Filing SOP 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+Standard Operating Procedure (SOP) for Walmart 
+Associates | Agent Timekeeping & Break Tagging Disputes​
+ 
+1. Purpose/ Scope 
+This procedure provides a clear framework for you to contest inaccuracies in your time logs or 
+break taggings. Whether caused by system glitches or tool errors, this process ensures your 
+actual work hours and productivity are recorded fairly.  
+Note: Accuracy is vital as these adjustments directly impact your payroll and performance 
+metrics. 
+2. Roles & Responsibilities 
+Role 
+Responsibility 
+Agent 
+(Disputant) 
+Files the dispute within the 5-day window and provides high-quality, 
+timestamped proof. 
+RTA (Approver) 
+Acts as the "Gatekeeper." Validates proof against system logs (IC 
+stamps) and approves/rejects based on evidence. 
+Team Lead (TL) 
+Provides a "Vouch" only as a last resort if technical proof is unavailable. 
+ 
+3. Tools / Requirements 
+●​ In-Contact (IC) Logs: The primary source for timestamp verification. 
+●​ Zoho Dispute: The platform where disputes are filed. 
+●​ Screenshot Tool: To capture errors, timestamps, or connectivity issues. 
+4. Procedure (Steps) 
+Step 1: Identify the Dispute Type 
+Determine what needs correcting before filing: 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+●​ Break Disputes: Used for incorrect taggings during breaks, meetings, or coaching 
+sessions. The goal is to prove you returned to work on time. 
+●​ Time Log Disputes: Used when Zoho fails to capture your actual Login or Logout time 
+due to tool or connectivity issues. 
+Step 2: Gather Valid Proof (Hierarchy of Evidence) 
+RTAs do not approve disputes based on explanations alone; you must provide proof. RTAs 
+follow this priority list—higher-ranked proof is more likely to be approved without hesitations: 
+1.​ IC (In-Contact) Stamps: The most reliable evidence.​
+​
+Request for IC stamps: Navigate on Cliq and find the specific thread for IC screenshot 
+request.​
+​
+Format for request:​
+Requesting IC Stamp:​
+Date:​
+Shift:​
+Reason:​
+ 
+2.​ Availability Messages: Chat timestamps showing you messaged "Back from break" or 
+"Logged in." 
+3.​ Issue Tracker: Screenshots of the tracker with visible timestamps. 
+4.​ Error Screenshots: Visible proof of login errors or system downtime (Date/Time must 
+be visible). 
+5.​ Team Lead Vouch: A confirmation from your TL (Use this only if steps 1-4 are 
+impossible). 
+Step 3: Filing the Dispute 
+Submit your request in the Zoho Dispute Module within 5 days of the occurrence. 
+●​ Action: Ensure the Time In and Time Out you request match your proof to the minute. 
+●​ Checklist: Verify the Date, Scheduled Shift, and Working Hours (8 or 10) are all correct. 
+●​ Reason: Choose the reason that best fits your evidence (e.g., "Tool Issue" vs. "System 
+Downtime"). 
+Step 4: RTA Review and Outcome 
+The RTA will cross-reference your submission against the RTA Validation Checklist. 
+●​ Approval: If your proof is clear, timestamped, and matches your request. 
+●​ Rejection: If proof is missing, unclear, filed after 5 days, or if the timestamps do not 
+match the requested adjustment. 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+Notes / Tips: 
+●​ 5-Day Rule: Any dispute filed after 5 days will be automatically rejected. For late filings, 
+you must be redirected to Lemuel Ching. 
+●​ Quality Matters: A clear screenshot of an IC Stamp is worth more than a long written 
+explanation. 
+5. Exceptions & Escalation 
+Issue 
+Action 
+Escalate 
+Dispute Rejected/Needs 
+Correction 
+Review the RTA notes, fix the 
+error, and re-submit. 
+Consult your TL for guidance. 
+Missing Proof for System 
+Outage 
+Use the "TL Vouch" method if 
+it was a site-wide issue. 
+TL to coordinate with RTA. 
+Repeated System Errors 
+Keep a log of all incident 
+tickets. 
+Escalate to IT and Operations 
+for a permanent fix. 
+ 
+6. Quality Check / Expected Result 
+●​ Successful Dispute: Your Zoho attendance record is updated to reflect your actual 
+working time, ensuring your productivity (Adherence) and Payroll are correct. 
+7. Records / Outputs 
+●​ Dispute History Report: A digital record of all approved/rejected adjustments. 
+●​ Updated Payroll Export: Reflects the corrected hours for the cutoff. 
+8. References 
+●​ Attendance & Timekeeping Policy. 
+●​ Payroll Processing Guidelines. 
+ 
+
+ 
+Line Assignment SOP 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+Standard Operating Procedure (SOP) for Walmart 
+Associates | Trust & Safety: Queue Prioritization, Assignment, and LATTE 
+Monitoring​
+ 
+1. Purpose/ Scope 
+This procedure ensures that US, CA, and Pre-Item tasks are handled with the correct urgency 
+to meet our Service Level Agreements (SLA). As an agent, this guide helps you understand how 
+tasks are assigned to you based on your training, how to request work via chat, and the 
+importance of maintaining an "Online" status in LATTE. 
+2. Roles & Responsibilities 
+Role 
+Responsibility 
+Agent 
+Requests lines via chat, follows SLA priority, stays "Online" in LATTE, and 
+processes assigned tasks. 
+RTA / Support Monitors SLA urgency, assigns lines manually or via LATTE upload, and 
+monitors agent idle time. 
+Team Lead 
+(TL) 
+Supports agents in meeting SLAs and follows up on unresponsiveness 
+reports from RTA. 
+ 
+3. Tools / Requirements 
+●​ ServiceNow Dashboard: Used to view live queue volume and priority levels. 
+●​ Chat Channel: [WMT - Trust & Safety] for work requests. 
+●​ Latte Tool: Used for automated line assigning.  
+4. Procedure (Steps) 
+Part A: Requesting and Receiving Work (Manual) 
+Step 1: Requesting Lines 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+When you are ready for a new batch of work, post your request in the [WMT - Trust & Safety] 
+team chat. 
+●​ Action: Clearly state your availability and which queues you are trained for (US, CA, or 
+Pre-Items). 
+Step 2: Understanding Your Assignment (Emoji Reactions) 
+The RTA will assign lines based on which queue (US or CA) is closest to an SLA breach. Once 
+assigned, the RTA will react to your message with an emoji. 
+●​ Action: Look for these emojis to know what work you have been given: 
+○​ US flag = US Line assigned. 
+○​ CA flag = CA Line assigned. 
+○​ Check mark = Pre-Item assigned. 
+Step 3: Processing by Priority 
+Always work your assigned lines based on the following SLA Tiering: 
+1.​ P1: Must be completed within 2 Hours. 
+2.​ P2: Must be completed within 12 Hours. 
+3.​ P3: Must be completed within 24 Hours. 
+4.​ P4/Pre-Items: Must be completed within 48 Hours. 
+ 
+Part B: LATTE Volume & Status Monitoring 
+Step 4: Ensuring "Online" Status​
+​
+Receiving Automated Assignments In this method, assignments are pushed to you 
+automatically through the tool rather than through chat requests. 
+●​ Action: Monitor your LATTE interface for incoming line assignments. 
+●​ Action: Once a line is assigned by the tool, begin processing immediately following the 
+SLA priority rules mentioned in Step 3. 
+●​ Note: You do not need to request lines in the chat if the LATTE tool is actively pushing 
+assignments to your dashboard. 
+The RTA uses the LATTE Admin Dashboard to monitor queue health and agent activity. 
+●​ Action: Ensure your status is ONLINE in LATTE at all times during production. 
+●​ Action: If you are tagged as IDLE, the RTA will reach out via the Shoutout Channel 
+and CC your Team Lead. 
+●​ Note: Unresponsiveness while idle may result in an entry in the WFM Logs for 
+documentation. 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+Notes / Tips: 
+●​ Equal Priority: US and CA lines are equally important; the "Tie-breaker" is always the 
+SLA clock. 
+●​ Pre-Items: These can only be handled by Pre-Item trained agents. Do not attempt these 
+if you haven't completed the specific training. 
+5. Exceptions & Escalation 
+Issue 
+Action 
+Escalate 
+Unresponsive 
+Agent 
+RTA reaches out via the Shoutout Channel. 
+If no reply, file a WFM 
+Log entry. 
+No Volume 
+Inform RTA via the Latte Meet or send a 
+DM.  
+Notify RTA for re-upload  
+RRtask not visible 
+in SNW 
+Complete task on latte to move on to 
+another set of assignments 
+Inform RTA for 
+acknowledgment via 
+incall messages 
+ 
+6. Quality Check / Expected Result 
+●​ Success: All P1 lines are cleared within the 2-hour window. 
+●​ Success: Agents show 100% adherence to their "Online" status in LATTE. 
+7. Records / Outputs 
+●​ ServiceNow Volume Exports: Daily record of incoming tasks. 
+●​ WFM Logs: Documentation of idle time and unresponsiveness. 
+●​ LATTE Queue Statistics: Summary of completed vs. pending tasks. 
+8. References 
+●​ Trust & Safety Training Manual. 
+●​ SLA Priority Matrix (P1-P4). 
+ 
+
+ 
+RO Line Assignment SOP 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+Standard Operating Procedure (SOP) for Walmart 
+Associates | RO Claim Assignment & Brand-Specific Routing​
+ 
+ 
+1. Purpose/ Scope 
+This procedure outlines how Rights Owner (RO) claims are prioritized and assigned. It ensures 
+that regardless of whether you are working on US or CA queues, the most urgent 
+claims—specifically Counterfeit and Oldest Created Dates—are handled first, while respecting 
+special routing rules for specific brands. 
+2. Roles & Responsibilities 
+Role 
+Responsibility 
+RO Agent 
+Requests claims via the designated thread, follows specific brand 
+rules (Apple/Stripe), and processes assigned claims. 
+RTA / Support 
+Monitors volume, shares counts, and manually assigns claims using 
+the "Locked To" field and emoji confirmations. 
+Apple Dedicated 
+Agent 
+Specifically handles all Apple-related brand claims. 
+ 
+3. Tools / Requirements 
+●​ RO Portal/System: For claim processing and "Locked To" updates. 
+●​ Chat Channels: Designated threads for US Claim Requests and CA Claim Requests. 
+4. Procedure (Steps) 
+Step 1: Start-of-Shift & Low Volume Protocol 
+At the beginning of the shift, the RTA will broadcast the current US and CA claim counts. 
+●​ Action: If the RTA announces No Incoming Volume, do not remain idle. 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+●​ Action: Immediately pivot to working on your Pending Claims or any Unprocessed 
+Emails in your inbox to maintain productivity. 
+Step 2: Requesting Claims via Thread 
+You must never cherry-pick claims. All work must be requested through the official channels. 
+●​ US Requests: Post in the [Claim request Thread here ⬇️] 
+●​ CA Requests: Post in the [CA Thread Claims] 
+●​ Requirement: Wait for the RTA to react with an Emoji to your message. This emoji is 
+your official confirmation that a claim has been locked to you. 
+Step 3: Understanding Prioritization & Assignment 
+The RTA assigns claims based on a specific hierarchy. Even though all types have an 8-hour 
+SLA, they are not treated equally. 
+1.​ US and CA Queues: Treated with equal importance. 
+2.​ Claim Hierarchy: Counterfeit claims are assigned first, followed by Copyright, 
+Trademark, and Patent. 
+3.​ Age: The oldest "Created Date" is always prioritized to prevent SLA breaches. 
+Step 4: Following Brand-Specific Rules 
+Certain brands have mandatory routing that overrides the standard flow: 
+●​ Apple Brand: If you are not an "Apple Dedicated Agent," you cannot be assigned these 
+claims. 
+●​ StripeDevice: These are automatically routed/assigned to Teresa Lin (t0l013q). 
+Step 5: Receiving the Assignment 
+The RTA will perform the following in the system: 
+1.​ Open the claim and update the "Locked To" field with your name. 
+2.​ Click Save and select Start Review. 
+3.​ Your Action: Once you see the emoji reaction in the chat, refresh your dashboard to 
+see the locked claim and begin your review immediately. 
+Notes / Tips: 
+●​ System Assignments: If you work on a claim that was automatically assigned by the 
+system (instead of requested via thread), an NTE will be issued for documentation. 
+●​ Manual Locks: Always verify the claim is "Locked To" you before you start the "Start 
+Review" process to avoid duplicate work. 
+5. Exceptions & Escalation 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+Issue 
+Action 
+Escalate 
+Claim Assigned to Wrong 
+Person 
+Do not process. Notify the RTA to 
+unlock the claim. 
+RTA 
+Urgent SLA (Under 1 
+Hour) 
+Flag the claim in the chat immediately. 
+RTA / TL 
+Apple Claim in General 
+Queue 
+Do not assign to general agents. 
+Escalate to RTA for 
+the transferring 
+process. 
+ 
+6. Quality Check / Expected Result 
+●​ Compliance: 100% of Apple claims are handled by dedicated agents. 
+●​ SLA Health: Zero claims exceed the 8-hour limit, with Counterfeit claims resolved 
+fastest. 
+7. Records / Outputs 
+●​ NTE Records: For tracking unauthorized system-assignment work. 
+●​ Locked To Logs: Audit trail of who handled which Rights Owner claim. 
+8. References 
+●​ Rights Owner (RO) Brand Guidelines. 
+●​ SLA and Hierarchy Matrix. 
+ 
+ 
+
+ 
+System Issue Notification SOP 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+Standard Operating Procedure (SOP) for Walmart 
+Associates | System Issue Reporting & Item Transfer Protocol (Agent View)​
+ 
+1. Purpose/ Scope 
+This procedure provides you with a clear roadmap for handling "Ghost" or "Erroring" items in 
+ServiceNow (SNW). When an item becomes non-actionable or refuses to leave your queue, 
+these steps ensure the item is properly transferred to the RTA team, keeping your productivity 
+metrics clean and preventing queue inflation. 
+2. Roles & Responsibilities 
+Role 
+Responsibility 
+Agent 
+Identifies the error, captures evidence, and initiates the reporting process 
+with the Team Lead (TL). 
+Team Lead 
+(TL) 
+Validates the issue, ensures the Google Form is filed, and supervises the 
+item transfer. 
+On-shift RTA 
+Receives the "Ghost" item and confirms the transfer was successful in the 
+system. 
+ 
+3. Tools / Requirements 
+●​ SNW (ServiceNow): To perform the item review and transfer. 
+●​ Google Reporting Form: [Official Reporting Link] 
+●​ Internal Chat (Cliq/Slack): For real-time coordination with your TL and the RTA. 
+4. Procedure (Steps) 
+Step 1: Identify "Non-Actionable" Items 
+Recognize when an item needs to be reported. Look for these three scenarios: 
+●​ Ghost Items: You completed the task, but it remains in your bucket. 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+●​ Erroring Items: The system shows a failure message or behaves abnormally when you 
+try to process it. 
+●​ Active Queue Mismatch: The item is marked "Done" but refuses to disappear from your 
+active view. 
+Step 2: Perform a Technical Reset 
+Before reporting, try a quick self-audit to ensure it isn't a temporary lag. 
+●​ Action: Refresh your SNW workspace. 
+●​ Action: Check if there is a known delay from another department. 
+●​ Result: If the item is still stuck after a hard refresh, move to Step 3. 
+Step 3: Capture Evidence & File the Report 
+You must document the bug before the item is moved. This data is used to report system bugs 
+to the client. 
+●​ Action: Access the Google Reporting Form. 
+●​ Required Data: Enter your name, the Item ID, a brief description of the error, and an 
+attached Screenshot of the issue. 
+Step 4: Execute Item Transfer in SNW 
+With your TL’s guidance, move the item out of your queue so you can continue working on 
+active tasks. 
+●​ Action: Open the stuck item in SNW and select the Transfer action. 
+●​ Target: Assign the item to an On-shift RTA. 
+●​ Fallback: If no RTA is available, transfer the item to John Vergara – Vendor (vn5774u). 
+Step 5: Confirm Completion 
+Ensure the handoff is finalized so the item doesn't "bounce back." 
+●​ Action: Your TL (or you, if instructed) must message the receiving RTA via Cliq: "I have 
+transferred Item ID [Number] to you; please confirm if visible." 
+●​ Verification: Check your SNW dashboard to confirm your queue is now clear of the 
+reported item. 
+ 
+ 
+ 
+
+ECENTERPRISES GROUP MANILA INC  
+33F Robinsons Summit Center, 6783 Ayala Avenue Makati City, 1200  
+Metro Manila, 1200, Philippines  
+ 
+ 
+Notes / Tips: 
+●​ Don't Skip the Form: The Google Form is the only way the RTA team can prove to the 
+client that a system bug exists. 
+●​ Real-time Sync: Always communicate the transfer immediately; RTAs cannot approve 
+what they cannot see. 
+5. Exceptions & Escalation 
+Issue 
+Action 
+Escalate To 
+Transfer Blocked 
+Attempt to "Allow" or "Block" the item first. Take a 
+screenshot of the block error. 
+RTA / RTA 
+Lead 
+Google Form is 
+Offline 
+Keep a manual log (Word/Excel) with the Item ID 
+and Reason. 
+RTA Team 
+Item Still Visible 
+Re-verify the Item ID and ensure "Submit" was 
+clicked in SNW. 
+TL / RTA 
+Lead 
+The "Returning" 
+Ghost 
+Flag items that keep appearing in your queue after 
+being transferred. 
+RTA Lead 
+6. Quality Check / Expected Result 
+●​ Traceability: Every "Ghost" item has a matching entry in the Google Form. 
+●​ Queue Health: Your active queue only contains items you can actually work on, 
+ensuring your AHT and productivity are accurate. 
+7. Records / Outputs 
+●​ Google Form Entries: The master audit log for system bugs. 
+●​ SNW Audit Trail: The history log showing the item moving from your ID to the RTA. 
+ 
+ 
+

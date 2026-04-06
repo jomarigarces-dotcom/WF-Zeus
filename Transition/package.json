@@ -1,0 +1,15 @@
+{
+  "name": "wf-zeus-transition",
+  "version": "1.0.0",
+  "description": "Workforce Zeus - Vercel + Convex Migration",
+  "scripts": {
+    "dev": "npx serve . -p 3000",
+    "convex:dev": "npx convex dev"
+  },
+  "dependencies": {
+    "convex": "^1.13.0"
+  },
+  "devDependencies": {
+    "serve": "^14.2.0"
+  }
+}

@@ -1,0 +1,917 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <base target="_top">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    if (localStorage.getItem('theme') === 'dark') {
+      document.documentElement.classList.add('dark');
+    }
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { inter: ['Inter', 'sans-serif'] },
+          colors: {
+            primary: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="/index.css">
+</head>
+
+<body
+  class="bg-[#f8f9fa] dark:bg-slate-950 overflow-hidden font-inter text-slate-800 dark:text-slate-100 transition-colors duration-300">
+  <header
+    class="fixed top-0 left-0 w-full h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 z-[100] transition-colors">
+    <div class="flex items-center gap-4">
+      <span id="sidebar-toggle"
+        class="material-icons text-slate-400 cursor-pointer hover:text-primary-600 transition-colors hover-pop active-shrink"
+        onclick="toggleSidebar()">menu</span>
+      <div class="flex items-center gap-4 hover-lift transition-all cursor-pointer">
+        <div class="zeus-logo-root">
+          <div class="zeus-logo-box animate-bounce-in">
+            <span class="material-icons logo-bolt">bolt</span>
+          </div>
+          <div class="zeus-logo-text" id="logo-text-span">
+            <span class="font-black text-slate-800 dark:text-white tracking-tight text-lg">WORKFORCE</span>
+            <span class="font-black text-primary-600 tracking-tight text-lg ml-1">ZEUS</span>
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 ml-4 pl-4 border-l border-slate-200 dark:border-slate-800">
+        <div id="account-switcher-trigger" class="hidden items-center gap-2 cursor-pointer group"
+          onclick="openAccountSwitcher()">
+          <span id="current-account-display"
+            class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 group-hover:text-primary-600 transition-colors">Loading...</span>
+          <span
+            class="material-icons text-slate-300 text-sm group-hover:text-primary-600 transition-colors">expand_more</span>
+        </div>
+        <button id="nav-back-to-selector"
+          class="hidden flex items-center justify-center p-2 rounded-xl text-slate-400 hover:text-primary-600 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all ml-1"
+          title="Return to Server Page" onclick="window.showAccountSelector()">
+          <span class="material-icons text-xl">apps</span>
+        </button>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <!-- Nickname Display -->
+      <span id="header-nickname-display"
+        class="hidden md:block text-[10px] font-black text-slate-400 uppercase tracking-widest mr-4"></span>
+      <!-- Assign-to-account button for super admins -->
+      <button id="assign-account-btn"
+        class="hidden bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-black uppercase tracking-widest px-3 py-2 rounded-full transition-all shadow-md shadow-emerald-500/20 hover-lift active-shrink mr-2"
+        title="Assign to workspace">Assign</button>
+      <!-- AUX Status Dropdown -->
+      <div class="relative group">
+        <button id="aux-status-btn" onclick="window.toggleAuxDropdown(event)"
+          class="flex items-center gap-2 px-4 py-2 rounded-full border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 transition-all hover:bg-slate-200 dark:hover:bg-slate-800 mr-2 hover-pop active-shrink">
+          <div id="status-indicator" class="w-2.5 h-2.5 rounded-full bg-slate-400 transition-all duration-300"></div>
+          <span id="status-text"
+            class="text-[10px] font-black uppercase tracking-widest text-slate-500 transition-colors">Online</span>
+          <span class="material-icons text-sm text-slate-400">expand_more</span>
+        </button>
+        <div id="aux-dropdown"
+          class="hidden absolute top-full right-0 mt-2 bg-white dark:bg-slate-800 shadow-xl border border-slate-200 dark:border-slate-700 rounded-xl z-50 min-w-[160px] overflow-hidden">
+          <button onclick="setAuxStatus('ONLINE')"
+            class="w-full text-left px-4 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 text-xs font-black uppercase tracking-widest text-slate-700 dark:text-slate-300 flex items-center gap-2 border-b border-slate-100 dark:border-slate-700">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Online
+          </button>
+          <button onclick="setAuxStatus('LUNCH')"
+            class="w-full text-left px-4 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 text-xs font-black uppercase tracking-widest text-slate-700 dark:text-slate-300 flex items-center gap-2 border-b border-slate-100 dark:border-slate-700">
+            <span class="w-2 h-2 rounded-full bg-yellow-500"></span> Lunch
+          </button>
+          <button onclick="setAuxStatus('BREAK')"
+            class="w-full text-left px-4 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 text-xs font-black uppercase tracking-widest text-slate-700 dark:text-slate-300 flex items-center gap-2 border-b border-slate-100 dark:border-slate-700">
+            <span class="w-2 h-2 rounded-full bg-blue-500"></span> Break
+          </button>
+          <button onclick="setAuxStatus('AFK')"
+            class="w-full text-left px-4 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 text-xs font-black uppercase tracking-widest text-slate-700 dark:text-slate-300 flex items-center gap-2 border-b border-slate-100 dark:border-slate-700">
+            <span class="w-2 h-2 rounded-full bg-orange-500"></span> AFK
+          </button>
+          <button onclick="setAuxStatus('PRODWALK')"
+            class="w-full text-left px-4 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 text-xs font-black uppercase tracking-widest text-slate-700 dark:text-slate-300 flex items-center gap-2 border-b border-slate-100 dark:border-slate-700">
+            <span class="w-2 h-2 rounded-full bg-purple-500"></span> Prod Walk
+          </button>
+          <button onclick="setAuxStatus('BIO')"
+            class="w-full text-left px-4 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 text-xs font-black uppercase tracking-widest text-slate-700 dark:text-slate-300 flex items-center gap-2 border-b border-slate-100 dark:border-slate-700">
+            <span class="w-2 h-2 rounded-full bg-pink-500"></span> Bio
+          </button>
+          <button onclick="setAuxStatus('OFFLINE')"
+            class="w-full text-left px-4 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 text-xs font-black uppercase tracking-widest text-slate-700 dark:text-slate-300 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-slate-400"></span> Offline
+          </button>
+        </div>
+      </div>
+      <button onclick="toggleTheme()"
+        class="w-10 h-10 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-primary-600 transition-all hover-pop active-shrink">
+        <span class="material-icons" id="theme-icon">dark_mode</span>
+      </button>
+      <button id="orgChartBtn"
+        class="hidden bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-black tracking-widest px-4 py-2 rounded-full transition-all uppercase shadow-md shadow-emerald-500/20 hover-lift active-shrink"
+        onclick="openOrgChart()">Org Chart</button>
+      <button
+        class="bg-primary-600 hover:bg-primary-700 text-white text-[10px] font-black tracking-widest px-4 py-2 rounded-full transition-all uppercase shadow-md shadow-primary-500/20 hover-lift active-shrink"
+        id="manageBtn" onclick="toggleManageMode()">Manage</button>
+      <button
+        class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-[10px] font-black tracking-widest px-4 py-2 rounded-full transition-all uppercase hover-lift active-shrink"
+        id="announceBtn" onclick="openBroadcaster()">Post</button>
+      <button id="server-announce-btn"
+        class="hidden ml-2 bg-emerald-600 text-white text-[10px] font-black tracking-widest px-3 py-2 rounded-full transition-all uppercase hover-lift active-shrink"
+        title="Global Announcement (Super Admin)" onclick="openBroadcaster(true)">Global Post</button>
+      <button id="maintenance-toggle-btn"
+        class="hidden ml-2 bg-rose-600 text-white text-[10px] font-black tracking-widest px-3 py-2 rounded-full transition-all uppercase hover-lift active-shrink"
+        title="Toggle Maintenance Mode (Authorized Admins)"
+        onclick="window.toggleMaintenanceMode()">Maintenance</button>
+    </div>
+  </header>
+  <!-- Feedback Button -->
+  <div id="feedback-fab" class="feedback-fab hover-pop active-shrink" onclick="openFeedback()" title="Feedback">
+    <span class="material-icons">feedback</span>
+  </div>
+  <!-- Right Side Notes Trigger -->
+  <div class="notes-trigger hover-pop active-shrink" onclick="toggleNotes()" title="Open Notes">
+    <span class="material-icons text-slate-400">lightbulb</span>
+  </div>
+  <!-- Notes Sidebar -->
+  <div id="notes-sidebar">
+    <div
+      class="p-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-white dark:bg-slate-800 z-10">
+      <div class="flex items-center gap-2">
+        <div class="toggle-switch scale-75 origin-left" data-mode="PERSONAL" id="notes-mode-switch"
+          onclick="toggleNotesMode()">
+          <div class="toggle-bg"></div>
+          <div class="toggle-btn active" id="note-tab-personal">Me</div>
+          <div class="toggle-btn" id="note-tab-team">Team</div>
+        </div>
+        <button onclick="openNotesDashboard()" class="text-slate-400 hover:text-primary-600" title="Full Screen"><span
+            class="material-icons text-lg">fullscreen</span></button>
+      </div>
+      <button onclick="toggleNotes()" class="text-slate-400 hover:text-red-500"><span
+          class="material-icons">close</span></button>
+    </div>
+    <div class="p-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
+      <input type="text" id="quick-note-title" placeholder="Title"
+        class="w-full bg-transparent outline-none text-sm font-bold mb-2 placeholder-slate-400 dark:text-white">
+      <div class="flex gap-1 mb-2 border-b border-slate-200 dark:border-slate-700 pb-1">
+        <button onmousedown="event.preventDefault(); formatDoc('bold')"
+          class="p-1 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white"><span
+            class="material-icons text-sm">format_bold</span></button>
+        <button onmousedown="event.preventDefault(); formatDoc('italic')"
+          class="p-1 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white"><span
+            class="material-icons text-sm">format_italic</span></button>
+        <button onmousedown="event.preventDefault(); formatDoc('underline')"
+          class="p-1 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white"><span
+            class="material-icons text-sm">format_underlined</span></button>
+      </div>
+      <div id="quick-note-body" contenteditable="true"
+        class="w-full bg-transparent outline-none text-sm h-16 overflow-y-auto placeholder-slate-400 dark:text-slate-300 empty:before:content-[attr(placeholder)] empty:before:text-slate-400"
+        placeholder="Take a note..."></div>
+      <div class="flex justify-end mt-2">
+        <button onclick="saveNoteAction()"
+          class="text-[10px] font-black uppercase bg-slate-200 dark:bg-slate-700 px-3 py-1 rounded-lg hover:bg-yellow-400 hover:text-yellow-900 transition-colors">Save</button>
+      </div>
+    </div>
+    <div id="notes-list" class="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-3 bg-white dark:bg-slate-900">
+      <!-- Notes Render Here -->
+    </div>
+  </div>
+  <div id="sidebar"
+    class="fixed left-[-260px] top-0 w-64 h-full bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 transition-all duration-300 z-[90] pt-20 overflow-y-auto custom-scrollbar">
+    <div class="px-6 mb-4 flex justify-between items-center" id="category-header">
+      <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Workspace</span>
+      <span class="material-icons text-slate-300 cursor-pointer hover:text-primary-600 hidden" id="add-cat-btn"
+        onclick="promptAddCategory()">add_circle</span>
+    </div>
+    <div id="category-list" class="space-y-1 px-3 mb-6"></div>
+    <!-- Admin Registry Section - Now only shown on Selector page -->
+    <div class="px-6 mt-8 mb-4 flex justify-between items-center hidden" id="admin-registry-header">
+      <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">User Registry</span>
+      <!-- access requests button for super admins -->
+      <button id="access-requests-btn"
+        class="ml-2 bg-yellow-400 hover:bg-yellow-500 text-slate-800 text-[10px] font-black uppercase px-3 py-1 rounded-full transition-all hidden"
+        onclick="openAccessRequests()">
+        Requests
+      </button>
+    </div>
+    <div id="admin-registry" class="space-y-1 px-3 mb-8 hidden"></div>
+  </div>
+  <main
+    class="ml-0 transition-all duration-300 mt-16 p-8 h-[calc(100vh-64px)] overflow-y-auto custom-scrollbar bg-[#f8f9fa] dark:bg-slate-950"
+    id="main-content">
+    <div id="account-filter-container" class="max-w-7xl mx-auto mb-6 hidden">
+      <div class="relative max-w-md">
+        <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+        <input type="text" id="account-search-input" oninput="filterAccounts()" placeholder="Search workspaces..."
+          class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl pl-12 pr-4 py-3 outline-none focus:ring-2 focus:ring-primary-500 transition-all text-sm font-bold">
+      </div>
+    </div>
+    <div id="icon-grid" class="max-w-7xl mx-auto overflow-y-auto max-h-[calc(100vh-250px)] custom-scrollbar pr-2"></div>
+  </main>
+  <div id="overlay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-[1000]" onclick="closeModals()">
+  </div>
+  <!-- Image Zoom Modal (Lightbox) -->
+  <div id="image-lightbox"
+    class="fixed inset-0 z-[1100] hidden items-center justify-center bg-black/90 backdrop-blur-md"
+    onclick="closeLightbox()">
+    <!-- Assign Loading Modal -->
+    <div id="assign-loading-modal" class="fixed inset-0 z-[1102] hidden flex items-center justify-center bg-black/60">
+      <div class="bg-white dark:bg-slate-800 p-8 rounded-xl flex flex-col items-center">
+        <span class="material-icons animate-spin text-4xl text-primary-600">sync</span>
+        <span class="mt-4 text-lg font-bold text-slate-700 dark:text-slate-200">Preparing registration...</span>
+      </div>
+    </div>
+    <div class="relative max-w-[90vw] max-h-[90vh]">
+      <img id="lightbox-img" class="max-w-full max-h-[90vh] rounded-xl shadow-2xl object-contain" src=""
+        onclick="event.stopPropagation()">
+      <button class="absolute -top-12 right-0 text-white hover:text-primary-500 transition-colors"
+        onclick="closeLightbox()">
+        <span class="material-icons text-3xl">close</span>
+      </button>
+    </div>
+  </div>
+  <!-- Notes Dashboard (Grid View) -->
+  <div id="notes-dashboard-modal"
+    class="fixed inset-0 z-[1200] hidden bg-[#f8f9fa] dark:bg-slate-900 text-slate-800 dark:text-slate-200 flex flex-col font-sans transition-colors">
+    <div
+      class="h-16 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 bg-white dark:bg-slate-900 transition-colors">
+      <div class="flex items-center gap-4">
+        <div class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-white/10 cursor-pointer transition-colors"
+          onclick="closeNotesDashboard()">
+          <span class="material-icons text-slate-500 dark:text-slate-400">arrow_back</span>
+        </div>
+        <span class="font-bold text-xl text-slate-800 dark:text-slate-100">Notes Dashboard</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="flex bg-slate-100 dark:bg-slate-800 rounded-xl p-1 border border-slate-200 dark:border-slate-700">
+          <button onclick="setDashboardMode('PERSONAL')" id="dash-mode-personal"
+            class="px-5 py-2 rounded-lg text-xs font-black uppercase transition-all">Personal</button>
+          <button onclick="setDashboardMode('TEAM')" id="dash-mode-team"
+            class="px-5 py-2 rounded-lg text-xs font-black uppercase transition-all">Team</button>
+        </div>
+        <button onclick="closeNotesDashboard()" class="text-slate-400 hover:text-red-500 transition-colors"><span
+            class="material-icons">close</span></button>
+      </div>
+    </div>
+    <div class="flex-1 overflow-y-auto custom-scrollbar p-4 md:p-8">
+      <!-- Create Note Bar -->
+      <div
+        class="max-w-[700px] mx-auto bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl mb-12 overflow-hidden transition-all group focus-within:ring-2 focus-within:ring-primary-500/30"
+        id="dash-create-container">
+        <div id="dash-create-collapsed"
+          class="p-4 text-slate-400 dark:text-slate-500 font-bold text-sm cursor-text flex justify-between items-center h-14"
+          onclick="expandDashCreate()">
+          <span class="ml-2">Take a note...</span>
+          <div class="flex gap-4 opacity-70 mr-2 text-slate-400">
+            <span class="material-icons text-lg">check_box</span>
+            <span class="material-icons text-lg">brush</span>
+            <span class="material-icons text-lg">image</span>
+          </div>
+        </div>
+        <div id="dash-create-expanded" class="hidden flex flex-col">
+          <input type="text" id="dash-new-title" placeholder="Title"
+            class="bg-transparent outline-none px-6 pt-5 pb-2 text-lg font-black placeholder-slate-400 dark:text-white">
+          <div id="dash-new-body" contenteditable="true"
+            class="bg-transparent outline-none px-6 py-3 text-sm min-h-[120px] text-slate-600 dark:text-slate-300 empty:before:content-[attr(placeholder)] empty:before:text-slate-400 leading-relaxed font-medium"
+            placeholder="Take a note..."></div>
+          <div
+            class="px-6 py-4 bg-slate-50 dark:bg-slate-800/50 flex justify-between items-center border-t border-slate-100 dark:border-slate-800">
+            <div class="flex gap-2">
+              <button onmousedown="event.preventDefault(); formatDoc('bold')"
+                class="p-2 text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-colors"><span
+                  class="material-icons text-base">format_bold</span></button>
+              <button onmousedown="event.preventDefault(); formatDoc('italic')"
+                class="p-2 text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-colors"><span
+                  class="material-icons text-base">format_italic</span></button>
+              <button onmousedown="event.preventDefault(); formatDoc('underline')"
+                class="p-2 text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-colors"><span
+                  class="material-icons text-base">format_underlined</span></button>
+            </div>
+            <button onclick="saveDashNote()"
+              class="bg-primary-600 hover:bg-primary-700 text-white px-8 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-primary-500/20 active-shrink transition-all">Save
+              Note</button>
+          </div>
+        </div>
+      </div>
+      <!-- Notes Grid -->
+      <div id="fs-notes-grid"
+        class="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-4 space-y-4 mx-auto max-w-7xl pb-20">
+        <!-- Notes injected here -->
+      </div>
+    </div>
+  </div>
+  <!-- Single Note Editor Modal -->
+  <div id="note-editor-modal"
+    class="fixed inset-0 z-[1300] hidden bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 transition-all"
+    onclick="closeNoteEditor()">
+    <div
+      class="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col max-h-[85vh] transition-all overflow-hidden"
+      onclick="event.stopPropagation()">
+      <div class="p-8 overflow-y-auto custom-scrollbar flex-1">
+        <input type="text" id="editor-title" placeholder="Title"
+          class="w-full bg-transparent outline-none text-2xl font-black mb-6 placeholder-slate-400 dark:text-white uppercase tracking-tight">
+        <div id="editor-body" contenteditable="true"
+          class="w-full bg-transparent outline-none text-base min-h-[300px] text-slate-600 dark:text-slate-300 leading-relaxed font-medium empty:before:content-[attr(placeholder)] empty:before:text-slate-400 whitespace-pre-wrap"
+          placeholder="Note content..."></div>
+      </div>
+      <div
+        class="px-6 py-4 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center transition-colors">
+        <div class="flex gap-2">
+          <button onmousedown="event.preventDefault(); formatDoc('bold')"
+            class="p-2.5 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 dark:text-slate-500 hover:text-primary-600 transition-all"><span
+              class="material-icons text-base">format_bold</span></button>
+          <button onmousedown="event.preventDefault(); formatDoc('italic')"
+            class="p-2.5 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 dark:text-slate-500 hover:text-primary-600 transition-all"><span
+              class="material-icons text-base">format_italic</span></button>
+          <button onmousedown="event.preventDefault(); formatDoc('underline')"
+            class="p-2.5 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 dark:text-slate-500 hover:text-primary-600 transition-all"><span
+              class="material-icons text-base">format_underlined</span></button>
+          <div class="w-px h-6 bg-slate-200 dark:bg-slate-700 mx-1 self-center"></div>
+          <button onclick="deleteNoteFromEditor()"
+            class="p-2.5 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 text-slate-400 hover:text-red-500 transition-all"
+            title="Delete Note"><span class="material-icons text-base">delete_outline</span></button>
+        </div>
+        <button onclick="saveNoteFromEditor()"
+          class="bg-primary-600 hover:bg-primary-700 text-white px-8 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-primary-500/20 active-shrink transition-all">Done</button>
+      </div>
+    </div>
+  </div>
+  <!-- Admin Dashboard Modal (Task Force & Live Status) -->
+  <!-- Updated background to slate-50 for better contrast against white cards -->
+  <div id="admin-dashboard-modal"
+    class="modal-box bg-[#f8f9fa] dark:bg-slate-900 rounded-[2rem] shadow-2xl fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] hidden z-[1006] border border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden">
+    <div
+      class="h-16 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 bg-white dark:bg-slate-900">
+      <div class="flex items-center gap-1">
+        <div class="admin-tab active" id="tab-tasks" onclick="switchAdminTab('tasks')">Task Force</div>
+        <div class="admin-tab" id="tab-status" onclick="switchAdminTab('status')">Live Status</div>
+        <div class="admin-tab" id="tab-history" onclick="switchAdminTab('history')">Task History</div>
+      </div>
+      <button
+        onclick="document.getElementById('admin-dashboard-modal').classList.add('hidden'); document.getElementById('overlay').classList.add('hidden');"
+        class="text-slate-400 hover:text-slate-600"><span class="material-icons">close</span></button>
+    </div>
+    <div id="admin-view-tasks" class="flex-1 p-6 flex gap-6 overflow-hidden">
+      <div class="w-1/2 flex flex-col gap-4">
+        <div>
+          <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Target
+            Audience</label>
+          <div class="flex gap-2 mb-2">
+            <button onclick="setTaskTargetType('ALL')" id="tt-all"
+              class="flex-1 py-2 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all bg-primary-600 text-white border-primary-600">Global</button>
+            <button onclick="setTaskTargetType('ACCOUNT')" id="tt-acc"
+              class="flex-1 py-2 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all bg-white border-slate-200 text-slate-500 dark:bg-slate-800 dark:border-slate-700">Server</button>
+            <button onclick="setTaskTargetType('USER')" id="tt-user"
+              class="flex-1 py-2 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all bg-white border-slate-200 text-slate-500 dark:bg-slate-800 dark:border-slate-700">User</button>
+          </div>
+          <input type="text" id="task-target-input"
+            class="w-full bg-white dark:bg-slate-800 dark:text-white rounded-xl px-4 py-3 outline-none text-xs font-bold border border-slate-200 dark:border-slate-700 hidden"
+            placeholder="Enter ID or Email...">
+          <select id="task-target-select"
+            class="w-full bg-white dark:bg-slate-800 dark:text-white rounded-xl px-4 py-3 outline-none font-bold text-xs uppercase border border-slate-200 dark:border-slate-700 hidden"></select>
+        </div>
+        <div
+          class="flex-1 bg-white dark:bg-slate-800 rounded-2xl p-4 border border-slate-200 dark:border-slate-700 flex flex-col shadow-sm">
+          <input type="text" id="bulk-task-input" placeholder="Draft a task..."
+            class="w-full bg-transparent outline-none text-sm font-bold mb-2 dark:text-white"
+            onkeypress="if(event.key === 'Enter') addToTaskQueue()">
+          <div class="flex justify-end mt-auto">
+            <button onclick="addToTaskQueue()"
+              class="text-[10px] font-black uppercase text-primary-600 hover:bg-primary-50 dark:hover:bg-slate-700 px-3 py-1 rounded-lg transition-colors border border-transparent hover:border-primary-100">+
+              Add to Queue</button>
+          </div>
+        </div>
+      </div>
+      <div class="w-1/2 flex flex-col">
+        <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 px-1">Task Queue</h4>
+        <div id="task-queue-list"
+          class="flex-1 overflow-y-auto custom-scrollbar space-y-2 mb-4 bg-white dark:bg-slate-800/50 rounded-2xl p-2 border border-slate-200 dark:border-slate-700 min-h-0 shadow-inner">
+          <div class="flex h-full items-center justify-center text-slate-400 text-xs italic">Queue empty</div>
+        </div>
+        <button id="dispatch-tasks-btn" onclick="dispatchBulkTasks()"
+          class="w-full bg-slate-900 text-white font-black py-4 rounded-2xl shadow-xl shadow-slate-500/20 uppercase tracking-widest text-xs hover:bg-primary-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Dispatch
+          Tasks</button>
+      </div>
+    </div>
+    <div id="admin-view-status" class="flex-1 p-6 flex flex-col overflow-hidden hidden">
+      <div class="flex justify-between items-center mb-4">
+        <div class="flex items-center gap-4">
+          <div class="flex flex-col">
+            <span class="text-2xl font-black text-emerald-500" id="live-online-count">0</span>
+            <span class="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Online</span>
+          </div>
+          <div class="h-8 w-px bg-slate-200 dark:bg-slate-700"></div>
+          <select id="status-filter-acc" onchange="fetchLiveStatus()"
+            class="bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold px-3 py-2 rounded-lg outline-none border border-slate-200 dark:border-slate-700">
+            <option value="ALL">All Servers</option>
+          </select>
+        </div>
+        <button onclick="fetchLiveStatus()"
+          class="w-8 h-8 rounded-full bg-white dark:bg-slate-800 hover:bg-primary-100 text-slate-500 hover:text-primary-600 flex items-center justify-center transition-colors border border-slate-200 dark:border-slate-700 shadow-sm"><span
+            class="material-icons text-sm">refresh</span></button>
+      </div>
+      <div
+        class="flex-1 overflow-y-auto custom-scrollbar bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <table class="w-full text-left border-collapse">
+          <thead
+            class="bg-slate-50 dark:bg-slate-800 sticky top-0 z-10 border-b border-slate-100 dark:border-slate-700">
+            <tr>
+              <th class="p-4 text-[9px] font-black uppercase text-slate-400 tracking-widest">User</th>
+              <th class="p-4 text-[9px] font-black uppercase text-slate-400 tracking-widest">Server</th>
+              <th class="p-4 text-[9px] font-black uppercase text-slate-400 tracking-widest text-right">Status</th>
+            </tr>
+          </thead>
+          <tbody id="status-table-body" class="text-xs font-bold text-slate-700 dark:text-slate-300"></tbody>
+        </table>
+      </div>
+    </div>
+    <div id="admin-view-history" class="flex-1 p-6 flex flex-col overflow-hidden hidden">
+      <div
+        class="flex items-center gap-3 mb-4 bg-white dark:bg-slate-800 p-3 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+        <div class="flex-1">
+          <label class="block text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Server</label>
+          <select id="history-filter-acc"
+            class="w-full bg-transparent text-xs font-bold outline-none dark:text-white border-b border-slate-100 dark:border-slate-600 pb-1">
+            <option value="ALL">All Servers</option>
+          </select>
+        </div>
+        <div class="w-px h-8 bg-slate-200 dark:bg-slate-600"></div>
+        <div class="flex-1">
+          <label class="block text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">User
+            (Name/Email)</label>
+          <input type="text" id="history-filter-user"
+            class="w-full bg-transparent text-xs font-bold outline-none dark:text-white border-b border-slate-100 dark:border-slate-600 pb-1"
+            placeholder="Search user...">
+        </div>
+        <div class="w-px h-8 bg-slate-200 dark:bg-slate-600"></div>
+        <div class="flex items-center gap-2">
+          <div>
+            <label class="block text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">From</label>
+            <input type="date" id="history-filter-date-from"
+              class="bg-transparent text-xs font-bold outline-none dark:text-white">
+          </div>
+          <div>
+            <label class="block text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">To</label>
+            <input type="date" id="history-filter-date-to"
+              class="bg-transparent text-xs font-bold outline-none dark:text-white">
+          </div>
+        </div>
+        <button onclick="fetchTaskHistory()"
+          class="bg-slate-900 dark:bg-slate-700 text-white p-2 rounded-lg hover:bg-primary-600 transition-colors flex items-center justify-center">
+          <span class="material-icons text-sm">search</span>
+        </button>
+      </div>
+      <div
+        class="flex-1 overflow-y-auto custom-scrollbar bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <table class="w-full text-left border-collapse">
+          <thead
+            class="bg-slate-50 dark:bg-slate-800 sticky top-0 z-10 border-b border-slate-100 dark:border-slate-700">
+            <tr>
+              <th class="p-3 text-[9px] font-black uppercase text-slate-400 tracking-widest w-1/2">Task</th>
+              <th class="p-3 text-[9px] font-black uppercase text-slate-400 tracking-widest">User</th>
+              <th class="p-3 text-[9px] font-black uppercase text-slate-400 tracking-widest">Server</th>
+              <th class="p-3 text-[9px] font-black uppercase text-slate-400 tracking-widest text-right">Completed</th>
+            </tr>
+          </thead>
+          <tbody id="history-table-body" class="text-xs font-bold text-slate-700 dark:text-slate-300">
+            <!-- Content populated by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!-- Feedback Modal -->
+  <div id="feedback-modal"
+    class="modal-box bg-white dark:bg-slate-900 p-8 rounded-[2rem] shadow-2xl fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] hidden z-[1007] border dark:border-slate-800">
+    <h3 class="text-xl font-black mb-6 uppercase tracking-tight text-slate-800 dark:text-white flex items-center gap-2">
+      <span class="material-icons text-yellow-500">feedback</span> User Feedback
+    </h3>
+    <!-- For Jomz: List View -->
+    <div id="feedback-list-view" class="hidden h-[400px] overflow-y-auto custom-scrollbar space-y-3"></div>
+    <!-- For Others: Form View -->
+    <div id="feedback-form-view" class="hidden">
+      <p class="text-slate-500 text-xs mb-4">Report bugs, suggest features, or share your thoughts directly with the
+        admin team.</p>
+      <textarea id="feedback-input"
+        class="w-full bg-slate-100 dark:bg-slate-800 dark:text-white rounded-xl px-4 py-3 outline-none h-40 resize-none text-sm mb-4"
+        placeholder="Your message..."></textarea>
+      <button id="send-feedback-btn" onclick="sendFeedback()"
+        class="w-full bg-primary-600 text-white font-black py-3 rounded-xl shadow-lg shadow-primary-500/20 uppercase tracking-widest text-xs hover:bg-primary-700 transition-all">Submit
+        Feedback</button>
+    </div>
+    <div class="mt-6 flex justify-end">
+      <button
+        onclick="document.getElementById('feedback-modal').classList.add('hidden'); document.getElementById('overlay').classList.add('hidden');"
+        class="text-slate-400 font-bold text-xs uppercase px-4 py-2 hover:text-slate-600 transition-colors">Close</button>
+    </div>
+  </div>
+  <!-- Nickname Registration Modal -->
+  <div id="nickname-modal"
+    class="modal-box bg-white dark:bg-slate-900 p-8 rounded-[2rem] shadow-2xl fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 hidden z-[1005] border dark:border-slate-800">
+    <div class="text-center mb-6">
+      <div
+        class="w-16 h-16 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-4 text-primary-600">
+        <span class="material-icons text-3xl">badge</span>
+      </div>
+      <h3 class="text-xl font-black uppercase tracking-tight text-slate-800 dark:text-white">Identify Yourself</h3>
+      <p class="text-xs text-slate-500 mt-2">Enter your preferred name for the workspace.</p>
+    </div>
+    <div class="space-y-4">
+      <input type="text" id="new-user-nickname"
+        class="w-full bg-slate-100 dark:bg-slate-800 dark:text-white rounded-xl px-4 py-3 outline-none text-sm font-bold text-center"
+        placeholder="e.g. Maverick">
+    </div>
+    <div class="flex justify-end gap-3 mt-8">
+      <button
+        onclick="document.getElementById('nickname-modal').classList.add('hidden'); document.getElementById('overlay').classList.add('hidden');"
+        class="text-slate-400 font-bold text-xs uppercase px-4 py-2 hover:text-slate-600 transition-colors">Cancel</button>
+      <button id="join-workspace-btn" onclick="submitRegistration()"
+        class="w-full bg-primary-600 text-white font-black text-[10px] uppercase tracking-widest px-6 py-3 rounded-xl hover:bg-primary-700 shadow-lg shadow-primary-500/20 transition-all">Join
+        Workspace</button>
+    </div>
+  </div>
+  <!-- Assigned Accounts Popup -->
+  <div id="assigned-modal"
+    class="modal-box bg-white dark:bg-slate-900 p-8 rounded-[2rem] shadow-2xl fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 hidden z-[1008] border dark:border-slate-800">
+    <h3 class="text-lg font-black mb-4 uppercase tracking-tight text-slate-800 dark:text-white">Assigned Accounts</h3>
+    <div id="assigned-list" class="space-y-2"></div>
+    <div class="mt-6 flex justify-end">
+      <button onclick="closeModals()"
+        class="text-slate-400 font-bold text-xs uppercase px-4 py-2 hover:text-slate-600 transition-colors">Close</button>
+    </div>
+  </div>
+  <!-- Verification / Waiting Modal -->
+  <div id="verification-modal"
+    class="modal-box bg-white dark:bg-slate-900 p-8 rounded-[2rem] shadow-2xl fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 hidden z-[1009] border dark:border-slate-800">
+    <div class="text-center">
+      <span class="material-icons text-4xl animate-spin text-primary-600">hourglass_empty</span>
+      <h3 class="text-xl font-black mt-4">Waiting for Verification</h3>
+      <p class="text-sm text-slate-500 mt-2">Your request is being processed. Please wait... <strong>do not close or
+          navigate away</strong>.</p>
+    </div>
+  </div>
+  <div id="account-switcher-modal"
+    class="modal-box bg-white dark:bg-slate-900 p-8 rounded-[2rem] shadow-2xl fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 hidden z-[1001] border dark:border-slate-800">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="text-xl font-black uppercase tracking-tight text-slate-800 dark:text-white">Zeus Accounts</h3>
+    </div>
+    <div id="account-list-container" class="space-y-3 max-h-80 overflow-y-auto custom-scrollbar px-1"></div>
+    <div class="flex justify-between items-center mt-8">
+      <button onclick="closeModals()"
+        class="text-slate-400 font-bold text-xs uppercase px-4 py-2 hover:text-slate-600 transition-colors">Close</button>
+      <button id="add-account-btn-trigger" onclick="openAccountCreator()"
+        class="hidden bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold text-[10px] uppercase tracking-widest px-4 py-2 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center gap-2">
+        <span class="material-icons text-sm">add</span> Add Account
+      </button>
+    </div>
+  </div>
+  <div id="account-creator-modal"
+    class="modal-box bg-white dark:bg-slate-900 p-8 rounded-[2rem] shadow-2xl fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 hidden z-[1002] border dark:border-slate-800">
+    <h3 class="text-xl font-black mb-6 uppercase tracking-tight text-slate-800 dark:text-white">Create New Workspace
+    </h3>
+    <div class="space-y-4">
+      <input type="text" id="new-account-name"
+        class="w-full bg-slate-100 dark:bg-slate-800 dark:text-white rounded-xl px-4 py-3 outline-none text-sm font-bold"
+        placeholder="Account Name (e.g. Amazon)">
+    </div>
+    <div class="flex justify-end gap-3 mt-8">
+      <button onclick="document.getElementById('account-creator-modal').classList.add('hidden')"
+        class="text-slate-400 font-bold text-xs uppercase px-4 py-2 hover:text-slate-600 transition-colors">Cancel</button>
+      <button id="create-account-btn" onclick="submitNewAccount()"
+        class="bg-primary-600 text-white font-black text-[10px] uppercase tracking-widest px-6 py-3 rounded-xl hover:bg-primary-700 shadow-lg shadow-primary-500/20 transition-all">Create
+        Zeus</button>
+    </div>
+  </div>
+  <!-- Reminder Modal -->
+  <div id="reminder-modal"
+    class="modal-box bg-white dark:bg-slate-900 p-8 rounded-[2rem] shadow-2xl fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[450px] hidden z-[1003] border dark:border-slate-800">
+    <h3 class="text-xl font-black mb-6 uppercase tracking-tight text-slate-800 dark:text-white">Post Reminder</h3>
+    <div class="space-y-4">
+      <div>
+        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Target
+          Audience</label>
+        <select id="reminder-target"
+          class="w-full bg-slate-100 dark:bg-slate-800 dark:text-white rounded-xl px-4 py-3 outline-none font-bold text-xs uppercase"></select>
+      </div>
+      <input type="text" id="reminder-sender"
+        class="w-full bg-slate-100 dark:bg-slate-800 dark:text-white rounded-xl px-4 py-3 outline-none text-sm"
+        placeholder="Sender Name (Optional)">
+      <textarea id="reminder-text"
+        class="w-full bg-slate-100 dark:bg-slate-800 dark:text-white rounded-xl px-4 py-3 outline-none h-24 resize-none text-sm"
+        placeholder="Reminder message..."></textarea>
+      <div
+        class="flex items-center gap-4 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+        <div class="flex-1">
+          <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Schedule
+            Send</label>
+          <input type="datetime-local" id="reminder-schedule"
+            class="w-full bg-transparent outline-none text-xs font-bold text-slate-600 dark:text-slate-300">
+        </div>
+        <div class="w-px h-8 bg-slate-200 dark:bg-slate-600"></div>
+        <div class="flex-1">
+          <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Duration</label>
+          <select id="reminder-duration"
+            class="w-full bg-transparent outline-none font-bold text-xs uppercase text-slate-600 dark:text-slate-300">
+            <option value="12">12 Hours</option>
+            <option value="24" selected>24 Hours</option>
+            <option value="48">48 Hours</option>
+            <option value="72">3 Days</option>
+            <option value="168">1 Week</option>
+          </select>
+        </div>
+      </div>
+      <!-- NEW RECURRENCE OPTION -->
+      <div>
+        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Recurrence
+          (Optional)</label>
+        <select id="reminder-recurrence"
+          class="w-full bg-slate-100 dark:bg-slate-800 dark:text-white rounded-xl px-4 py-3 outline-none font-bold text-xs uppercase">
+          <option value="NONE">No Recurrence (One-time)</option>
+          <option value="WEEKLY">Weekly (Same Day)</option>
+          <option value="MONTHLY">Monthly (Same Date)</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Icon/Image
+          (Optional)</label>
+        <div class="relative group">
+          <input type="file" id="reminder-image" accept="image/*"
+            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="previewReminderImage(event)">
+          <div
+            class="w-full py-3 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl flex items-center justify-center gap-2 text-slate-400 group-hover:border-primary-500 transition-colors">
+            <span class="material-icons text-sm">image</span> <span
+              class="text-[10px] font-bold uppercase">Attach</span>
+          </div>
+        </div>
+        <div id="reminder-image-preview-container"
+          class="mt-2 hidden rounded-xl overflow-hidden h-20 border border-slate-100 dark:border-slate-800 relative">
+          <img id="reminder-image-preview" src="" class="w-full h-full object-cover">
+          <button onclick="clearReminderImage()"
+            class="absolute top-1 right-1 bg-red-500 text-white w-5 h-5 rounded-full flex items-center justify-center hover:bg-red-600"><span
+              class="material-icons text-xs">close</span></button>
+        </div>
+      </div>
+    </div>
+    <div class="flex justify-end gap-3 mt-6">
+      <button onclick="document.getElementById('reminder-modal').classList.add('hidden')"
+        class="text-slate-400 font-bold text-xs uppercase px-4 py-2 hover:text-slate-600 transition-colors">Cancel</button>
+      <button id="reminder-send-btn" onclick="sendReminder()"
+        class="bg-slate-800 text-white font-black text-[10px] uppercase tracking-widest px-6 py-3 rounded-xl hover:bg-primary-600 shadow-lg shadow-slate-500/20 transition-all">Send</button>
+    </div>
+  </div>
+  <div id="modal"
+    class="modal-box bg-white dark:bg-slate-900 p-8 rounded-[2rem] shadow-2xl fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 hidden z-[1001] border dark:border-slate-800">
+    <h3 id="modal-title" class="text-xl font-black mb-6 uppercase tracking-tight text-slate-800 dark:text-white">Zeus
+      Modification</h3>
+    <div class="space-y-4">
+      <input type="text" id="edit-name"
+        class="w-full bg-slate-100 dark:bg-slate-800 dark:text-white rounded-xl px-4 py-3 outline-none text-sm"
+        placeholder="Display Name">
+      <div id="url-field"><input type="text" id="edit-url"
+          class="w-full bg-slate-100 dark:bg-slate-800 dark:text-white rounded-xl px-4 py-3 outline-none text-sm"
+          placeholder="Link URL"></div>
+      <div id="icon-type-field"><input type="text" id="edit-icon"
+          class="w-full bg-slate-100 dark:bg-slate-800 dark:text-white rounded-xl px-4 py-3 outline-none text-sm"
+          placeholder="Icon Emoji"></div>
+      <!-- Category Selection Dropdown -->
+      <div id="category-select-container">
+        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">Category</label>
+        <select id="edit-category-select"
+          class="w-full bg-slate-100 dark:bg-slate-800 dark:text-white rounded-xl px-4 py-3 outline-none text-sm font-bold"></select>
+      </div>
+    </div>
+    <div class="flex justify-end gap-3 mt-8">
+      <button onclick="closeModals()"
+        class="text-slate-400 font-bold text-xs uppercase px-4 py-2 hover:text-slate-600 transition-colors">Cancel</button>
+      <button id="modal-apply-btn" onclick="saveEdit()"
+        class="bg-primary-600 text-white font-bold text-xs uppercase px-6 py-2 rounded-xl hover:bg-primary-700 shadow-lg shadow-primary-500/20">Apply</button>
+    </div>
+  </div>
+  <div id="broadcaster-modal"
+    class="modal-box bg-white dark:bg-slate-900 p-8 rounded-[2rem] shadow-2xl fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] hidden z-[1001] border dark:border-slate-800">
+    <h3 class="text-xl font-black mb-6 uppercase tracking-tight text-slate-800 dark:text-white">Announcements</h3>
+    <input type="text" id="ann-sender"
+      class="w-full bg-slate-100 dark:bg-slate-800 dark:text-white rounded-xl px-4 py-3 outline-none mb-3 text-sm"
+      placeholder="Your Name">
+    <select id="ann-target"
+      class="w-full bg-slate-100 dark:bg-slate-800 dark:text-white rounded-xl px-4 py-3 outline-none mb-3 text-sm">
+      <option value="CURRENT">Current Account</option>
+    </select>
+    <select id="ann-severity"
+      class="w-full bg-slate-100 dark:bg-slate-800 dark:text-white rounded-xl px-4 py-3 outline-none mb-3 font-bold text-xs uppercase">
+      <option value="info">Info</option>
+      <option value="warning">Warning</option>
+      <option value="critical">Critical</option>
+    </select>
+    <div class="mb-3">
+      <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Zeus Image
+        Attachment</label>
+      <div class="relative group">
+        <input type="file" id="ann-image" accept="image/*"
+          class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="previewAnnImage(event)">
+        <div
+          class="w-full py-4 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-2xl flex items-center justify-center gap-2 text-slate-400 group-hover:border-primary-500 transition-colors">
+          <span class="material-icons text-lg">add_a_photo</span>
+          <span class="text-[11px] font-bold uppercase">Choose Photo</span>
+        </div>
+      </div>
+      <div id="ann-image-preview-container"
+        class="mt-3 hidden relative rounded-2xl overflow-hidden border border-slate-100 dark:border-slate-800">
+        <img id="ann-image-preview" src="" class="w-full h-40 object-cover">
+        <button onclick="clearAnnImage()"
+          class="absolute top-2 right-2 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors">
+          <span class="material-icons text-sm">close</span>
+        </button>
+      </div>
+    </div>
+    <!-- New Link Input -->
+    <input type="text" id="ann-link"
+      class="w-full bg-slate-100 dark:bg-slate-800 dark:text-white rounded-xl px-4 py-3 outline-none mb-3 text-sm"
+      placeholder="Link URL (Optional)">
+    <textarea id="ann-message"
+      class="w-full bg-slate-100 dark:bg-slate-800 dark:text-white rounded-xl px-4 py-3 outline-none h-32 resize-none mb-4 text-sm"
+      placeholder="Type your update here..."></textarea>
+    <button id="ann-post-btn"
+      class="w-full bg-primary-600 text-white font-black py-4 rounded-2xl shadow-xl shadow-primary-500/20 uppercase tracking-widest text-xs hover:bg-primary-700"
+      onclick="releaseAnnouncement()">Post Announcement</button>
+  </div>
+  <!-- Pinned Announcements Modal -->
+  <div id="pinned-ann-modal"
+    class="modal-box bg-white dark:bg-slate-900 p-6 rounded-xl fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[640px] max-h-[70vh] overflow-auto hidden z-[1002] border dark:border-slate-800">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-black">Pinned Announcements</h3>
+      <button
+        onclick="document.getElementById('pinned-ann-modal').classList.add('hidden'); document.getElementById('overlay').classList.add('hidden');"
+        class="text-slate-400 hover:text-slate-600"><span class="material-icons">close</span></button>
+    </div>
+    <div id="pinned-ann-list" class="space-y-3"></div>
+  </div>
+  <!-- Access Requests Modal -->
+  <div id="access-requests-modal"
+    class="modal-box bg-white dark:bg-slate-900 p-6 rounded-xl fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] max-h-[70vh] overflow-auto hidden z-[1002] border dark:border-slate-800">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-black">Access Requests</h3>
+      <button onclick="closeAccessRequests()" class="text-slate-400 hover:text-slate-600"><span
+          class="material-icons">close</span></button>
+    </div>
+    <div id="access-requests-list" class="space-y-2 text-sm text-slate-700 dark:text-slate-300">
+      <!-- populated dynamically -->
+    </div>
+  </div>
+  <!-- Task Assignment Modal -->
+  <div id="task-assignment-modal"
+    class="modal-box bg-white dark:bg-slate-900 p-8 rounded-[2rem] shadow-2xl fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[480px] hidden z-[1001] border dark:border-slate-800">
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h3 class="text-xl font-black uppercase tracking-tight text-slate-800 dark:text-white">Assign Task</h3>
+        <p id="task-target-name" class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">Target: â€”
+        </p>
+      </div>
+      <button onclick="closeTaskAssignmentModal()"
+        class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+        <span class="material-icons">close</span>
+      </button>
+    </div>
+    <textarea id="task-input"
+      class="w-full bg-slate-100 dark:bg-slate-800 dark:text-white rounded-xl px-4 py-3 outline-none h-24 resize-none mb-3 text-sm placeholder-slate-400"
+      placeholder="Describe the task..." onkeydown="handleTaskInputKeydown(event)"></textarea>
+    <p class="text-[9px] text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-4 px-1">Add multiple tasks â€¢
+      Press Ctrl+Enter to add â€¢ Close when done</p>
+    <div class="flex gap-3">
+      <button onclick="closeTaskAssignmentModal()"
+        class="flex-1 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-black py-3 rounded-xl uppercase tracking-widest text-xs hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors">
+        Done
+      </button>
+      <button id="task-submit-btn" onclick="addTaskFromModal()"
+        class="flex-1 bg-primary-600 text-white font-black py-3 rounded-xl shadow-lg shadow-primary-500/20 uppercase tracking-widest text-xs hover:bg-primary-700 transition-colors">
+        Add Task
+      </button>
+    </div>
+  </div>
+  <div id="context-menu"
+    class="fixed bg-white dark:bg-slate-800 shadow-2xl border border-slate-100 dark:border-slate-700 rounded-2xl overflow-hidden hidden z-[2000] w-44">
+    <div id="ctx-save-link" onclick="saveLinkFromContext()"
+      class="hidden px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer flex items-center gap-2 text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase border-b border-slate-100 dark:border-slate-700">
+      <span class="material-icons text-sm">bookmark_add</span> Save Link
+    </div>
+    <div id="ctx-edit-btn" onclick="editItem()"
+      class="px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer flex items-center gap-2 text-[10px] font-black text-slate-600 dark:text-slate-300 uppercase">
+      <span class="material-icons text-sm">edit</span> Edit
+    </div>
+    <div id="ctx-del-btn" onclick="deleteItemAction()"
+      class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer flex items-center gap-2 text-[10px] font-black text-red-500 border-t border-slate-100 dark:border-slate-700 uppercase">
+      <span class="material-icons text-sm">delete</span> Remove
+    </div>
+  </div>
+  <!-- Org Chart Modal -->
+  <div id="org-chart-modal"
+    class="fixed inset-0 z-[1400] hidden bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-200 flex flex-col font-sans transition-colors overflow-hidden">
+    <div
+      class="h-16 border-b border-slate-200 dark:border-white/10 flex items-center justify-between px-6 bg-slate-50 dark:bg-slate-900 shrink-0">
+      <div class="flex items-center gap-4">
+        <div>
+          <span class="font-bold text-lg text-slate-800 dark:text-slate-200 block leading-tight">Walmart Support
+            Team</span>
+          <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Organization Chart</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="flex flex-col items-end">
+          <div class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest"
+            id="org-last-updated"></div>
+          <div class="text-[8px] font-black text-primary-500 uppercase tracking-widest" id="org-current-time"></div>
+        </div>
+        <button onclick="loadOrgChartData(true)" id="org-refresh-btn"
+          class="flex items-center gap-2 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all">
+          <span class="material-icons text-sm org-spin-icon">refresh</span> Refresh
+        </button>
+        <button onclick="closeOrgChart()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white"><span
+            class="material-icons">close</span></button>
+      </div>
+    </div>
+    <div
+      class="org-legend flex items-center flex-wrap gap-2 px-6 py-2 bg-slate-100 dark:bg-slate-900/50 border-b border-slate-200 dark:border-white/5 shrink-0">
+      <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest mr-2">Roles:</span>
+      <div
+        class="flex items-center gap-1.5 px-2 py-1 rounded bg-white dark:bg-white/5 border border-slate-200 dark:border-white/5">
+        <div class="w-2 h-2 rounded-full" style="background:#f59e0b"></div><span
+          class="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase">Manager</span>
+      </div>
+      <div
+        class="flex items-center gap-1.5 px-2 py-1 rounded bg-white dark:bg-white/5 border border-slate-200 dark:border-white/5">
+        <div class="w-2 h-2 rounded-full" style="background:#3b82f6"></div><span
+          class="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase">Asst Manager</span>
+      </div>
+      <div
+        class="flex items-center gap-1.5 px-2 py-1 rounded bg-white dark:bg-white/5 border border-slate-200 dark:border-white/5">
+        <div class="w-2 h-2 rounded-full" style="background:#8b5cf6"></div><span
+          class="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase">Sr TL</span>
+      </div>
+      <div
+        class="flex items-center gap-1.5 px-2 py-1 rounded bg-white dark:bg-white/5 border border-slate-200 dark:border-white/5">
+        <div class="w-2 h-2 rounded-full" style="background:#a855f7"></div><span
+          class="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase">QA TL</span>
+      </div>
+      <div
+        class="flex items-center gap-1.5 px-2 py-1 rounded bg-white dark:bg-white/5 border border-slate-200 dark:border-white/5">
+        <div class="w-2 h-2 rounded-full" style="background:#10b981"></div><span
+          class="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase">Team Leader</span>
+      </div>
+      <div
+        class="flex items-center gap-1.5 px-2 py-1 rounded bg-white dark:bg-white/5 border border-slate-200 dark:border-white/5">
+        <div class="w-2 h-2 rounded-full" style="background:#06b6d4"></div><span
+          class="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase">RTA</span>
+      </div>
+      <div
+        class="flex items-center gap-1.5 px-2 py-1 rounded bg-white dark:bg-white/5 border border-slate-200 dark:border-white/5">
+        <div class="w-2 h-2 rounded-full" style="background:#ec4899"></div><span
+          class="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase">QA</span>
+      </div>
+      <div
+        class="flex items-center gap-1.5 px-2 py-1 rounded bg-white dark:bg-white/5 border border-slate-200 dark:border-white/5">
+        <div class="w-2 h-2 rounded-full" style="background:#f97316"></div><span
+          class="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase">L&D Trainer</span>
+      </div>
+    </div>
+    <div class="flex-1 overflow-hidden bg-[#f8f9fa] dark:bg-slate-950 p-8" id="org-chart-main">
+      <div class="flex flex-col items-center justify-center h-full text-slate-500">
+        <span class="material-icons text-4xl animate-spin mb-4">sync</span>
+        <span class="text-xs font-bold uppercase tracking-widest">Loading Roster...</span>
+      </div>
+    </div>
+  </div>
+  <!-- Org Chart Tooltip -->
+  <div id="org-tt"
+    class="fixed z-[1500] pointer-events-none opacity-0 translate-y-2 transition-all duration-200 min-w-[240px]">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl p-4 shadow-2xl">
+      <div id="org-tti"></div>
+    </div>
+  </div>
+  <!-- Maintenance Overlay -->
+  <div id="maintenance-overlay"
+    class="hidden fixed inset-0 bg-slate-900/90 backdrop-blur-md z-[9999] flex flex-col items-center justify-center p-6 text-center">
+    <div class="w-24 h-24 bg-rose-500/10 rounded-full flex items-center justify-center mb-6 animate-pulse">
+      <span class="material-icons text-rose-500 text-5xl">construction</span>
+    </div>
+    <h1 class="text-4xl font-black text-white mb-4 tracking-tight">Workforce Zeus is on <span
+        class="text-rose-500">Maintenance</span></h1>
+    <p class="text-slate-400 max-w-md text-lg">We're currently performing some scheduled updates to improve your
+      experience. Please check back later.</p>
+    <div class="mt-8 flex gap-4">
+      <!-- This button will only be visible to authorized users so they can turn it off -->
+      <button id="maintenance-off-btn"
+        class="hidden px-6 py-3 bg-white text-slate-900 font-bold rounded-xl hover:bg-slate-100 transition-all font-inter uppercase tracking-widest text-xs"
+        onclick="window.toggleMaintenanceMode()">Turn Off Maintenance</button>
+    </div>
+  </div>
+  <!-- Lightning Effect Canvas -->
+  <canvas id="lightning-canvas" class="fixed inset-0 pointer-events-none z-[9999] hidden"></canvas>
+  <script type="module" src="app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,6 @@
+{
+  "version": 2,
+  "public": true,
+  "buildCommand": "echo 'No build command needed. Static files.'",
+  "outputDirectory": "."
+}

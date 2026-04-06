@@ -1,0 +1,80 @@
+{
+  "departments": [
+    {
+      "name": "Operations",
+      "roots": [
+        {
+          "name": "John Doe",
+          "role": "Manager",
+          "email": "john.doe@example.com",
+          "isActive": true,
+          "lob": "Tier 1 Support",
+          "scheduleHours": "09:00 EST - 18:00 EST",
+          "scheduleDays": "Monday - Friday",
+          "format": "horizontal",
+          "children": [
+            {
+              "name": "Jane Smith",
+              "role": "Team Leader",
+              "email": "jane@example.com",
+              "isActive": true,
+              "lob": "Tier 1 Support",
+              "format": "vertical",
+              "children": [
+                {
+                  "name": "Alex Johnson",
+                  "role": "RTA",
+                  "email": "alex@example.com"
+                },
+                {
+                  "name": "Sam Carter",
+                  "role": "QA",
+                  "email": "sam@example.com",
+                  "isActive": true
+                }
+              ]
+            },
+            {
+              "name": "Mike Ross",
+              "role": "Team Leader",
+              "email": "mike@example.com",
+              "isActive": false,
+              "lob": "Tier 1 Support",
+              "format": "vertical",
+              "children": [
+                {
+                  "name": "David Clark",
+                  "role": "RTA",
+                  "email": "david@example.com"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Learning & Development",
+      "roots": [
+        {
+          "name": "Sarah Connor",
+          "role": "Learning & Development Manager",
+          "email": "sarah@example.com",
+          "isActive": true,
+          "lob": "Training",
+          "scheduleHours": "09:00 EST - 18:00 EST",
+          "scheduleDays": "Monday - Friday",
+          "format": "vertical",
+          "children": [
+            {
+              "name": "Leo Valdez",
+              "role": "Trainer",
+              "email": "leo@example.com",
+              "isActive": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
