@@ -1848,8 +1848,8 @@ import { convex, runQuery, runMutation } from './convex-client.js';
       } else {
         state.notes.unshift(obj);
       }
-      const aid = state.currentAccount ? state.currentAccount.id : null;
-      (async () => { try { const res = await runMutation("notes:saveNote", { email: state.userEmail, noteId: null, title: t, content: b, scope: state.notesMode, accountId: aid, nickname: state.userNickname }); Promise.resolve().then(() => { const _cb = (n => {
+      const aid = state.currentAccount ? state.currentAccount.id : undefined;
+      (async () => { try { const res = await runMutation("notes:saveNote", { email: state.userEmail, noteId: undefined, title: t, content: b, scope: state.notesMode, accountId: aid, nickname: state.userNickname || undefined }); Promise.resolve().then(() => { const _cb = (n => {
         if (state.notesMode === 'TEAM') state.currentAccount.notes = n;
         else state.notes = n;
         renderNotes();
@@ -1920,8 +1920,8 @@ import { convex, runQuery, runMutation } from './convex-client.js';
       n.title = t;
       n.content = b;
     }
-    const aid = state.currentAccount ? state.currentAccount.id : null;
-    (async () => { try { const res = await runMutation("notes:saveNote", { email: state.userEmail, noteId: state.currentNoteId, title: t, content: b, scope: state.notesMode, accountId: aid, nickname: state.userNickname }); Promise.resolve().then(() => { const _cb = (nx => {
+    const aid = state.currentAccount ? state.currentAccount.id : undefined;
+    (async () => { try { const res = await runMutation("notes:saveNote", { email: state.userEmail, noteId: state.currentNoteId || undefined, title: t, content: b, scope: state.notesMode, accountId: aid, nickname: state.userNickname || undefined }); Promise.resolve().then(() => { const _cb = (nx => {
       if (state.notesMode === 'TEAM') state.currentAccount.notes = nx;
       else state.notes = nx;
       renderNotes();
@@ -1937,7 +1937,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     const id = state.currentNoteId;
     if (state.notesMode === 'TEAM') state.currentAccount.notes = state.currentAccount.notes.filter(n => n.id !== id);
     else state.notes = state.notes.filter(n => n.id !== id);
-    const aid = state.currentAccount ? state.currentAccount.id : null;
+    const aid = state.currentAccount ? state.currentAccount.id : undefined;
     (async () => { try { const res = await runMutation("notes:deleteNote", { email: state.userEmail, noteId: id, scope: state.notesMode, accountId: aid }); Promise.resolve().then(() => { const _cb = (n => {
       if (state.notesMode === 'TEAM') state.currentAccount.notes = n;
       else state.notes = n;
@@ -2012,8 +2012,8 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     t.value = '';
     b.innerHTML = '';
     renderNotes();
-    const aid = state.currentAccount ? state.currentAccount.id : null;
-    (async () => { try { const res = await runMutation("notes:saveNote", { email: state.userEmail, noteId: null, title: tv, content: bv, scope: state.notesMode, accountId: aid, nickname: state.userNickname }); Promise.resolve().then(() => { const _cb = (n => {
+    const aid = state.currentAccount ? state.currentAccount.id : undefined;
+    (async () => { try { const res = await runMutation("notes:saveNote", { email: state.userEmail, noteId: undefined, title: tv, content: bv, scope: state.notesMode, accountId: aid, nickname: state.userNickname || undefined }); Promise.resolve().then(() => { const _cb = (n => {
       if (state.notesMode === 'TEAM') state.currentAccount.notes = n;
       else state.notes = n;
       renderNotes();
@@ -2024,7 +2024,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     if (state.notesMode === 'TEAM') state.currentAccount.notes = state.currentAccount.notes.filter(n => n.id !== id);
     else state.notes = state.notes.filter(n => n.id !== id);
     renderNotes();
-    const aid = state.currentAccount ? state.currentAccount.id : null;
+    const aid = state.currentAccount ? state.currentAccount.id : undefined;
     (async () => { try { const res = await runMutation("notes:deleteNote", { email: state.userEmail, noteId: id, scope: state.notesMode, accountId: aid }); Promise.resolve().then(() => { const _cb = (n => {
       if (state.notesMode === 'TEAM') state.currentAccount.notes = n;
       else state.notes = n;
@@ -2361,7 +2361,8 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     if (!m) return;
     window.setBtnLoading('reminder-send-btn', true);
     const isRecurring = rec !== 'NONE';
-    (async () => { try { const res = await runMutation("reminders:postReminder", { callerEmail: state.userEmail, targetAccount: t, message: m, imageUrl: state.currentReminderImageBase64, sender: s, durationHours: d, scheduledTime: sc, isRecurring: isRecurring, recurrenceRule: rec }); Promise.resolve().then(() => { const _cb = (() => {
+    const durNum = d ? Number(d) : undefined;
+    (async () => { try { const res = await runMutation("reminders:postReminder", { callerEmail: state.userEmail, targetAccount: t, message: m, imageUrl: state.currentReminderImageBase64, sender: s, durationHours: durNum, scheduledTime: sc, isRecurring: isRecurring, recurrenceRule: rec }); Promise.resolve().then(() => { const _cb = (() => {
       window.setBtnLoading('reminder-send-btn', false);
       closeModals();
       if (state.currentAccount) window.loadAccount(state.currentAccount.id);
