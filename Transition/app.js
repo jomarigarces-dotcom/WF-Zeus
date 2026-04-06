@@ -1139,6 +1139,15 @@ import { convex, runQuery, runMutation } from './convex-client.js';
       (async () => { try { const res = await runMutation("users:requestAccountAccess", { email: state.userEmail, accountIds: ids, nickname: state.userNickname }); Promise.resolve().then(() => { const _cb = (callback); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
     }
   };
+  window.promptCreateAccount = function () {
+    const nameInput = document.getElementById('new-account-name');
+    if (nameInput) nameInput.value = '';
+    const errorMsg = document.getElementById('new-account-error');
+    if (errorMsg) errorMsg.classList.add('hidden');
+    document.getElementById('overlay').classList.remove('hidden');
+    document.getElementById('account-creator-modal').classList.remove('hidden');
+  };
+
   window.openAccountSwitcher = function () {
     if (state.role !== 'SUPER_ADMIN' && state.availableAccounts.length <= 1) return;
     const c = document.getElementById('account-list-container');
