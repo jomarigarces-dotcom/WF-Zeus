@@ -1008,7 +1008,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
       renderAnnouncements();
     } else {
       main.classList.remove('overflow-hidden');
-      const filteredIcons = state.currentAccount.icons.filter(i => i.catId == state.currentCat);
+      const filteredIcons = (state.currentAccount.icons || []).filter(i => i.catId == state.currentCat);
       if (filteredIcons.length === 0 && !state.isManage) { grid.innerHTML = `<div class="flex flex-col items-center justify-center min-h-[40vh] text-center opacity-40"><span class="material-icons text-6xl mb-4 text-slate-200">grid_view</span><p class="font-black uppercase text-xs tracking-[0.2em] text-slate-400">Blank Workspace. Initialize tools via Manage Mode.</p></div>`; return; }
       const iconContainer = document.createElement('div'); iconContainer.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-20';
       filteredIcons.forEach(icon => { const card = document.createElement('div'); card.className = 'tool-card group cursor-pointer'; card.onclick = () => window.open(icon.url, '_blank'); if (state.isManage) card.oncontextmenu = (e) => showContextMenu(e, 'icon', icon.id); card.innerHTML = `<div class="w-12 h-12 bg-primary-50 dark:bg-primary-900/20 rounded-2xl flex items-center justify-center text-2xl mb-5 group-hover:bg-primary-600 group-hover:text-white shadow-sm"><span>${icon.iconType || '🔗'}</span></div><h3 class="font-black text-slate-800 dark:text-white text-base mb-1 tracking-tight group-hover:text-primary-600 transition-colors uppercase">${icon.title}</h3><p class="text-[10px] text-slate-400 dark:text-slate-500 truncate uppercase font-bold tracking-widest">${icon.url.replace('https://', '')}</p>`; iconContainer.appendChild(card); });
