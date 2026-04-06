@@ -659,7 +659,13 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     });
   };
   function initSession() {
-    (async () => { try { const res = await runQuery("users:getSessionInfo", { email: state.userEmail || localStorage.getItem('zeus_user_email') || "" }); Promise.resolve().then(() => { const _cb = (function (info) {
+    const email = state.userEmail || localStorage.getItem('zeus_user_email') || '';
+    if (!email) {
+      // No email — show login screen
+      showLoginScreen();
+      return;
+    }
+    (async () => { try { const res = await runQuery("users:getSessionInfo", { email }); Promise.resolve().then(() => { const _cb = (function (info) {
       state.role = info.role;
       state.userEmail = info.email;
       state.userNickname = info.nickname;
@@ -670,6 +676,10 @@ import { convex, runQuery, runMutation } from './convex-client.js';
       state.isMaintenanceMode = info.isMaintenanceMode;
       state.canToggleMaintenance = info.canToggleMaintenance;
 
+      // Hide login screen if visible
+      const loginOverlay = document.getElementById('login-overlay');
+      if (loginOverlay) loginOverlay.classList.add('hidden');
+
       const nickEl = document.getElementById('header-nickname-display');
       if (nickEl) nickEl.innerText = info.nickname;
 
@@ -679,7 +689,6 @@ import { convex, runQuery, runMutation } from './convex-client.js';
 
       const lastAccountId = localStorage.getItem('zeus_last_account');
       if (info.role === 'SUPER_ADMIN') {
-        // super admins get notification button refreshed
         fetchAccessRequests();
         if (lastAccountId && info.accounts.some(a => a.id === lastAccountId)) { window.loadAccount(lastAccountId); }
         else { state.isRestoring = false; window.showAccountSelector(); }
@@ -691,8 +700,46 @@ import { convex, runQuery, runMutation } from './convex-client.js';
         state.isRestoring = false;
         showRegistration();
       }
-    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
+    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert('Session error: ' + (err.message || String(err))); } })();
   }
+
+  function showLoginScreen() {
+    const overlay = document.getElementById('login-overlay');
+    if (overlay) overlay.classList.remove('hidden');
+    state.isRestoring = false;
+  }
+
+  window.submitLogin = function () {
+    const input = document.getElementById('login-email-input');
+    const errEl = document.getElementById('login-error');
+    if (!input) return;
+    const email = input.value.trim().toLowerCase();
+    if (!email) { errEl.innerText = 'Please enter your email.'; errEl.classList.remove('hidden'); return; }
+    if (!email.endsWith('@ececontactcenters.com')) {
+      errEl.innerText = 'Only @ececontactcenters.com email addresses are allowed.';
+      errEl.classList.remove('hidden');
+      return;
+    }
+    errEl.classList.add('hidden');
+    localStorage.setItem('zeus_user_email', email);
+    state.userEmail = email;
+    const loginOverlay = document.getElementById('login-overlay');
+    if (loginOverlay) loginOverlay.classList.add('hidden');
+    initSession();
+  };
+
+  window.handleLoginKeydown = function (e) {
+    if (e.key === 'Enter') window.submitLogin();
+  };
+
+  window.logoutSession = function () {
+    localStorage.removeItem('zeus_user_email');
+    localStorage.removeItem('zeus_last_account');
+    state.userEmail = '';
+    state.role = 'GUEST';
+    state.currentAccount = null;
+    showLoginScreen();
+  };
 
   window.toggleMaintenanceMode = function () {
     const action = state.isMaintenanceMode ? 'Deactivate' : 'Activate';
@@ -779,7 +826,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     const grid = document.getElementById('icon-grid');
     grid.innerHTML = '<div class="flex items-center justify-center min-h-[50vh]"><span class="material-icons text-4xl text-primary-600 animate-spin">sync</span></div>';
     localStorage.setItem('zeus_last_account', accountId);
-    (async () => { try { const res = await runMutation("unknown:getAccountData", { args: [accountId] }); Promise.resolve().then(() => { const _cb = (function (data) {
+    (async () => { try { const res = await runQuery("accounts:getAccountData", { accountId }); Promise.resolve().then(() => { const _cb = (function (data) {
       if (!data) { window.showAccountSelector(); return; }
       state.currentAccount = data;
       state.view = 'PORTAL';
@@ -924,7 +971,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
   };
   window.fetchRegistry = function () {
     if (state.role !== 'SUPER_ADMIN') return;
-    (async () => { try { const res = await runMutation("unknown:getUsersRegistry", {}); Promise.resolve().then(() => { const _cb = (function (registry) {
+    (async () => { try { const res = await runQuery("accounts:getUsersRegistry", { callerEmail: state.userEmail }); Promise.resolve().then(() => { const _cb = (function (registry) {
       renderAdminRegistry(registry);
     }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
   };
@@ -961,6 +1008,9 @@ import { convex, runQuery, runMutation } from './convex-client.js';
             <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest truncate max-w-[140px]">${u.email}</span>
           </div>
           <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all">
+            <button class="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/30 hover:bg-emerald-500 hover:text-white flex items-center justify-center text-emerald-600 transition-colors" title="Add to Account" onclick="openAdminAssignModal('${u.email}', '${u.nickname}')">
+              <span class="material-icons text-[12px]">person_add</span>
+            </button>
             <button class="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-700 hover:bg-primary-500 hover:text-white flex items-center justify-center text-slate-400 transition-colors" title="Assign Task" onclick="promptAdminTask('${u.email}', '${u.nickname}')">
               <span class="material-icons text-[12px]">playlist_add</span>
             </button>
@@ -988,7 +1038,8 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     document.getElementById('overlay').classList.add('hidden');
   };
   window.fetchAccessRequests = function () {
-    (async () => { try { const res = await runQuery("users:getAccessRequests", {}); Promise.resolve().then(() => { const _cb = (renderAccessRequests); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
+    if (!state.userEmail) return;
+    (async () => { try { const res = await runQuery("users:getAccessRequests", { callerEmail: state.userEmail }); Promise.resolve().then(() => { const _cb = (renderAccessRequests); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
   };
   window.renderAccessRequests = function (reqs) {
     const c = document.getElementById('access-requests-list');
@@ -1081,7 +1132,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
       updateAssignButton();
     };
     if (state.role === 'SUPER_ADMIN') {
-      (async () => { try { const res = await runMutation("users:registerUserToAccounts", { args: [ids, n] }); Promise.resolve().then(() => { const _cb = (callback); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
+      (async () => { try { const res = await runMutation("users:registerUserToAccounts", { callerEmail: state.userEmail, accountIds: ids, nickname: n }); Promise.resolve().then(() => { const _cb = (callback); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
     } else {
       // send approval request instead
       (async () => { try { const res = await runMutation("users:requestAccountAccess", { email: state.userEmail, accountIds: ids, nickname: state.userNickname }); Promise.resolve().then(() => { const _cb = (callback); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
@@ -1112,16 +1163,18 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     document.getElementById('account-creator-modal').classList.remove('hidden');
   };
   window.submitNewAccount = function () {
-    const n = document.getElementById('new-account-name').value;
+    const n = document.getElementById('new-account-name').value.trim();
     if (!n) return;
     window.setBtnLoading('create-account-btn', true);
-    (async () => { try { const res = await runMutation("accounts:createAccount", { callerEmail: state.userEmail, accountName: n }); Promise.resolve().then(() => { const _cb = (info => {
+    (async () => { try { await runMutation("accounts:createAccount", { callerEmail: state.userEmail, accountName: n });
+      // Refetch full session to get updated accounts list
+      const info = await runQuery("users:getSessionInfo", { email: state.userEmail });
       state.availableAccounts = info.accounts;
       document.getElementById('account-creator-modal').classList.add('hidden');
-      window.setBtnLoading('create-account-btn', false);
+      window.setBtnLoading('create-account-btn', false, 'Create Zeus');
       window.openAccountSwitcher();
       if (state.view === 'SELECTOR') fetchRegistry();
-    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
+    } catch(err) { console.error(err); alert(err.message || String(err)); window.setBtnLoading('create-account-btn', false, 'Create Zeus'); } })();
   };
   window.toggleManageMode = function () {
     state.isManage = !state.isManage;
@@ -1167,35 +1220,44 @@ import { convex, runQuery, runMutation } from './convex-client.js';
       iconType: i || '🔗'
     };
     window.setBtnLoading('modal-apply-btn', true);
-    // If editing an account, we use a different context
-    const accountId = state.context.type === 'account' ? state.context.id : (state.currentAccount ? state.currentAccount.id : null);
-    (async () => { try { const res = await runMutation("accounts:saveAccountData", { accountId: state.currentAccount?.id, type: undefined, item: { id: accountId, name: state.context.type, title: state.context.type, url: obj, iconType: null, catId: null } }); Promise.resolve().then(() => { const _cb = (d => {
-      if (state.context.type === 'account') {
-        // Refresh available accounts and current account if needed
-        state.availableAccounts = d.accounts;
-        if (state.currentAccount && state.currentAccount.id === state.context.id) {
-          state.currentAccount.name = n;
-        }
-        window.showAccountSelector();
-      } else {
+    if (state.context.type === 'account') {
+      // Rename account
+      (async () => { try { const res = await runMutation("accounts:saveAccountData", { accountId: state.context.id, type: 'account', item: { id: state.context.id, name: n } }); Promise.resolve().then(() => { const _cb = (d => {
+        // Refresh session to get updated account name
+        runQuery("users:getSessionInfo", { email: state.userEmail }).then(info => {
+          state.availableAccounts = info.accounts;
+          if (state.currentAccount && state.currentAccount.id === state.context.id) state.currentAccount.name = n;
+          window.setBtnLoading('modal-apply-btn', false);
+          closeModals();
+          if (state.view === 'SELECTOR') window.showAccountSelector();
+        });
+      }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); window.setBtnLoading('modal-apply-btn', false); } })();
+    } else {
+      // Save category or icon
+      const type = state.context.type === 'cat' ? 'cat' : 'icon';
+      (async () => { try { const res = await runMutation("accounts:saveAccountData", { accountId: state.currentAccount.id, type, item: obj }); Promise.resolve().then(() => { const _cb = (d => {
         state.currentAccount = d;
         renderCategories();
         renderContent();
-      }
-      window.setBtnLoading('modal-apply-btn', false);
-      closeModals();
-    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
+        window.setBtnLoading('modal-apply-btn', false);
+        closeModals();
+      }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); window.setBtnLoading('modal-apply-btn', false); } })();
+    }
   };
   window.deleteItemAction = function () {
     if (state.context.type === 'account') {
-      if (confirm(`Delete ${state.context.id}?`)) (async () => { try { const res = await runMutation("accounts:deleteAccount", { callerEmail: state.userEmail, accountId: state.context.id }); Promise.resolve().then(() => { const _cb = (i => {
-        state.availableAccounts = i.accounts;
-        window.showAccountSelector();
-        closeModals();
-      }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
+      if (confirm(`Delete this workspace?`)) {
+        (async () => { try {
+          await runMutation("accounts:deleteAccount", { callerEmail: state.userEmail, accountId: state.context.id });
+          const info = await runQuery("users:getSessionInfo", { email: state.userEmail });
+          state.availableAccounts = info.accounts;
+          window.showAccountSelector();
+          closeModals();
+        } catch(err) { console.error(err); alert(err.message || String(err)); } })();
+      }
       return;
     }
-    if (confirm("Remove item?")) (async () => { try { const res = await runMutation("accounts:deleteAccountItem", { accountId: state.currentAccount?.id, type: state.context.type, itemId: state.currentAccount.id }); Promise.resolve().then(() => { const _cb = (d => {
+    if (confirm("Remove item?")) (async () => { try { const res = await runMutation("accounts:deleteAccountItem", { accountId: state.currentAccount?.id, type: state.context.type, itemId: state.context.id }); Promise.resolve().then(() => { const _cb = (d => {
       state.currentAccount = d;
       renderCategories();
       renderContent();
@@ -1274,10 +1336,10 @@ import { convex, runQuery, runMutation } from './convex-client.js';
         alert('Error: Cannot determine account context for deletion');
         return;
       }
-      (async () => { try { const res = await runMutation("unknown:deleteAccountAnnouncement", { args: [accountId, id] }); Promise.resolve().then(() => { const _cb = (d => {
-        state.currentAccount = d;
-        renderAnnouncements();
-      }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
+      (async () => { try { await runMutation("announcements:deleteAccountAnnouncement", { callerEmail: state.userEmail, accountId, annId: id });
+        const data = await runQuery("accounts:getAccountData", { accountId });
+        if (data) { state.currentAccount = data; renderAnnouncements(); }
+      } catch(err) { console.error(err); alert(err.message || String(err)); } })();
     }
   };
   window.editAnnAction = function (id) {
@@ -1323,18 +1385,11 @@ import { convex, runQuery, runMutation } from './convex-client.js';
   window.togglePinAction = function (id, cb) {
     // Toggle pin on the server, update state and re-render. Optional callback runs after update.
     const accId = state.currentAccount ? state.currentAccount.id : null;
-    (async () => { try { const res = await runMutation("unknown:toggleAnnouncementPin", { args: [accId, id] }); Promise.resolve().then(() => { const _cb = (d => {
-      try {
-        state.currentAccount = d;
-        renderAnnouncements();
-        if (typeof cb === 'function') cb();
-      } catch (e) {
-        console.error('Error in togglePinAction success handler', e);
-      }
-    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); Promise.resolve().then(() => { const _fc = (err => {
-      console.error('Failed to toggle pin', err);
-      alert('Failed to toggle pin (server error)');
-    }); if(typeof _fc === 'function') _fc(err); else alert(err.message || String(err)); }); } })();
+    (async () => { try {
+      await runMutation("announcements:toggleAnnouncementPin", { callerEmail: state.userEmail, accountId: accId, annId: id });
+      const data = await runQuery("accounts:getAccountData", { accountId: accId });
+      if (data) { state.currentAccount = data; renderAnnouncements(); if (typeof cb === 'function') cb(); }
+    } catch(err) { console.error('Failed to toggle pin', err); alert('Failed to toggle pin (server error)'); } })();
   };
   window.releaseAnnouncement = function () {
     const m = document.getElementById('ann-message').value;
@@ -1346,74 +1401,34 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     // Check if editing existing announcement
     if (state.currentEditingAnn) {
       const accId = state.currentEditingAnn.accountId;
-      (async () => { try { const res = await runMutation("unknown:editAccountAnnouncement", { args: [accId, state.currentEditingAnn.id, m, s, state.currentImageBase64, link] }); Promise.resolve().then(() => { const _cb = (d => {
-        if (d && d.status === 'error') {
-          alert('Error: ' + d.message);
-          return;
-        }
-        try {
-          state.currentAccount = d;
-          state.currentEditingAnn = null; // Clear editing state
-          renderAnnouncements();
-          closeModals();
-        } catch (err) {
-          console.error('Error handling edit announcement response', err);
-          alert('An error occurred while updating the announcement.');
-        } finally {
-          window.setBtnLoading('ann-post-btn', false);
-        }
-      }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); Promise.resolve().then(() => { const _fc = (err => {
-        console.error('RPC failure editing announcement', err);
-        alert('Failed to update announcement (server error)');
+      (async () => { try {
+        await runMutation("announcements:editAccountAnnouncement", { callerEmail: state.userEmail, accountId: accId, annId: state.currentEditingAnn.id, newMsg: m, newSeverity: s, newImageUrl: state.currentImageBase64, newLinkUrl: link || null });
+        const data = await runQuery("accounts:getAccountData", { accountId: accId });
+        if (data) { state.currentAccount = data; }
+        state.currentEditingAnn = null;
+        renderAnnouncements();
+        closeModals();
         window.setBtnLoading('ann-post-btn', false);
-      }); if(typeof _fc === 'function') _fc(err); else alert(err.message || String(err)); }); } })();
+      } catch(err) { console.error('RPC failure editing announcement', err); alert('Failed to update announcement (server error)'); window.setBtnLoading('ann-post-btn', false); } })();
       return;
     }
     // Otherwise, post new announcement
     const targetSel = document.getElementById('ann-target');
     let target = state.currentAccount ? state.currentAccount.id : null;
-    if (targetSel) {
-      const v = targetSel.value;
-      if (v) target = v;
-    }
-    (async () => { try { const res = await runMutation("unknown:postAccountAnnouncement", { args: [target, m, s, snd, state.currentImageBase64, link] }); Promise.resolve().then(() => { const _cb = (d => {
-      try {
-        // If global broadcast returned lightweight ok object
-        if (d && d.ok) {
-          // Refresh workspace data, then re-render announcements when done
-          try {
-            pollWorkspaceUpdates(() => {
-              try { renderAnnouncements(); } catch (e) { console.error('renderAnnouncements after poll failed', e); }
-              try { closeModals(); } catch (e) { console.error('closeModals after poll failed', e); }
-            });
-          } catch (e) {
-            console.error('pollWorkspaceUpdates call failed', e);
-          }
-          return;
-        }
-        if (d && d.status === 'forbidden') {
-          alert('Unauthorized to post global announcement');
-          return;
-        }
-        if (d && d.status === 'error') {
-          alert('Error: ' + d.message);
-          return;
-        }
-        // otherwise server returned the updated account
-        state.currentAccount = d;
-        renderAnnouncements();
-        closeModals();
-      } catch (err) {
-        console.error('Error handling announcement response', err);
-        alert('An error occurred while processing the announcement response.');
-      } finally {
-        window.setBtnLoading('ann-post-btn', false);
+    if (targetSel && targetSel.value) target = targetSel.value;
+    if (!target) { alert('No target account selected.'); window.setBtnLoading('ann-post-btn', false); return; }
+    (async () => { try {
+      const result = await runMutation("announcements:postAccountAnnouncement", { callerEmail: state.userEmail, accountId: target, message: m, severity: s, sender: snd || state.userNickname, imageUrl: state.currentImageBase64 || null, linkUrl: link || null });
+      if (result && result.status === 'forbidden') { alert('Unauthorized to post global announcement'); window.setBtnLoading('ann-post-btn', false); return; }
+      if (result && result.status === 'error') { alert('Error: ' + result.message); window.setBtnLoading('ann-post-btn', false); return; }
+      // Refresh workspace data
+      if (state.currentAccount) {
+        const data = await runQuery("accounts:getAccountData", { accountId: state.currentAccount.id });
+        if (data) { state.currentAccount = data; renderAnnouncements(); }
       }
-    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); Promise.resolve().then(() => { const _fc = (err => {
-      console.error('RPC failure posting announcement', err);
-      alert('Failed to post announcement (server error)');
+      closeModals();
       window.setBtnLoading('ann-post-btn', false);
-    }); if(typeof _fc === 'function') _fc(err); else alert(err.message || String(err)); }); } })();
+    } catch(err) { console.error('RPC failure posting announcement', err); alert('Failed to post announcement (server error)'); window.setBtnLoading('ann-post-btn', false); } })();
   };
   window.toggleTheme = function () {
     state.isDark = !state.isDark;
@@ -1476,7 +1491,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     document.getElementById('overlay').classList.remove('hidden');
   };
   window.closeModals = function () {
-    ['modal', 'broadcaster-modal', 'overlay', 'account-switcher-modal', 'account-creator-modal', 'reminder-modal', 'nickname-modal', 'image-lightbox', 'admin-dashboard-modal', 'feedback-modal', 'notes-dashboard-modal', 'note-editor-modal', 'assigned-modal', 'access-requests-modal', 'verification-modal'].forEach(id => {
+    ['modal', 'broadcaster-modal', 'overlay', 'account-switcher-modal', 'account-creator-modal', 'reminder-modal', 'nickname-modal', 'image-lightbox', 'admin-dashboard-modal', 'feedback-modal', 'notes-dashboard-modal', 'note-editor-modal', 'assigned-modal', 'access-requests-modal', 'verification-modal', 'admin-assign-modal'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.classList.add('hidden');
     });
@@ -2623,6 +2638,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     inputEl.style.height = 'auto'; // reset height
     aiChatState.isWaiting = true;
     window.showAITypingIndicator();
+    // Note: AI bot endpoint — keep unknown prefix until AI module is set up
     (async () => { try { const res = await runMutation("unknown:askAIBot", { args: [question] }); Promise.resolve().then(() => { const _cb = ((response) => {
       window.removeAITypingIndicator();
       aiChatState.isWaiting = false;
@@ -2630,9 +2646,42 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); Promise.resolve().then(() => { const _fc = ((err) => {
       window.removeAITypingIndicator();
       aiChatState.isWaiting = false;
-      window.addAIMessageToUI('ai', 'Error: ' + err.message);
+      window.addAIMessageToUI('ai', 'Sorry, AI is temporarily unavailable.');
     }); if(typeof _fc === 'function') _fc(err); else alert(err.message || String(err)); }); } })();
   }
+
+  // --- ADMIN ASSIGN USER TO ACCOUNT ---
+  window.openAdminAssignModal = function (email, nickname) {
+    const modal = document.getElementById('admin-assign-modal');
+    if (!modal) return;
+    document.getElementById('admin-assign-target-name').innerText = nickname + ' (' + email + ')';
+    document.getElementById('admin-assign-email').value = email;
+    // Render account checkboxes
+    const list = document.getElementById('admin-assign-account-list');
+    list.innerHTML = '';
+    state.availableAccounts.forEach(acc => {
+      const item = document.createElement('label');
+      item.className = 'flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700';
+      item.innerHTML = `<input type="checkbox" value="${acc.id}" class="admin-assign-checkbox w-4 h-4 rounded accent-blue-600"><span class="text-xs font-black uppercase tracking-tight text-slate-700 dark:text-slate-200">${acc.name}</span><span class="text-[9px] text-slate-400 ml-auto font-bold">${acc.id}</span>`;
+      list.appendChild(item);
+    });
+    document.getElementById('overlay').classList.remove('hidden');
+    modal.classList.remove('hidden');
+  };
+
+  window.submitAdminAssign = function () {
+    const email = document.getElementById('admin-assign-email').value;
+    const checked = Array.from(document.querySelectorAll('.admin-assign-checkbox:checked')).map(cb => cb.value);
+    if (checked.length === 0) { alert('Select at least one account.'); return; }
+    window.setBtnLoading('admin-assign-submit-btn', true);
+    (async () => { try {
+      const registry = await runMutation("accounts:adminAssignUser", { callerEmail: state.userEmail, targetEmail: email, accountIds: checked });
+      renderAdminRegistry(registry);
+      document.getElementById('admin-assign-modal').classList.add('hidden');
+      document.getElementById('overlay').classList.add('hidden');
+      window.setBtnLoading('admin-assign-submit-btn', false, 'Assign');
+    } catch(err) { console.error(err); alert(err.message || String(err)); window.setBtnLoading('admin-assign-submit-btn', false, 'Assign'); } })();
+  };
 
   window.addAIMessageToUI = function (role, text) {
     const container = document.getElementById('ai-chat-messages');

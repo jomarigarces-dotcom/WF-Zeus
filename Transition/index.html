@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -213,6 +213,48 @@
     </div>
     <div id="icon-grid" class="max-w-7xl mx-auto overflow-y-auto max-h-[calc(100vh-250px)] custom-scrollbar pr-2"></div>
   </main>
+
+  <!-- ===== LOGIN OVERLAY — shown when no email in localStorage ===== -->
+  <div id="login-overlay" class="fixed inset-0 z-[2000] flex items-center justify-center bg-slate-950/95 backdrop-blur-xl hidden">
+    <div class="w-full max-w-md mx-auto px-6">
+      <!-- Logo -->
+      <div class="text-center mb-10">
+        <div class="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-primary-600 shadow-2xl shadow-primary-500/40 mb-6">
+          <span class="material-icons text-white text-4xl">bolt</span>
+        </div>
+        <h1 class="text-4xl font-black italic tracking-tighter text-white uppercase mb-2">Workforce Zeus</h1>
+        <p class="text-slate-400 text-sm font-medium">Enterprise Command & Control Platform</p>
+      </div>
+      <!-- Card -->
+      <div class="bg-white/5 border border-white/10 backdrop-blur-sm rounded-3xl p-8 shadow-2xl">
+        <h2 class="text-lg font-black text-white uppercase tracking-widest mb-1">Sign In</h2>
+        <p class="text-slate-400 text-xs mb-6">Use your <span class="text-primary-400 font-bold">@ececontactcenters.com</span> email address.</p>
+        <div class="space-y-4">
+          <div class="relative">
+            <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-lg">email</span>
+            <input
+              id="login-email-input"
+              type="email"
+              placeholder="yourname@ececontactcenters.com"
+              class="w-full bg-white/5 border border-white/10 text-white placeholder-slate-500 rounded-2xl pl-12 pr-4 py-4 outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all text-sm font-medium"
+              onkeydown="handleLoginKeydown(event)"
+              autocomplete="email"
+            >
+          </div>
+          <p id="login-error" class="text-red-400 text-xs font-bold hidden"></p>
+          <button
+            onclick="submitLogin()"
+            class="w-full bg-primary-600 hover:bg-primary-500 text-white font-black text-sm uppercase tracking-widest py-4 rounded-2xl transition-all shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 hover:scale-[1.01] active:scale-[0.99]"
+          >
+            Enter Zeus
+          </button>
+        </div>
+        <p class="text-center text-slate-600 text-[10px] mt-6 uppercase tracking-widest font-bold">Authorized Personnel Only</p>
+      </div>
+    </div>
+  </div>
+  <!-- ===== END LOGIN OVERLAY ===== -->
+
   <div id="overlay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-[1000]" onclick="closeModals()">
   </div>
   <!-- Image Zoom Modal (Lightbox) -->
@@ -570,6 +612,39 @@
       </button>
     </div>
   </div>
+  <!-- ===== ADMIN ASSIGN USER TO ACCOUNT MODAL ===== -->
+  <div id="admin-assign-modal"
+    class="modal-box bg-white dark:bg-slate-900 p-8 rounded-[2rem] shadow-2xl fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[440px] hidden z-[1010] border dark:border-slate-800">
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h3 class="text-xl font-black uppercase tracking-tight text-slate-800 dark:text-white flex items-center gap-2">
+          <span class="material-icons text-emerald-500">person_add</span> Assign to Account
+        </h3>
+        <p id="admin-assign-target-name" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1"></p>
+      </div>
+      <button onclick="document.getElementById('admin-assign-modal').classList.add('hidden'); document.getElementById('overlay').classList.add('hidden');"
+        class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+        <span class="material-icons">close</span>
+      </button>
+    </div>
+    <input type="hidden" id="admin-assign-email">
+    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Select Accounts to Grant Access</p>
+    <div id="admin-assign-account-list" class="space-y-1 max-h-64 overflow-y-auto custom-scrollbar mb-6 bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-3 border border-slate-100 dark:border-slate-700">
+      <!-- Populated by JS -->
+    </div>
+    <div class="flex gap-3">
+      <button onclick="document.getElementById('admin-assign-modal').classList.add('hidden'); document.getElementById('overlay').classList.add('hidden');"
+        class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-black text-[10px] uppercase tracking-widest py-3 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
+        Cancel
+      </button>
+      <button id="admin-assign-submit-btn" onclick="submitAdminAssign()"
+        class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-[10px] uppercase tracking-widest py-3 rounded-xl shadow-lg shadow-emerald-500/20 transition-all">
+        Assign
+      </button>
+    </div>
+  </div>
+  <!-- ===== END ADMIN ASSIGN MODAL ===== -->
+
   <div id="account-creator-modal"
     class="modal-box bg-white dark:bg-slate-900 p-8 rounded-[2rem] shadow-2xl fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 hidden z-[1002] border dark:border-slate-800">
     <h3 class="text-xl font-black mb-6 uppercase tracking-tight text-slate-800 dark:text-white">Create New Workspace

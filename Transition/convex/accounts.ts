@@ -283,6 +283,46 @@ export const getUsersRegistry = query({
   },
 });
 
+// Admin direct-assign a user to one or more accounts (SUPER_ADMIN only, no approval needed)
+export const adminAssignUser = mutation({
+  args: {
+    callerEmail: v.string(),
+    targetEmail: v.string(),
+    accountIds: v.array(v.string()),
+  },
+  handler: async (ctx, { callerEmail, targetEmail, accountIds }) => {
+    callerEmail = callerEmail.toLowerCase().trim();
+    targetEmail = targetEmail.toLowerCase().trim();
+    if (!SUPER_ADMINS.includes(callerEmail)) throw new Error("Unauthorized");
+
+    for (const accId of accountIds) {
+      const acc = await ctx.db
+        .query("accounts")
+        .withIndex("by_accountId", (q) => q.eq("accountId", accId))
+        .first();
+      if (acc && !acc.users.map((u) => u.toLowerCase()).includes(targetEmail)) {
+        await ctx.db.patch(acc._id, { users: [...acc.users, targetEmail] });
+      }
+    }
+
+    // Return updated registry
+    const allAccs = await ctx.db.query("accounts").collect();
+    const registry: Record<string, { name: string; users: { email: string; nickname: string }[] }> = {};
+    for (const a of allAccs) {
+      const usersList = [];
+      for (const uEmail of a.users) {
+        const profile = await ctx.db
+          .query("userProfiles")
+          .withIndex("by_email", (q) => q.eq("email", uEmail))
+          .first();
+        usersList.push({ email: uEmail, nickname: profile?.nickname ?? uEmail.split("@")[0] });
+      }
+      registry[a.accountId] = { name: a.name, users: usersList };
+    }
+    return registry;
+  },
+});
+
 // Remove user from account (SUPER_ADMIN only)
 export const unregisterUser = mutation({
   args: { callerEmail: v.string(), accountId: v.string(), email: v.string() },
