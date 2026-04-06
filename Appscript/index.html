@@ -353,9 +353,14 @@
         <div class="admin-tab" id="tab-status" onclick="switchAdminTab('status')">Live Status</div>
         <div class="admin-tab" id="tab-history" onclick="switchAdminTab('history')">Task History</div>
       </div>
-      <button
-        onclick="document.getElementById('admin-dashboard-modal').classList.add('hidden'); document.getElementById('overlay').classList.add('hidden');"
-        class="text-slate-400 hover:text-slate-600"><span class="material-icons">close</span></button>
+      <div class="flex items-center gap-2">
+        <button onclick="openAccountCreator()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl transition-all shadow-md flex items-center gap-2">
+          <span class="material-icons text-sm">add</span> Add Workspace
+        </button>
+        <button
+          onclick="document.getElementById('admin-dashboard-modal').classList.add('hidden'); document.getElementById('overlay').classList.add('hidden');"
+          class="text-slate-400 hover:text-slate-600"><span class="material-icons">close</span></button>
+      </div>
     </div>
     <div id="admin-view-tasks" class="flex-1 p-6 flex gap-6 overflow-hidden">
       <div class="w-1/2 flex flex-col gap-4">

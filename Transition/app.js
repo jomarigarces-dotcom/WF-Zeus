@@ -233,7 +233,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
               const accName = state.availableAccounts.find(a => a.id === n.accountId)?.name || n.accountId;
               if (n.requestType === 'REMOVAL' && state.currentAccount && state.currentAccount.id === n.accountId) {
                 alert(`Your removal request for workspace ${accName} has been approved.`);
-                (async () => { try { const res = await runQuery("users:getSessionInfo", { email: state.userEmail || localStorage.getItem('zeus_user_email') || null }); Promise.resolve().then(() => { const _cb = (function (info) {
+                (async () => { try { const res = await runQuery("users:getSessionInfo", { email: state.userEmail || localStorage.getItem('zeus_user_email') || "" }); Promise.resolve().then(() => { const _cb = (function (info) {
                   state.userAccounts = info.userAccounts || [];
                   state.role = info.role;
                   if (state.userAccounts.length > 0) {
@@ -659,12 +659,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     });
   };
   function initSession() {
-    const email = state.userEmail || localStorage.getItem('zeus_user_email');
-    if (!email) {
-      showLogin();
-      return;
-    }
-    (async () => { try { const res = await runQuery("users:getSessionInfo", { email: email }); Promise.resolve().then(() => { const _cb = (function (info) {
+    (async () => { try { const res = await runQuery("users:getSessionInfo", { email: state.userEmail || localStorage.getItem('zeus_user_email') || "" }); Promise.resolve().then(() => { const _cb = (function (info) {
       state.role = info.role;
       state.userEmail = info.email;
       state.userNickname = info.nickname;
@@ -784,7 +779,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     const grid = document.getElementById('icon-grid');
     grid.innerHTML = '<div class="flex items-center justify-center min-h-[50vh]"><span class="material-icons text-4xl text-primary-600 animate-spin">sync</span></div>';
     localStorage.setItem('zeus_last_account', accountId);
-    (async () => { try { const res = await runQuery("accounts:getAccountData", { accountId: accountId }); Promise.resolve().then(() => { const _cb = (function (data) {
+    (async () => { try { const res = await runMutation("unknown:getAccountData", { args: [accountId] }); Promise.resolve().then(() => { const _cb = (function (data) {
       if (!data) { window.showAccountSelector(); return; }
       state.currentAccount = data;
       state.view = 'PORTAL';
@@ -929,7 +924,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
   };
   window.fetchRegistry = function () {
     if (state.role !== 'SUPER_ADMIN') return;
-    (async () => { try { const res = await runQuery("accounts:getUsersRegistry", { callerEmail: state.userEmail }); Promise.resolve().then(() => { const _cb = (function (registry) {
+    (async () => { try { const res = await runMutation("unknown:getUsersRegistry", {}); Promise.resolve().then(() => { const _cb = (function (registry) {
       renderAdminRegistry(registry);
     }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
   };
@@ -993,7 +988,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     document.getElementById('overlay').classList.add('hidden');
   };
   window.fetchAccessRequests = function () {
-    (async () => { try { const res = await runQuery("users:getAccessRequests", { callerEmail: state.userEmail }); Promise.resolve().then(() => { const _cb = (renderAccessRequests); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
+    (async () => { try { const res = await runQuery("users:getAccessRequests", {}); Promise.resolve().then(() => { const _cb = (renderAccessRequests); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
   };
   window.renderAccessRequests = function (reqs) {
     const c = document.getElementById('access-requests-list');
@@ -1086,7 +1081,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
       updateAssignButton();
     };
     if (state.role === 'SUPER_ADMIN') {
-      (async () => { try { const res = await runMutation("users:registerUserToAccounts", { callerEmail: state.userEmail, accountIds: ids, nickname: n }); Promise.resolve().then(() => { const _cb = (callback); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
+      (async () => { try { const res = await runMutation("users:registerUserToAccounts", { args: [ids, n] }); Promise.resolve().then(() => { const _cb = (callback); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
     } else {
       // send approval request instead
       (async () => { try { const res = await runMutation("users:requestAccountAccess", { email: state.userEmail, accountIds: ids, nickname: state.userNickname }); Promise.resolve().then(() => { const _cb = (callback); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
@@ -1174,7 +1169,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     window.setBtnLoading('modal-apply-btn', true);
     // If editing an account, we use a different context
     const accountId = state.context.type === 'account' ? state.context.id : (state.currentAccount ? state.currentAccount.id : null);
-    (async () => { try { const res = await runMutation("accounts:saveAccountData", { accountId: state.currentAccount?.id, type: state.context.type, item: { id: state.context.id || Date.now().toString(), name: n, title: n, url: u, iconType: i || '🔗', catId: targetCat || state.currentCat } }); Promise.resolve().then(() => { const _cb = (d => {
+    (async () => { try { const res = await runMutation("accounts:saveAccountData", { accountId: state.currentAccount?.id, type: undefined, item: { id: accountId, name: state.context.type, title: state.context.type, url: obj, iconType: null, catId: null } }); Promise.resolve().then(() => { const _cb = (d => {
       if (state.context.type === 'account') {
         // Refresh available accounts and current account if needed
         state.availableAccounts = d.accounts;
@@ -1200,7 +1195,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
       }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
       return;
     }
-    if (confirm("Remove item?")) (async () => { try { const res = await runMutation("accounts:deleteAccountItem", { accountId: state.currentAccount?.id, type: state.context.type, itemId: state.context.id }); Promise.resolve().then(() => { const _cb = (d => {
+    if (confirm("Remove item?")) (async () => { try { const res = await runMutation("accounts:deleteAccountItem", { accountId: state.currentAccount?.id, type: state.context.type, itemId: state.currentAccount.id }); Promise.resolve().then(() => { const _cb = (d => {
       state.currentAccount = d;
       renderCategories();
       renderContent();
@@ -1279,7 +1274,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
         alert('Error: Cannot determine account context for deletion');
         return;
       }
-      (async () => { try { const res = await runMutation("announcements:deleteAccountAnnouncement", { callerEmail: state.userEmail, accountId: accountId, annId: id }); Promise.resolve().then(() => { const _cb = (d => {
+      (async () => { try { const res = await runMutation("unknown:deleteAccountAnnouncement", { args: [accountId, id] }); Promise.resolve().then(() => { const _cb = (d => {
         state.currentAccount = d;
         renderAnnouncements();
       }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
@@ -1328,7 +1323,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
   window.togglePinAction = function (id, cb) {
     // Toggle pin on the server, update state and re-render. Optional callback runs after update.
     const accId = state.currentAccount ? state.currentAccount.id : null;
-    (async () => { try { const res = await runMutation("announcements:toggleAnnouncementPin", { callerEmail: state.userEmail, accountId: accId, annId: id }); Promise.resolve().then(() => { const _cb = (d => {
+    (async () => { try { const res = await runMutation("unknown:toggleAnnouncementPin", { args: [accId, id] }); Promise.resolve().then(() => { const _cb = (d => {
       try {
         state.currentAccount = d;
         renderAnnouncements();
@@ -1351,7 +1346,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     // Check if editing existing announcement
     if (state.currentEditingAnn) {
       const accId = state.currentEditingAnn.accountId;
-      (async () => { try { const res = await runMutation("announcements:editAccountAnnouncement", { callerEmail: state.userEmail, accountId: accId, annId: state.currentEditingAnn.id, newMsg: m, newSeverity: s, newImageUrl: state.currentImageBase64, newLinkUrl: link }); Promise.resolve().then(() => { const _cb = (d => {
+      (async () => { try { const res = await runMutation("unknown:editAccountAnnouncement", { args: [accId, state.currentEditingAnn.id, m, s, state.currentImageBase64, link] }); Promise.resolve().then(() => { const _cb = (d => {
         if (d && d.status === 'error') {
           alert('Error: ' + d.message);
           return;
@@ -1381,7 +1376,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
       const v = targetSel.value;
       if (v) target = v;
     }
-    (async () => { try { const res = await runMutation("announcements:postAccountAnnouncement", { callerEmail: state.userEmail, accountId: target, message: m, severity: s, sender: snd, imageUrl: state.currentImageBase64, linkUrl: link }); Promise.resolve().then(() => { const _cb = (d => {
+    (async () => { try { const res = await runMutation("unknown:postAccountAnnouncement", { args: [target, m, s, snd, state.currentImageBase64, link] }); Promise.resolve().then(() => { const _cb = (d => {
       try {
         // If global broadcast returned lightweight ok object
         if (d && d.ok) {

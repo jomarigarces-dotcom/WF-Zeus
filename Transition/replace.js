@@ -58,7 +58,7 @@ function convertArgsToObj(methodName, rawArgsStr) {
   const parts = rawArgsStr.split(',').map(s => s.trim()).filter(p => p !== '');
   
   // Custom mapping for each function based on schema
-  if (methodName === 'getSessionInfo') return `{ email: state.userEmail || localStorage.getItem('zeus_user_email') || null }`;
+  if (methodName === 'getSessionInfo') return `{ email: state.userEmail || localStorage.getItem('zeus_user_email') || "" }`;
   if (methodName === 'heartbeat') return `{ email: state.userEmail, currentAccountId: state.currentAccount?.id }`;
   if (methodName === 'requestAccountAccess') return `{ email: state.userEmail, accountIds: ${parts[0]}, nickname: state.userNickname }`;
   if (methodName === 'requestAccountRemoval') return `{ email: state.userEmail, accountId: ${parts[0]} }`;
