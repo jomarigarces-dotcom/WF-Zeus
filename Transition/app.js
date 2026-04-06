@@ -1133,10 +1133,18 @@ import { convex, runQuery, runMutation } from './convex-client.js';
       updateAssignButton();
     };
     if (state.role === 'SUPER_ADMIN') {
-      (async () => { try { const res = await runMutation("users:registerUserToAccounts", { callerEmail: state.userEmail, accountIds: ids, nickname: n }); Promise.resolve().then(() => { const _cb = (callback); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
+      (async () => { try { 
+        await runMutation("users:registerUserToAccounts", { callerEmail: state.userEmail, accountIds: ids, nickname: n }); 
+        const info = await runQuery("users:getSessionInfo", { email: state.userEmail });
+        callback(info);
+      } catch(err) { console.error(err); alert(err.message || String(err)); window.setBtnLoading('join-workspace-btn', false); } })();
     } else {
       // send approval request instead
-      (async () => { try { const res = await runMutation("users:requestAccountAccess", { email: state.userEmail, accountIds: ids, nickname: state.userNickname }); Promise.resolve().then(() => { const _cb = (callback); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
+      (async () => { try { 
+        await runMutation("users:requestAccountAccess", { email: state.userEmail, accountIds: ids, nickname: n }); 
+        const info = await runQuery("users:getSessionInfo", { email: state.userEmail });
+        callback(info);
+      } catch(err) { console.error(err); alert(err.message || String(err)); window.setBtnLoading('join-workspace-btn', false); } })();
     }
   };
   window.promptCreateAccount = function () {
