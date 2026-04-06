@@ -1207,7 +1207,8 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     const l = document.getElementById('category-list');
     l.innerHTML = '';
     if (!state.currentAccount) return;
-    state.currentAccount.categories.forEach(cat => {
+    const cats = state.currentAccount.categories || [{ id: 'HOME', name: 'Home' }];
+    cats.forEach(cat => {
       const d = document.createElement('div');
       const a = state.currentCat === cat.id;
       d.className = `side-item ${a ? 'active' : ''}`;
