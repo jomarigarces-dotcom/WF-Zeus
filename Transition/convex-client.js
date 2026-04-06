@@ -11,7 +11,7 @@
 // ============================================================
 // CONFIGURE THIS: Paste your Convex deployment URL here
 // ============================================================
-const CONVEX_URL = "https://YOUR_DEPLOYMENT.convex.cloud";
+const CONVEX_URL = "https://successful-bee-546.convex.cloud";
 // ============================================================
 
 import { ConvexClient } from "https://cdn.jsdelivr.net/npm/convex@1.13.0/browser/+esm";

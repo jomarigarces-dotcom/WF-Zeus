@@ -104,44 +104,99 @@ function convertArgsToObj(methodName, rawArgsStr) {
   return `{ args: [${rawArgsStr}] }`;
 }
 
-let code = fs.readFileSync('app.js', 'utf8');
+let code = fs.readFileSync('../Appscript/JS.html', 'utf8');
+code = code.replace(/<script.*?>|<\/script>/g, '');
+code = `import { convex, runQuery, runMutation } from './convex-client.js';\n` + code;
 
-// Regex to capture:
-// google.script.run
-// .withSuccessHandler(...)  [optional]
-// .withFailureHandler(...)  [optional]
-// .methodName(...)
-const regex = /google\.script\.run(?:\.withSuccessHandler\((.*?)\))?(?:\.withFailureHandler\((.*?)\))?\.([a-zA-Z0-9_]+)\((.*?)\)/gs;
 
-let match;
-while ((match = regex.exec(code)) !== null) {
-  const fullMatch = match[0];
-  const successCallback = match[1];
-  const failureCallback = match[2];
-  const methodName = match[3];
-  const rawArgs = match[4];
+function getBalanced(str, startChar, endChar, startIndex) {
+  let depth = 0;
+  for (let i = startIndex; i < str.length; i++) {
+    if (str[i] === startChar) depth++;
+    else if (str[i] === endChar) {
+      depth--;
+      if (depth === 0) return i;
+    }
+  }
+  return -1;
+}
 
-  // Fix known issue with getRosterData - we will handle this manually later
-  if (methodName === 'getRosterData') {
-      const parts = code.split(fullMatch);
-      code = parts[0] + `fetch('/orgchart.json').then(r=>r.json()).then(data => { if(${successCallback}) (${successCallback})(data); }).catch(err => { if(${failureCallback}) (${failureCallback})(err); })` + parts[1];
-      continue;
+let i = 0;
+while (true) {
+  const startIdx = code.indexOf('google.script.run', i);
+  if (startIdx === -1) break;
+
+  let currentIdx = startIdx + 'google.script.run'.length;
+  let successCallback = null;
+  let failureCallback = null;
+  let methodName = null;
+  let rawArgs = null;
+  let fullMatchEnd = -1;
+
+  // Scan for .withSuccessHandler or .withFailureHandler or .method
+  while (true) {
+    const nextDot = code.indexOf('.', currentIdx);
+    if (nextDot === -1 || nextDot > currentIdx + 5) break; 
+
+    if (code.startsWith('.withSuccessHandler(', nextDot)) {
+      const openParen = nextDot + '.withSuccessHandler('.length - 1;
+      const closeParen = getBalanced(code, '(', ')', openParen);
+      successCallback = code.substring(openParen + 1, closeParen);
+      currentIdx = closeParen + 1;
+    } else if (code.startsWith('.withFailureHandler(', nextDot)) {
+      const openParen = nextDot + '.withFailureHandler('.length - 1;
+      const closeParen = getBalanced(code, '(', ')', openParen);
+      failureCallback = code.substring(openParen + 1, closeParen);
+      currentIdx = closeParen + 1;
+    } else {
+      // Must be the method name
+      const methodMatch = code.substring(nextDot + 1).match(/^([a-zA-Z0-9_]+)\(/);
+      if (methodMatch) {
+        methodName = methodMatch[1];
+        const openParen = nextDot + 1 + methodName.length;
+        const closeParen = getBalanced(code, '(', ')', openParen);
+        rawArgs = code.substring(openParen + 1, closeParen);
+        fullMatchEnd = closeParen + 1;
+        break;
+      } else {
+        break;
+      }
+    }
   }
 
-  const funcPath = moduleMap[methodName] || ('unknown:' + methodName);
-  const isQuery = queries.has(methodName);
-  const convexType = isQuery ? 'runQuery' : 'runMutation';
-  
-  const argsObj = convertArgsToObj(methodName, rawArgs);
-  
-  let repl = `(async () => { try { const res = await ${convexType}("${funcPath}", ${argsObj});`;
-  if (successCallback) repl += ` if (typeof ${successCallback} === 'function') { ${successCallback}(res); }`;
-  repl += ` } catch(err) { console.error(err);`;
-  if (failureCallback) repl += ` if (typeof ${failureCallback} === 'function') { ${failureCallback}(err); } else { alert(err.message || String(err)); }`;
-  repl += ` } })()`;
+  if (methodName && fullMatchEnd !== -1) {
+    const fullMatch = code.substring(startIdx, fullMatchEnd);
+    
+    // getRosterData check
+    if (methodName === 'getRosterData') {
+        const repl = `fetch('/orgchart.json').then(r=>r.json()).then(data => { Promise.resolve().then(() => { const _cb = (${successCallback}); if(typeof _cb === 'function') _cb(data); }); }).catch(err => { Promise.resolve().then(() => { const _fc = (${failureCallback}); if(typeof _fc === 'function') _fc(err); }); })`;
+        code = code.substring(0, startIdx) + repl + code.substring(fullMatchEnd);
+        i = startIdx + repl.length;
+        continue;
+    }
 
-  const parts = code.split(fullMatch);
-  code = parts[0] + repl + parts[1];
+    const funcPath = moduleMap[methodName] || ('unknown:' + methodName);
+    const isQuery = queries.has(methodName);
+    const convexType = isQuery ? 'runQuery' : 'runMutation';
+    const argsObj = convertArgsToObj(methodName, rawArgs);
+
+    let repl = `(async () => { try { const res = await ${convexType}("${funcPath}", ${argsObj});`;
+    if (successCallback) {
+      repl += ` Promise.resolve().then(() => { const _cb = (${successCallback}); if(typeof _cb === 'function') _cb(res); });`;
+    }
+    repl += ` } catch(err) { console.error(err);`;
+    if (failureCallback) {
+      repl += ` Promise.resolve().then(() => { const _fc = (${failureCallback}); if(typeof _fc === 'function') _fc(err); else alert(err.message || String(err)); });`;
+    } else {
+      repl += ` alert(err.message || String(err));`;
+    }
+    repl += ` } })()`;
+
+    code = code.substring(0, startIdx) + repl + code.substring(fullMatchEnd);
+    i = startIdx + repl.length;
+  } else {
+    i = currentIdx;
+  }
 }
 
 // Remove // TODO-CONVEX annotations
