@@ -143,31 +143,32 @@ export const saveAccountData = mutation({
     if (type === "account") {
       // Rename account
       await ctx.db.patch(acc._id, { name: item.name ?? acc.name });
-      return { id: acc.accountId, name: item.name ?? acc.name };
-    }
-
-    const key = type === "cat" ? "categories" : "icons";
-    const list: any[] = [...(acc as any)[key]];
-    const idx = list.findIndex((i) => String(i.id) === String(item.id));
-
-    if (type === "cat") {
-      const catItem = { id: item.id, name: item.name ?? "" };
-      if (idx !== -1) list[idx] = catItem;
-      else list.push(catItem);
-      await ctx.db.patch(acc._id, { categories: list });
     } else {
-      const iconItem = {
-        id: item.id,
-        title: item.title ?? item.name ?? "",
-        url: item.url ?? "",
-        iconType: item.iconType ?? "🔗",
-        catId: item.catId ?? "HOME",
-      };
-      if (idx !== -1) list[idx] = iconItem;
-      else list.push(iconItem);
-      await ctx.db.patch(acc._id, { icons: list });
+      const key = type === "cat" ? "categories" : "icons";
+      const list: any[] = [...((acc as any)[key] || [])];
+      const idx = list.findIndex((i) => String(i.id) === String(item.id));
+
+      if (type === "cat") {
+        const catItem = { id: item.id, name: item.name ?? "" };
+        if (idx !== -1) list[idx] = catItem;
+        else list.push(catItem);
+        await ctx.db.patch(acc._id, { categories: list });
+      } else {
+        const iconItem = {
+          id: item.id,
+          title: item.title ?? item.name ?? "",
+          url: item.url ?? "",
+          iconType: item.iconType ?? "🔗",
+          catId: item.catId ?? "HOME",
+        };
+        if (idx !== -1) list[idx] = iconItem;
+        else list.push(iconItem);
+        await ctx.db.patch(acc._id, { icons: list });
+      }
     }
 
+    const updatedAcc = await ctx.db.get(acc._id);
+    if (!updatedAcc) throw new Error("Account resolution failure");
 
     // Fetch and return full account data to satisfy frontend expectations
     const allReminders = await ctx.db.query("reminders").collect();
@@ -191,13 +192,13 @@ export const saveAccountData = mutation({
       });
 
     return {
-      id: acc.accountId,
-      name: acc.name,
-      categories: acc.categories,
-      icons: acc.icons,
-      announcements: acc.announcements,
-      notes: acc.notes,
-      users: acc.users,
+      id: updatedAcc.accountId,
+      name: updatedAcc.name,
+      categories: updatedAcc.categories || [],
+      icons: updatedAcc.icons || [],
+      announcements: updatedAcc.announcements || [],
+      notes: updatedAcc.notes || [],
+      users: updatedAcc.users || [],
       activeReminders,
     };
   },
@@ -215,14 +216,17 @@ export const deleteAccountItem = mutation({
 
     if (type === "cat") {
       await ctx.db.patch(acc._id, {
-        categories: acc.categories.filter((c) => c.id !== itemId),
-        icons: acc.icons.filter((i) => i.catId !== itemId),
+        categories: (acc.categories || []).filter((c) => c.id !== itemId),
+        icons: (acc.icons || []).filter((i) => i.catId !== itemId),
       });
     } else {
       await ctx.db.patch(acc._id, {
-        icons: acc.icons.filter((i) => i.id !== itemId),
+        icons: (acc.icons || []).filter((i) => i.id !== itemId),
       });
     }
+
+    const updatedAcc = await ctx.db.get(acc._id);
+    if (!updatedAcc) throw new Error("Account resolution failure");
 
     // Fetch and return full account data after item deletion
     const allReminders = await ctx.db.query("reminders").collect();
@@ -246,13 +250,13 @@ export const deleteAccountItem = mutation({
       });
 
     return {
-      id: acc.accountId,
-      name: acc.name,
-      categories: acc.categories,
-      icons: acc.icons,
-      announcements: acc.announcements,
-      notes: acc.notes,
-      users: acc.users,
+      id: updatedAcc.accountId,
+      name: updatedAcc.name,
+      categories: updatedAcc.categories,
+      icons: updatedAcc.icons,
+      announcements: updatedAcc.announcements,
+      notes: updatedAcc.notes,
+      users: updatedAcc.users,
       activeReminders,
     };
   },

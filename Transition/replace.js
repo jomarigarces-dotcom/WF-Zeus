@@ -14,11 +14,13 @@ const moduleMap = {
   toggleMaintenanceMode: 'users:toggleMaintenanceMode',
   
   fetchWorkspaceUpdates: 'accounts:getAccountData', // mapped to account data fetch
+  getAccountData: 'accounts:getAccountData',
   createAccount: 'accounts:createAccount',
   deleteAccount: 'accounts:deleteAccount',
   saveAccountData: 'accounts:saveAccountData',
   deleteAccountItem: 'accounts:deleteAccountItem',
   getRegistry: 'accounts:getUsersRegistry',
+  getUsersRegistry: 'accounts:getUsersRegistry',
   unregisterUser: 'accounts:unregisterUser',
 
   addPersonalTask: 'tasks:addPersonalTask',
@@ -35,7 +37,10 @@ const moduleMap = {
   postAnnouncement: 'announcements:postAccountAnnouncement',
   editAnnouncement: 'announcements:editAccountAnnouncement',
   togglePinAnnouncement: 'announcements:toggleAnnouncementPin',
+  toggleAnnouncementPin: 'announcements:toggleAnnouncementPin',
   deleteAnnouncement: 'announcements:deleteAccountAnnouncement',
+  deleteAccountAnnouncement: 'announcements:deleteAccountAnnouncement',
+  askAIBot: 'ai:askAIBot',
 
   postReminder: 'reminders:postReminder',
   deleteReminder: 'reminders:deleteReminder',
@@ -49,7 +54,7 @@ const moduleMap = {
 };
 
 const queries = new Set([
-  'getSessionInfo', 'getAccessRequests', 'fetchWorkspaceUpdates', 'getRegistry',
+  'getSessionInfo', 'getAccessRequests', 'fetchWorkspaceUpdates', 'getAccountData', 'getRegistry', 'getUsersRegistry',
   'fetchPersonalUpdates', 'getTaskHistory', 'getActiveReminders', 'getRemindersForManagement',
   'getLiveStatus', 'getFeedbacks'
 ]);
@@ -96,7 +101,11 @@ function convertArgsToObj(methodName, rawArgsStr) {
   
   if (methodName === 'submitFeedback') return `{ email: state.userEmail, nickname: state.userNickname, message: ${parts[0]} }`;
   if (methodName === 'approveAccountAccess') return `{ callerEmail: state.userEmail, requestId: ${parts[0]} }`;
-  if (methodName === 'rejectAccountAccess') return `{ callerEmail: state.userEmail, requestId: ${parts[0]} }`;
+  if (methodName === 'getUsersRegistry') return `{ callerEmail: state.userEmail }`;
+  if (methodName === 'getAccountData' || methodName === 'fetchWorkspaceUpdates') return `{ accountId: ${parts[0]} }`;
+  if (methodName === 'deleteAccountAnnouncement') return `{ callerEmail: state.userEmail, accountId: ${parts[0]}, annId: ${parts[1]} }`;
+  if (methodName === 'toggleAnnouncementPin') return `{ callerEmail: state.userEmail, accountId: ${parts[0]}, annId: ${parts[1]} }`;
+  if (methodName === 'askAIBot') return `{ question: ${parts[0]} }`;
 
   if (parts.length === 0) return `{}`;
 

@@ -45,66 +45,6 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     isMaintenanceMode: false,
     canToggleMaintenance: false
   };
-
-  // --- CUSTOM UI MODALS ---
-  window.zeusAlert = function(msg) {
-    const container = document.getElementById('zeus-toast-container');
-    if (!container) { console.warn('zeusAlert:', msg); return; }
-    const toast = document.createElement('div');
-    toast.className = 'bg-slate-900/95 dark:bg-slate-100/95 backdrop-blur-md text-white dark:text-slate-900 px-4 py-3 rounded-2xl shadow-xl flex items-center justify-between gap-3 transform -translate-y-4 opacity-0 pointer-events-auto transition-all duration-300 border border-slate-700 dark:border-slate-300';
-    toast.innerHTML = `<span class="text-[11px] font-bold font-inter tracking-wide leading-tight">${msg}</span><button class="material-icons text-[16px] opacity-50 hover:opacity-100 transition-opacity">close</button>`;
-    container.appendChild(toast);
-    
-    requestAnimationFrame(() => {
-      toast.classList.remove('-translate-y-4', 'opacity-0');
-      toast.classList.add('translate-y-0', 'opacity-100');
-    });
-
-    const closeToast = () => {
-      toast.classList.remove('translate-y-0', 'opacity-100');
-      toast.classList.add('-translate-y-4', 'opacity-0');
-      setTimeout(() => toast.remove(), 300);
-    };
-
-    toast.querySelector('button').onclick = closeToast;
-    setTimeout(closeToast, 4000);
-  };
-
-  window.zeusConfirm = function(msg, onConfirm) {
-    const overlay = document.getElementById('zeus-confirm-overlay');
-    const box = document.getElementById('zeus-confirm-box');
-    const msgEl = document.getElementById('zeus-confirm-msg');
-    const okBtn = document.getElementById('zeus-confirm-ok-btn');
-    const cancelBtn = document.getElementById('zeus-confirm-cancel-btn');
-    
-    if (!overlay) {
-      if(window.confirm(msg)) onConfirm();
-      return;
-    }
-    
-    msgEl.innerText = msg;
-    overlay.classList.remove('hidden');
-    
-    requestAnimationFrame(() => {
-      box.classList.remove('scale-95', 'opacity-0');
-      box.classList.add('scale-100', 'opacity-100');
-    });
-
-    const closeMod = () => {
-      box.classList.remove('scale-100', 'opacity-100');
-      box.classList.add('scale-95', 'opacity-0');
-      setTimeout(() => overlay.classList.add('hidden'), 200);
-      okBtn.onclick = null;
-      cancelBtn.onclick = null;
-    };
-
-    cancelBtn.onclick = closeMod;
-    okBtn.onclick = () => {
-      closeMod();
-      if (typeof onConfirm === 'function') onConfirm();
-    };
-  };
-
   // helper to update assign button in header
   window.updateAssignButton = function () {
     const btn = document.getElementById('assign-account-btn');
@@ -138,12 +78,11 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     modal.classList.remove('hidden');
   };
   window.unassignAccount = function (accId) {
-    window.zeusConfirm('Send a request to remove this account?', () => {
-      (async () => { try { const res = await runMutation("users:requestAccountRemoval", { email: state.userEmail, accountId: accId }); Promise.resolve().then(() => { const _cb = (() => {
-        zeusAlert('Removal request sent to super admins.');
-        closeModals();
-      }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); zeusAlert(err.message || String(err)); } })();
-    });
+    if (!confirm('Send a request to remove this account?')) return;
+    (async () => { try { const res = await runMutation("users:requestAccountRemoval", { email: state.userEmail, accountId: accId }); Promise.resolve().then(() => { const _cb = (() => {
+      alert('Removal request sent to super admins.');
+      closeModals();
+    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
   };
   window.filterAccounts = function () {
     const query = document.getElementById('account-search-input').value.toLowerCase();
@@ -199,7 +138,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
       if (s.status !== 'OFFLINE' && timeDiff > awayTime) {
         s.status = 'ONLINE';
         // Sync to server
-        (async () => { try { const res = await runMutation("users:updateUserAuxStatus", { email: state.userEmail, auxStatus: 'ONLINE' }); } catch(err) { console.error(err); zeusAlert(err.message || String(err)); } })();
+        (async () => { try { const res = await runMutation("users:updateUserAuxStatus", { email: state.userEmail, auxStatus: 'ONLINE' }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
       }
       s.lastActivityTime = now;
       state.lastInteractionTime = now;
@@ -293,7 +232,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
             if (n.approved) {
               const accName = state.availableAccounts.find(a => a.id === n.accountId)?.name || n.accountId;
               if (n.requestType === 'REMOVAL' && state.currentAccount && state.currentAccount.id === n.accountId) {
-                zeusAlert(`Your removal request for workspace ${accName} has been approved.`);
+                alert(`Your removal request for workspace ${accName} has been approved.`);
                 (async () => { try { const res = await runQuery("users:getSessionInfo", { email: state.userEmail || localStorage.getItem('zeus_user_email') || "" }); Promise.resolve().then(() => { const _cb = (function (info) {
                   state.userAccounts = info.userAccounts || [];
                   state.role = info.role;
@@ -303,23 +242,23 @@ import { convex, runQuery, runMutation } from './convex-client.js';
                     window.showAccountSelector();
                     window.showRegistration();
                   }
-                }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); zeusAlert(err.message || String(err)); } })();
+                }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
               } else if (n.requestType === 'ACCESS' || !n.requestType) {
                 // For access approval, trigger loading and route
-                zeusAlert(`Your access request for workspace ${accName} has been approved.`);
+                alert(`Your access request for workspace ${accName} has been approved.`);
                 window.loadAccount(n.accountId);
               } else {
                 initSession();
               }
             } else {
               const accName = state.availableAccounts.find(a => a.id === n.accountId)?.name || n.accountId;
-              zeusAlert(`Your ${typeLabel} request for workspace ${accName} was denied.`);
+              alert(`Your ${typeLabel} request for workspace ${accName} was denied.`);
             }
           }
         });
       }
       if (onComplete) onComplete();
-    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); Promise.resolve().then(() => { const _fc = (() => { if (onComplete) onComplete(); }); if(typeof _fc === 'function') _fc(err); else zeusAlert(err.message || String(err)); }); } })();
+    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); Promise.resolve().then(() => { const _fc = (() => { if (onComplete) onComplete(); }); if(typeof _fc === 'function') _fc(err); else alert(err.message || String(err)); }); } })();
   };
   // Poll Workspace Data (Reminders, Notes, Announcements)
   window.pollWorkspaceUpdates = function (onComplete) {
@@ -355,7 +294,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
         }
       }
       if (onComplete) onComplete();
-    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); Promise.resolve().then(() => { const _fc = (() => { if (onComplete) onComplete(); }); if(typeof _fc === 'function') _fc(err); else zeusAlert(err.message || String(err)); }); } })();
+    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); Promise.resolve().then(() => { const _fc = (() => { if (onComplete) onComplete(); }); if(typeof _fc === 'function') _fc(err); else alert(err.message || String(err)); }); } })();
   };
   window.refreshDashboard = function () {
     const icons = document.querySelectorAll('.refresh-spin-icon');
@@ -550,19 +489,19 @@ import { convex, runQuery, runMutation } from './convex-client.js';
       targetId = document.getElementById('task-target-select').value;
     } else if (state.bulkTargetType === 'USER') {
       targetId = document.getElementById('task-target-input').value;
-      if (!targetId) { zeusAlert("Enter User Email"); return; }
+      if (!targetId) { alert("Enter User Email"); return; }
     }
     const btn = document.getElementById('dispatch-tasks-btn');
     window.setBtnLoading('dispatch-tasks-btn', true);
     (async () => { try { const res = await runMutation("tasks:bulkAssignTasks", { callerEmail: state.userEmail, targetType: state.bulkTargetType, targetId: targetId, tasks: state.bulkTaskQueue, senderNickname: state.userNickname }); Promise.resolve().then(() => { const _cb = (msg => {
-      zeusAlert(msg);
+      alert(msg);
       state.bulkTaskQueue = [];
       renderTaskQueue();
       window.setBtnLoading('dispatch-tasks-btn', false, "Dispatch Tasks");
-    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); zeusAlert(err.message || String(err)); } })();
+    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
   };
   window.fetchLiveStatus = function () {
-    (async () => { try { const res = await runQuery("status:getLiveStatus", { callerEmail: state.userEmail }); Promise.resolve().then(() => { const _cb = (renderLiveStatus); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); zeusAlert(err.message || String(err)); } })();
+    (async () => { try { const res = await runQuery("status:getLiveStatus", { callerEmail: state.userEmail }); Promise.resolve().then(() => { const _cb = (renderLiveStatus); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
   };
   window.renderLiveStatus = function (users) {
     const tbody = document.getElementById('status-table-body');
@@ -616,7 +555,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     const dFrom = document.getElementById('history-filter-date-from').value;
     const dTo = document.getElementById('history-filter-date-to').value;
     document.getElementById('history-table-body').innerHTML = '<tr><td colspan="4" class="p-8 text-center"><span class="material-icons animate-spin text-slate-400">sync</span></td></tr>';
-    (async () => { try { const res = await runQuery("tasks:getTaskHistory", { callerEmail: state.userEmail, filterAccount: acc, filterUser: usr, dateFrom: dFrom, dateTo: dTo }); Promise.resolve().then(() => { const _cb = (renderTaskHistory); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); zeusAlert(err.message || String(err)); } })();
+    (async () => { try { const res = await runQuery("tasks:getTaskHistory", { callerEmail: state.userEmail, filterAccount: acc, filterUser: usr, dateFrom: dFrom, dateTo: dTo }); Promise.resolve().then(() => { const _cb = (renderTaskHistory); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
   };
   window.renderTaskHistory = function (tasks) {
     const tbody = document.getElementById('history-table-body');
@@ -669,12 +608,12 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     if (!msg) return;
     window.setBtnLoading('send-feedback-btn', true);
     (async () => { try { const res = await runMutation("feedback:submitFeedback", { email: state.userEmail, nickname: state.userNickname, message: msg }); Promise.resolve().then(() => { const _cb = (() => {
-      zeusAlert("Feedback sent! Thank you.");
+      alert("Feedback sent! Thank you.");
       document.getElementById('feedback-input').value = '';
       document.getElementById('feedback-modal').classList.add('hidden');
       document.getElementById('overlay').classList.add('hidden');
       window.setBtnLoading('send-feedback-btn', false, "Submit Feedback");
-    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); zeusAlert(err.message || String(err)); } })();
+    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
   };
   window.loadFeedbacks = function () {
     const list = document.getElementById('feedback-list-view');
@@ -694,7 +633,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
                 <div class="mt-2 text-[8px] text-slate-400">${f.email}</div>
             </div>
         `).join('');
-    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); zeusAlert(err.message || String(err)); } })();
+    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
   };
   /* ------------------------------------------------------------------
      ANIMATION & NAVIGATION
@@ -720,13 +659,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     });
   };
   function initSession() {
-    const email = state.userEmail || localStorage.getItem('zeus_user_email') || '';
-    if (!email) {
-      // No email — show login screen
-      showLoginScreen();
-      return;
-    }
-    (async () => { try { const res = await runQuery("users:getSessionInfo", { email }); Promise.resolve().then(() => { const _cb = (function (info) {
+    (async () => { try { const res = await runQuery("users:getSessionInfo", { email: state.userEmail || localStorage.getItem('zeus_user_email') || "" }); Promise.resolve().then(() => { const _cb = (function (info) {
       state.role = info.role;
       state.userEmail = info.email;
       state.userNickname = info.nickname;
@@ -737,10 +670,6 @@ import { convex, runQuery, runMutation } from './convex-client.js';
       state.isMaintenanceMode = info.isMaintenanceMode;
       state.canToggleMaintenance = info.canToggleMaintenance;
 
-      // Hide login screen if visible
-      const loginOverlay = document.getElementById('login-overlay');
-      if (loginOverlay) loginOverlay.classList.add('hidden');
-
       const nickEl = document.getElementById('header-nickname-display');
       if (nickEl) nickEl.innerText = info.nickname;
 
@@ -750,6 +679,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
 
       const lastAccountId = localStorage.getItem('zeus_last_account');
       if (info.role === 'SUPER_ADMIN') {
+        // super admins get notification button refreshed
         fetchAccessRequests();
         if (lastAccountId && info.accounts.some(a => a.id === lastAccountId)) { window.loadAccount(lastAccountId); }
         else { state.isRestoring = false; window.showAccountSelector(); }
@@ -761,55 +691,17 @@ import { convex, runQuery, runMutation } from './convex-client.js';
         state.isRestoring = false;
         showRegistration();
       }
-    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); zeusAlert('Session error: ' + (err.message || String(err))); } })();
+    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
   }
-
-  function showLoginScreen() {
-    const overlay = document.getElementById('login-overlay');
-    if (overlay) overlay.classList.remove('hidden');
-    state.isRestoring = false;
-  }
-
-  window.submitLogin = function () {
-    const input = document.getElementById('login-email-input');
-    const errEl = document.getElementById('login-error');
-    if (!input) return;
-    const email = input.value.trim().toLowerCase();
-    if (!email) { errEl.innerText = 'Please enter your email.'; errEl.classList.remove('hidden'); return; }
-    if (!email.endsWith('@ececontactcenters.com')) {
-      errEl.innerText = 'Only @ececontactcenters.com email addresses are allowed.';
-      errEl.classList.remove('hidden');
-      return;
-    }
-    errEl.classList.add('hidden');
-    localStorage.setItem('zeus_user_email', email);
-    state.userEmail = email;
-    const loginOverlay = document.getElementById('login-overlay');
-    if (loginOverlay) loginOverlay.classList.add('hidden');
-    initSession();
-  };
-
-  window.handleLoginKeydown = function (e) {
-    if (e.key === 'Enter') window.submitLogin();
-  };
-
-  window.logoutSession = function () {
-    localStorage.removeItem('zeus_user_email');
-    localStorage.removeItem('zeus_last_account');
-    state.userEmail = '';
-    state.role = 'GUEST';
-    state.currentAccount = null;
-    showLoginScreen();
-  };
 
   window.toggleMaintenanceMode = function () {
-    const action = state.isMaintenanceMode ? "TURN OFF" : "TURN ON";
-    window.zeusConfirm(`Are you sure you want to ${action} Maintenance Mode? This will affect all users.`, () => {
-      (async () => { try { const res = await runMutation("users:toggleMaintenanceMode", { callerEmail: state.userEmail }); Promise.resolve().then(() => { const _cb = (status => {
-        state.isMaintenanceMode = status;
-        renderMaintenanceUI();
-      }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); zeusAlert(err.message || String(err)); } })();
-    });
+    const action = state.isMaintenanceMode ? 'Deactivate' : 'Activate';
+    if (!confirm(`Are you sure you want to ${action} Maintenance Mode? This will affect all users.`)) return;
+
+    (async () => { try { const res = await runMutation("users:toggleMaintenanceMode", { callerEmail: state.userEmail }); Promise.resolve().then(() => { const _cb = (status => {
+      state.isMaintenanceMode = status;
+      renderMaintenanceUI();
+    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
   };
 
   function renderMaintenanceUI() {
@@ -887,7 +779,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     const grid = document.getElementById('icon-grid');
     grid.innerHTML = '<div class="flex items-center justify-center min-h-[50vh]"><span class="material-icons text-4xl text-primary-600 animate-spin">sync</span></div>';
     localStorage.setItem('zeus_last_account', accountId);
-    (async () => { try { const res = await runQuery("accounts:getAccountData", { accountId }); Promise.resolve().then(() => { const _cb = (function (data) {
+    (async () => { try { const res = await runQuery("accounts:getAccountData", { accountId: accountId }); Promise.resolve().then(() => { const _cb = (function (data) {
       if (!data) { window.showAccountSelector(); return; }
       state.currentAccount = data;
       state.view = 'PORTAL';
@@ -925,7 +817,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
       document.getElementById('orgChartBtn').classList.toggle('hidden', !isWalmart);
       renderCategories();
       renderContent();
-    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); zeusAlert(err.message || String(err)); } })();
+    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
   };
   /* ------------------------------------------------------------------
      MAIN CONTENT RENDERER
@@ -955,8 +847,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
       if (filterContainer) filterContainer.classList.remove('hidden');
       let cardsHtml = state.availableAccounts.map(acc => `<div onclick="window.loadAccount('${acc.id}')" class="tool-card group cursor-pointer p-8 border-2 border-transparent hover:border-primary-500"><div class="w-16 h-16 bg-primary-100 dark:bg-primary-900/40 rounded-3xl flex items-center justify-center mb-6 group-hover:bg-primary-600 group-hover:text-white"><span class="material-icons text-3xl">hub</span></div><h3 class="text-xl font-black mb-1 group-hover:text-primary-600 transition-colors uppercase tracking-tight">${acc.name}</h3><p class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Workspace Server: ${acc.id}</p><div class="mt-6 flex items-center gap-2 text-primary-600 font-bold text-xs uppercase tracking-widest">Navigating Server <span class="material-icons text-sm">bolt</span></div></div>`).join('');
       const adminActions = state.role === 'SUPER_ADMIN' ? `
-        <div class="flex justify-center flex-wrap mt-12 gap-4 pb-12">
-            <button onclick="promptCreateAccount()" class="bg-blue-600 text-white px-6 py-3 rounded-full font-black text-xs uppercase tracking-widest hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-lg"><span class="material-icons text-sm">add_to_queue</span> Add Workspace</button>
+        <div class="flex justify-center mt-12 gap-4 pb-12">
             <button onclick="openReminderCreator()" class="bg-slate-800 text-white dark:bg-slate-700 px-6 py-3 rounded-full font-black text-xs uppercase tracking-widest hover:bg-primary-600 transition-colors flex items-center gap-2 shadow-lg"><span class="material-icons text-sm">notifications_active</span> Send Global Reminder</button>
             <button onclick="openAdminDashboard()" class="bg-emerald-600 text-white px-6 py-3 rounded-full font-black text-xs uppercase tracking-widest hover:bg-emerald-700 transition-colors flex items-center gap-2 shadow-lg"><span class="material-icons text-sm">admin_panel_settings</span> Command Center</button>
         </div>` : '';
@@ -1008,7 +899,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
       renderAnnouncements();
     } else {
       main.classList.remove('overflow-hidden');
-      const filteredIcons = (state.currentAccount.icons || []).filter(i => i.catId == state.currentCat);
+      const filteredIcons = state.currentAccount.icons.filter(i => i.catId == state.currentCat);
       if (filteredIcons.length === 0 && !state.isManage) { grid.innerHTML = `<div class="flex flex-col items-center justify-center min-h-[40vh] text-center opacity-40"><span class="material-icons text-6xl mb-4 text-slate-200">grid_view</span><p class="font-black uppercase text-xs tracking-[0.2em] text-slate-400">Blank Workspace. Initialize tools via Manage Mode.</p></div>`; return; }
       const iconContainer = document.createElement('div'); iconContainer.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-20';
       filteredIcons.forEach(icon => { const card = document.createElement('div'); card.className = 'tool-card group cursor-pointer'; card.onclick = () => window.open(icon.url, '_blank'); if (state.isManage) card.oncontextmenu = (e) => showContextMenu(e, 'icon', icon.id); card.innerHTML = `<div class="w-12 h-12 bg-primary-50 dark:bg-primary-900/20 rounded-2xl flex items-center justify-center text-2xl mb-5 group-hover:bg-primary-600 group-hover:text-white shadow-sm"><span>${icon.iconType || '🔗'}</span></div><h3 class="font-black text-slate-800 dark:text-white text-base mb-1 tracking-tight group-hover:text-primary-600 transition-colors uppercase">${icon.title}</h3><p class="text-[10px] text-slate-400 dark:text-slate-500 truncate uppercase font-bold tracking-widest">${icon.url.replace('https://', '')}</p>`; iconContainer.appendChild(card); });
@@ -1035,7 +926,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     if (state.role !== 'SUPER_ADMIN') return;
     (async () => { try { const res = await runQuery("accounts:getUsersRegistry", { callerEmail: state.userEmail }); Promise.resolve().then(() => { const _cb = (function (registry) {
       renderAdminRegistry(registry);
-    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); zeusAlert(err.message || String(err)); } })();
+    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
   };
   window.renderAdminRegistry = function (registry) {
     const h = document.getElementById('admin-registry-header');
@@ -1070,9 +961,6 @@ import { convex, runQuery, runMutation } from './convex-client.js';
             <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest truncate max-w-[140px]">${u.email}</span>
           </div>
           <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all">
-            <button class="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/30 hover:bg-emerald-500 hover:text-white flex items-center justify-center text-emerald-600 transition-colors" title="Add to Account" onclick="openAdminAssignModal('${u.email}', '${u.nickname}')">
-              <span class="material-icons text-[12px]">person_add</span>
-            </button>
             <button class="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-700 hover:bg-primary-500 hover:text-white flex items-center justify-center text-slate-400 transition-colors" title="Assign Task" onclick="promptAdminTask('${u.email}', '${u.nickname}')">
               <span class="material-icons text-[12px]">playlist_add</span>
             </button>
@@ -1085,9 +973,9 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     }
   };
   window.unregisterAction = function (aid, email) {
-    window.zeusConfirm(`Remove ${email}?`, () => {
-      (async () => { try { const res = await runMutation("accounts:unregisterUser", { callerEmail: state.userEmail, accountId: aid, email: email.trim().toLowerCase() }); Promise.resolve().then(() => { const _cb = (r => renderAdminRegistry(r)); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); zeusAlert(err.message || String(err)); } })();
-    });
+    if (confirm(`Remove ${email}?`)) {
+      (async () => { try { const res = await runMutation("accounts:unregisterUser", { callerEmail: state.userEmail, accountId: aid, email: email.trim().toLowerCase() }); Promise.resolve().then(() => { const _cb = (r => renderAdminRegistry(r)); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
+    }
   };
   // Access request UI
   window.openAccessRequests = function () {
@@ -1100,8 +988,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     document.getElementById('overlay').classList.add('hidden');
   };
   window.fetchAccessRequests = function () {
-    if (!state.userEmail) return;
-    (async () => { try { const res = await runQuery("users:getAccessRequests", { callerEmail: state.userEmail }); Promise.resolve().then(() => { const _cb = (renderAccessRequests); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); zeusAlert(err.message || String(err)); } })();
+    (async () => { try { const res = await runQuery("users:getAccessRequests", {}); Promise.resolve().then(() => { const _cb = (renderAccessRequests); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
   };
   window.renderAccessRequests = function (reqs) {
     const c = document.getElementById('access-requests-list');
@@ -1134,12 +1021,12 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     (async () => { try { const res = await runMutation("users:approveAccountAccess", { callerEmail: state.userEmail, requestId: requestId }); Promise.resolve().then(() => { const _cb = (() => {
       fetchAccessRequests();
       fetchRegistry();
-    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); zeusAlert(err.message || String(err)); } })();
+    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
   };
   window.rejectRequest = function (requestId) {
-    (async () => { try { const res = await runMutation("users:rejectAccountAccess", { callerEmail: state.userEmail, requestId: requestId }); Promise.resolve().then(() => { const _cb = (() => {
+    (async () => { try { const res = await runMutation("users:rejectAccountAccess", { args: [requestId] }); Promise.resolve().then(() => { const _cb = (() => {
       fetchAccessRequests();
-    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); zeusAlert(err.message || String(err)); } })();
+    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
   };
   window.showRegistration = function () {
     state.view = 'REGISTRATION';
@@ -1152,7 +1039,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
   };
   window.proceedToNickname = function () {
     if (state.selectedRegistrationAccounts.size === 0) {
-      zeusAlert("Select a workspace.");
+      alert("Select a workspace.");
       return;
     }
     document.getElementById('new-user-nickname').value = '';
@@ -1162,7 +1049,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
   window.submitRegistration = function () {
     const n = document.getElementById('new-user-nickname').value;
     if (!n) {
-      zeusAlert("Nickname required.");
+      alert("Nickname required.");
       return;
     }
     const ids = Array.from(state.selectedRegistrationAccounts);
@@ -1181,7 +1068,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
       document.getElementById('overlay').classList.add('hidden');
       window.setBtnLoading('join-workspace-btn', false);
       if (state.role === 'GUEST') {
-        zeusAlert('Your access request has been sent. A super admin will review and grant approval shortly.');
+        alert('Your access request has been sent. A super admin will review and grant approval shortly.');
         // Clear selection so user doesn't accidentally re-submit same request
         state.selectedRegistrationAccounts.clear();
         renderContent();
@@ -1194,29 +1081,12 @@ import { convex, runQuery, runMutation } from './convex-client.js';
       updateAssignButton();
     };
     if (state.role === 'SUPER_ADMIN') {
-      (async () => { try { 
-        await runMutation("users:registerUserToAccounts", { callerEmail: state.userEmail, accountIds: ids, nickname: n }); 
-        const info = await runQuery("users:getSessionInfo", { email: state.userEmail });
-        callback(info);
-      } catch(err) { console.error(err); zeusAlert(err.message || String(err)); window.setBtnLoading('join-workspace-btn', false); } })();
+      (async () => { try { const res = await runMutation("users:registerUserToAccounts", { args: [ids, n] }); Promise.resolve().then(() => { const _cb = (callback); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
     } else {
       // send approval request instead
-      (async () => { try { 
-        await runMutation("users:requestAccountAccess", { email: state.userEmail, accountIds: ids, nickname: n }); 
-        const info = await runQuery("users:getSessionInfo", { email: state.userEmail });
-        callback(info);
-      } catch(err) { console.error(err); zeusAlert(err.message || String(err)); window.setBtnLoading('join-workspace-btn', false); } })();
+      (async () => { try { const res = await runMutation("users:requestAccountAccess", { email: state.userEmail, accountIds: ids, nickname: state.userNickname }); Promise.resolve().then(() => { const _cb = (callback); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
     }
   };
-  window.promptCreateAccount = function () {
-    const nameInput = document.getElementById('new-account-name');
-    if (nameInput) nameInput.value = '';
-    const errorMsg = document.getElementById('new-account-error');
-    if (errorMsg) errorMsg.classList.add('hidden');
-    document.getElementById('overlay').classList.remove('hidden');
-    document.getElementById('account-creator-modal').classList.remove('hidden');
-  };
-
   window.openAccountSwitcher = function () {
     if (state.role !== 'SUPER_ADMIN' && state.availableAccounts.length <= 1) return;
     const c = document.getElementById('account-list-container');
@@ -1242,18 +1112,16 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     document.getElementById('account-creator-modal').classList.remove('hidden');
   };
   window.submitNewAccount = function () {
-    const n = document.getElementById('new-account-name').value.trim();
+    const n = document.getElementById('new-account-name').value;
     if (!n) return;
     window.setBtnLoading('create-account-btn', true);
-    (async () => { try { await runMutation("accounts:createAccount", { callerEmail: state.userEmail, accountName: n });
-      // Refetch full session to get updated accounts list
-      const info = await runQuery("users:getSessionInfo", { email: state.userEmail });
+    (async () => { try { const res = await runMutation("accounts:createAccount", { callerEmail: state.userEmail, accountName: n }); Promise.resolve().then(() => { const _cb = (info => {
       state.availableAccounts = info.accounts;
       document.getElementById('account-creator-modal').classList.add('hidden');
-      window.setBtnLoading('create-account-btn', false, 'Create Zeus');
+      window.setBtnLoading('create-account-btn', false);
       window.openAccountSwitcher();
       if (state.view === 'SELECTOR') fetchRegistry();
-    } catch(err) { console.error(err); zeusAlert(err.message || String(err)); window.setBtnLoading('create-account-btn', false, 'Create Zeus'); } })();
+    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
   };
   window.toggleManageMode = function () {
     state.isManage = !state.isManage;
@@ -1268,8 +1136,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     const l = document.getElementById('category-list');
     l.innerHTML = '';
     if (!state.currentAccount) return;
-    const cats = state.currentAccount.categories || [{ id: 'HOME', name: 'Home' }];
-    cats.forEach(cat => {
+    state.currentAccount.categories.forEach(cat => {
       const d = document.createElement('div');
       const a = state.currentCat === cat.id;
       d.className = `side-item ${a ? 'active' : ''}`;
@@ -1300,50 +1167,39 @@ import { convex, runQuery, runMutation } from './convex-client.js';
       iconType: i || '🔗'
     };
     window.setBtnLoading('modal-apply-btn', true);
-    if (state.context.type === 'account') {
-      // Rename account
-      (async () => { try { const res = await runMutation("accounts:saveAccountData", { accountId: state.context.id, type: 'account', item: { id: state.context.id, name: n } }); Promise.resolve().then(() => { const _cb = (d => {
-        // Refresh session to get updated account name
-        runQuery("users:getSessionInfo", { email: state.userEmail }).then(info => {
-          state.availableAccounts = info.accounts;
-          if (state.currentAccount && state.currentAccount.id === state.context.id) state.currentAccount.name = n;
-          window.setBtnLoading('modal-apply-btn', false);
-          closeModals();
-          if (state.view === 'SELECTOR') window.showAccountSelector();
-        });
-      }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); zeusAlert(err.message || String(err)); window.setBtnLoading('modal-apply-btn', false); } })();
-    } else {
-      // Save category or icon
-      const type = state.context.type === 'cat' ? 'cat' : 'icon';
-      (async () => { try { const res = await runMutation("accounts:saveAccountData", { accountId: state.currentAccount.id, type, item: obj }); Promise.resolve().then(() => { const _cb = (d => {
+    // If editing an account, we use a different context
+    const accountId = state.context.type === 'account' ? state.context.id : (state.currentAccount ? state.currentAccount.id : null);
+    (async () => { try { const res = await runMutation("accounts:saveAccountData", { accountId: state.currentAccount?.id, type: undefined, item: { id: accountId, name: state.context.type, title: state.context.type, url: obj, iconType: null, catId: null } }); Promise.resolve().then(() => { const _cb = (d => {
+      if (state.context.type === 'account') {
+        // Refresh available accounts and current account if needed
+        state.availableAccounts = d.accounts;
+        if (state.currentAccount && state.currentAccount.id === state.context.id) {
+          state.currentAccount.name = n;
+        }
+        window.showAccountSelector();
+      } else {
         state.currentAccount = d;
         renderCategories();
         renderContent();
-        window.setBtnLoading('modal-apply-btn', false);
-        closeModals();
-      }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); zeusAlert(err.message || String(err)); window.setBtnLoading('modal-apply-btn', false); } })();
-    }
+      }
+      window.setBtnLoading('modal-apply-btn', false);
+      closeModals();
+    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
   };
   window.deleteItemAction = function () {
     if (state.context.type === 'account') {
-      window.zeusConfirm(`Delete this workspace?`, () => {
-        (async () => { try {
-          await runMutation("accounts:deleteAccount", { callerEmail: state.userEmail, accountId: state.context.id });
-          const info = await runQuery("users:getSessionInfo", { email: state.userEmail });
-          state.availableAccounts = info.accounts;
-          window.showAccountSelector();
-          closeModals();
-        } catch(err) { console.error(err); zeusAlert(err.message || String(err)); } })();
-      });
+      if (confirm(`Delete ${state.context.id}?`)) (async () => { try { const res = await runMutation("accounts:deleteAccount", { callerEmail: state.userEmail, accountId: state.context.id }); Promise.resolve().then(() => { const _cb = (i => {
+        state.availableAccounts = i.accounts;
+        window.showAccountSelector();
+        closeModals();
+      }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
       return;
     }
-    window.zeusConfirm("Remove item?", () => {
-      (async () => { try { const res = await runMutation("accounts:deleteAccountItem", { accountId: state.currentAccount?.id, type: state.context.type, itemId: state.context.id }); Promise.resolve().then(() => { const _cb = (d => {
-        state.currentAccount = d;
-        renderCategories();
-        renderContent();
-      }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); zeusAlert(err.message || String(err)); } })();
-    });
+    if (confirm("Remove item?")) (async () => { try { const res = await runMutation("accounts:deleteAccountItem", { accountId: state.currentAccount?.id, type: state.context.type, itemId: state.currentAccount.id }); Promise.resolve().then(() => { const _cb = (d => {
+      state.currentAccount = d;
+      renderCategories();
+      renderContent();
+    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
   };
   window.renderAnnouncements = function () {
     const c = document.getElementById('ann-scroll-area');
@@ -1411,27 +1267,27 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     state.htmlCache.announcements = newHTML;
   };
   window.deleteAnnAction = function (id) {
-    window.zeusConfirm("Delete announcement?", () => {
+    if (confirm("Delete announcement?")) {
       // If we're viewing an account, use its ID. Otherwise find the announcement's account
       let accountId = state.currentAccount ? state.currentAccount.id : null;
       if (!accountId) {
-        zeusAlert('Error: Cannot determine account context for deletion');
+        alert('Error: Cannot determine account context for deletion');
         return;
       }
-      (async () => { try { await runMutation("announcements:deleteAccountAnnouncement", { callerEmail: state.userEmail, accountId, annId: id });
-        const data = await runQuery("accounts:getAccountData", { accountId });
-        if (data) { state.currentAccount = data; renderAnnouncements(); }
-      } catch(err) { console.error(err); zeusAlert(err.message || String(err)); } })();
-    });
+      (async () => { try { const res = await runMutation("announcements:deleteAccountAnnouncement", { callerEmail: state.userEmail, accountId: accountId, annId: id }); Promise.resolve().then(() => { const _cb = (d => {
+        state.currentAccount = d;
+        renderAnnouncements();
+      }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
+    }
   };
   window.editAnnAction = function (id) {
     // Find announcement and prefill broadcaster modal for editing
     if (!state.currentAccount) {
-      zeusAlert('Error: No account context found for editing');
+      alert('Error: No account context found for editing');
       return;
     }
     const ann = (state.currentAccount.announcements || []).find(a => a.id === id || a.globalId === id);
-    if (!ann) return zeusAlert('Announcement not found');
+    if (!ann) return alert('Announcement not found');
     state.currentEditingAnn = { id: ann.id, globalId: ann.globalId || null, accountId: state.currentAccount.id };
     document.getElementById('ann-message').value = ann.message || '';
     document.getElementById('ann-severity').value = ann.severity || 'info';
@@ -1467,11 +1323,18 @@ import { convex, runQuery, runMutation } from './convex-client.js';
   window.togglePinAction = function (id, cb) {
     // Toggle pin on the server, update state and re-render. Optional callback runs after update.
     const accId = state.currentAccount ? state.currentAccount.id : null;
-    (async () => { try {
-      await runMutation("announcements:toggleAnnouncementPin", { callerEmail: state.userEmail, accountId: accId, annId: id });
-      const data = await runQuery("accounts:getAccountData", { accountId: accId });
-      if (data) { state.currentAccount = data; renderAnnouncements(); if (typeof cb === 'function') cb(); }
-    } catch(err) { console.error('Failed to toggle pin', err); zeusAlert('Failed to toggle pin (server error)'); } })();
+    (async () => { try { const res = await runMutation("announcements:toggleAnnouncementPin", { callerEmail: state.userEmail, accountId: accId, annId: id }); Promise.resolve().then(() => { const _cb = (d => {
+      try {
+        state.currentAccount = d;
+        renderAnnouncements();
+        if (typeof cb === 'function') cb();
+      } catch (e) {
+        console.error('Error in togglePinAction success handler', e);
+      }
+    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); Promise.resolve().then(() => { const _fc = (err => {
+      console.error('Failed to toggle pin', err);
+      alert('Failed to toggle pin (server error)');
+    }); if(typeof _fc === 'function') _fc(err); else alert(err.message || String(err)); }); } })();
   };
   window.releaseAnnouncement = function () {
     const m = document.getElementById('ann-message').value;
@@ -1483,34 +1346,74 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     // Check if editing existing announcement
     if (state.currentEditingAnn) {
       const accId = state.currentEditingAnn.accountId;
-      (async () => { try {
-        await runMutation("announcements:editAccountAnnouncement", { callerEmail: state.userEmail, accountId: accId, annId: state.currentEditingAnn.id, newMsg: m, newSeverity: s, newImageUrl: state.currentImageBase64, newLinkUrl: link || null });
-        const data = await runQuery("accounts:getAccountData", { accountId: accId });
-        if (data) { state.currentAccount = data; }
-        state.currentEditingAnn = null;
-        renderAnnouncements();
-        closeModals();
+      (async () => { try { const res = await runMutation("unknown:editAccountAnnouncement", { args: [accId, state.currentEditingAnn.id, m, s, state.currentImageBase64, link] }); Promise.resolve().then(() => { const _cb = (d => {
+        if (d && d.status === 'error') {
+          alert('Error: ' + d.message);
+          return;
+        }
+        try {
+          state.currentAccount = d;
+          state.currentEditingAnn = null; // Clear editing state
+          renderAnnouncements();
+          closeModals();
+        } catch (err) {
+          console.error('Error handling edit announcement response', err);
+          alert('An error occurred while updating the announcement.');
+        } finally {
+          window.setBtnLoading('ann-post-btn', false);
+        }
+      }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); Promise.resolve().then(() => { const _fc = (err => {
+        console.error('RPC failure editing announcement', err);
+        alert('Failed to update announcement (server error)');
         window.setBtnLoading('ann-post-btn', false);
-      } catch(err) { console.error('RPC failure editing announcement', err); zeusAlert('Failed to update announcement (server error)'); window.setBtnLoading('ann-post-btn', false); } })();
+      }); if(typeof _fc === 'function') _fc(err); else alert(err.message || String(err)); }); } })();
       return;
     }
     // Otherwise, post new announcement
     const targetSel = document.getElementById('ann-target');
     let target = state.currentAccount ? state.currentAccount.id : null;
-    if (targetSel && targetSel.value) target = targetSel.value;
-    if (!target) { zeusAlert('No target account selected.'); window.setBtnLoading('ann-post-btn', false); return; }
-    (async () => { try {
-      const result = await runMutation("announcements:postAccountAnnouncement", { callerEmail: state.userEmail, accountId: target, message: m, severity: s, sender: snd || state.userNickname, imageUrl: state.currentImageBase64 || null, linkUrl: link || null });
-      if (result && result.status === 'forbidden') { zeusAlert('Unauthorized to post global announcement'); window.setBtnLoading('ann-post-btn', false); return; }
-      if (result && result.status === 'error') { zeusAlert('Error: ' + result.message); window.setBtnLoading('ann-post-btn', false); return; }
-      // Refresh workspace data
-      if (state.currentAccount) {
-        const data = await runQuery("accounts:getAccountData", { accountId: state.currentAccount.id });
-        if (data) { state.currentAccount = data; renderAnnouncements(); }
+    if (targetSel) {
+      const v = targetSel.value;
+      if (v) target = v;
+    }
+    (async () => { try { const res = await runMutation("unknown:postAccountAnnouncement", { args: [target, m, s, snd, state.currentImageBase64, link] }); Promise.resolve().then(() => { const _cb = (d => {
+      try {
+        // If global broadcast returned lightweight ok object
+        if (d && d.ok) {
+          // Refresh workspace data, then re-render announcements when done
+          try {
+            pollWorkspaceUpdates(() => {
+              try { renderAnnouncements(); } catch (e) { console.error('renderAnnouncements after poll failed', e); }
+              try { closeModals(); } catch (e) { console.error('closeModals after poll failed', e); }
+            });
+          } catch (e) {
+            console.error('pollWorkspaceUpdates call failed', e);
+          }
+          return;
+        }
+        if (d && d.status === 'forbidden') {
+          alert('Unauthorized to post global announcement');
+          return;
+        }
+        if (d && d.status === 'error') {
+          alert('Error: ' + d.message);
+          return;
+        }
+        // otherwise server returned the updated account
+        state.currentAccount = d;
+        renderAnnouncements();
+        closeModals();
+      } catch (err) {
+        console.error('Error handling announcement response', err);
+        alert('An error occurred while processing the announcement response.');
+      } finally {
+        window.setBtnLoading('ann-post-btn', false);
       }
-      closeModals();
+    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); Promise.resolve().then(() => { const _fc = (err => {
+      console.error('RPC failure posting announcement', err);
+      alert('Failed to post announcement (server error)');
       window.setBtnLoading('ann-post-btn', false);
-    } catch(err) { console.error('RPC failure posting announcement', err); zeusAlert('Failed to post announcement (server error)'); window.setBtnLoading('ann-post-btn', false); } })();
+    }); if(typeof _fc === 'function') _fc(err); else alert(err.message || String(err)); }); } })();
   };
   window.toggleTheme = function () {
     state.isDark = !state.isDark;
@@ -1573,7 +1476,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     document.getElementById('overlay').classList.remove('hidden');
   };
   window.closeModals = function () {
-    ['modal', 'broadcaster-modal', 'overlay', 'account-switcher-modal', 'account-creator-modal', 'reminder-modal', 'nickname-modal', 'image-lightbox', 'admin-dashboard-modal', 'feedback-modal', 'notes-dashboard-modal', 'note-editor-modal', 'assigned-modal', 'access-requests-modal', 'verification-modal', 'admin-assign-modal'].forEach(id => {
+    ['modal', 'broadcaster-modal', 'overlay', 'account-switcher-modal', 'account-creator-modal', 'reminder-modal', 'nickname-modal', 'image-lightbox', 'admin-dashboard-modal', 'feedback-modal', 'notes-dashboard-modal', 'note-editor-modal', 'assigned-modal', 'access-requests-modal', 'verification-modal'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.classList.add('hidden');
     });
@@ -1666,7 +1569,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     if (f) {
       // Limit image size to 5MB to prevent RPC payload issues
       if (f.size > 5 * 1024 * 1024) {
-        zeusAlert("Image too large. Please select an image smaller than 5MB.");
+        alert("Image too large. Please select an image smaller than 5MB.");
         e.target.value = '';
         return;
       }
@@ -1743,25 +1646,24 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     (async () => { try { const res = await runMutation("tasks:addPersonalTask", { email: state.userEmail, taskText: t }); Promise.resolve().then(() => { const _cb = (l => {
       state.checklist = l || [];
       if (state.currentCat === 'HOME') updateChecklistUI();
-    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); zeusAlert(err.message || String(err)); } })();
+    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
   };
   window.toggleTaskAction = function (id) {
     const t = state.checklist.find(x => x.id === id);
     if (t) {
       t.isDone = !t.isDone;
       if (state.currentCat === 'HOME') updateChecklistUI();
-      (async () => { try { const res = await runMutation("tasks:togglePersonalTask", { email: state.userEmail, taskId: id }); Promise.resolve().then(() => { const _cb = (l => state.checklist = l || []); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); zeusAlert(err.message || String(err)); } })();
+      (async () => { try { const res = await runMutation("tasks:togglePersonalTask", { email: state.userEmail, taskId: id }); Promise.resolve().then(() => { const _cb = (l => state.checklist = l || []); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
     }
   };
   window.deleteTaskAction = function (id) {
-    window.zeusConfirm("Delete?", () => {
-      state.checklist = state.checklist.filter(x => x.id !== id);
+    if (!confirm("Delete?")) return;
+    state.checklist = state.checklist.filter(x => x.id !== id);
+    if (state.currentCat === 'HOME') updateChecklistUI();
+    (async () => { try { const res = await runMutation("tasks:deletePersonalTask", { email: state.userEmail, taskId: id }); Promise.resolve().then(() => { const _cb = (l => {
+      state.checklist = l || [];
       if (state.currentCat === 'HOME') updateChecklistUI();
-      (async () => { try { const res = await runMutation("tasks:deletePersonalTask", { email: state.userEmail, taskId: id }); Promise.resolve().then(() => { const _cb = (l => {
-        state.checklist = l || [];
-        if (state.currentCat === 'HOME') updateChecklistUI();
-      }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); zeusAlert(err.message || String(err)); } })();
-    });
+    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
   };
   window.promptAdminTask = function (email, nickname) {
     // Open task assignment modal instead of browser prompt
@@ -1830,7 +1732,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
       pollPersonalUpdates();
     }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); Promise.resolve().then(() => { const _fc = (err => {
       console.error('Failed to dispatch tasks', err);
-    }); if(typeof _fc === 'function') _fc(err); else zeusAlert(err.message || String(err)); }); } })();
+    }); if(typeof _fc === 'function') _fc(err); else alert(err.message || String(err)); }); } })();
   };
   window.toggleNotes = function () {
     state.notesOpen = !state.notesOpen;
@@ -1896,7 +1798,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     const b = document.getElementById('dash-new-body').innerHTML.trim();
     if (t || b) {
       if (state.notesMode === 'TEAM' && !state.currentAccount) {
-        zeusAlert("Join workspace first.");
+        alert("Join workspace first.");
         return;
       }
       const tmpId = 'temp_' + Date.now();
@@ -1913,13 +1815,13 @@ import { convex, runQuery, runMutation } from './convex-client.js';
       } else {
         state.notes.unshift(obj);
       }
-      const aid = state.currentAccount ? state.currentAccount.id : undefined;
-      (async () => { try { const res = await runMutation("notes:saveNote", { email: state.userEmail, noteId: undefined, title: t, content: b, scope: state.notesMode, accountId: aid, nickname: state.userNickname || undefined }); Promise.resolve().then(() => { const _cb = (n => {
+      const aid = state.currentAccount ? state.currentAccount.id : null;
+      (async () => { try { const res = await runMutation("notes:saveNote", { email: state.userEmail, noteId: null, title: t, content: b, scope: state.notesMode, accountId: aid, nickname: state.userNickname }); Promise.resolve().then(() => { const _cb = (n => {
         if (state.notesMode === 'TEAM') state.currentAccount.notes = n;
         else state.notes = n;
         renderNotes();
         renderFullScreenNotes();
-      }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); zeusAlert(err.message || String(err)); } })();
+      }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
     }
     // Reset UI
     document.getElementById('dash-new-title').value = '';
@@ -1985,34 +1887,33 @@ import { convex, runQuery, runMutation } from './convex-client.js';
       n.title = t;
       n.content = b;
     }
-    const aid = state.currentAccount ? state.currentAccount.id : undefined;
-    (async () => { try { const res = await runMutation("notes:saveNote", { email: state.userEmail, noteId: state.currentNoteId || undefined, title: t, content: b, scope: state.notesMode, accountId: aid, nickname: state.userNickname || undefined }); Promise.resolve().then(() => { const _cb = (nx => {
+    const aid = state.currentAccount ? state.currentAccount.id : null;
+    (async () => { try { const res = await runMutation("notes:saveNote", { email: state.userEmail, noteId: state.currentNoteId, title: t, content: b, scope: state.notesMode, accountId: aid, nickname: state.userNickname }); Promise.resolve().then(() => { const _cb = (nx => {
       if (state.notesMode === 'TEAM') state.currentAccount.notes = nx;
       else state.notes = nx;
       renderNotes();
       renderFullScreenNotes();
-    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); zeusAlert(err.message || String(err)); } })();
+    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
     renderNotes();
     renderFullScreenNotes();
     closeNoteEditor();
   };
   window.deleteNoteFromEditor = function () {
     if (!state.currentNoteId) return;
-    window.zeusConfirm("Delete this note?", () => {
-      const id = state.currentNoteId;
-      if (state.notesMode === 'TEAM') state.currentAccount.notes = state.currentAccount.notes.filter(n => n.id !== id);
-      else state.notes = state.notes.filter(n => n.id !== id);
-      const aid = state.currentAccount ? state.currentAccount.id : undefined;
-      (async () => { try { const res = await runMutation("notes:deleteNote", { email: state.userEmail, noteId: id, scope: state.notesMode, accountId: aid }); Promise.resolve().then(() => { const _cb = (n => {
-        if (state.notesMode === 'TEAM') state.currentAccount.notes = n;
-        else state.notes = n;
-        renderNotes();
-        renderFullScreenNotes();
-      }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); zeusAlert(err.message || String(err)); } })();
+    if (!confirm("Delete this note?")) return;
+    const id = state.currentNoteId;
+    if (state.notesMode === 'TEAM') state.currentAccount.notes = state.currentAccount.notes.filter(n => n.id !== id);
+    else state.notes = state.notes.filter(n => n.id !== id);
+    const aid = state.currentAccount ? state.currentAccount.id : null;
+    (async () => { try { const res = await runMutation("notes:deleteNote", { email: state.userEmail, noteId: id, scope: state.notesMode, accountId: aid }); Promise.resolve().then(() => { const _cb = (n => {
+      if (state.notesMode === 'TEAM') state.currentAccount.notes = n;
+      else state.notes = n;
       renderNotes();
       renderFullScreenNotes();
-      closeNoteEditor();
-    });
+    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
+    renderNotes();
+    renderFullScreenNotes();
+    closeNoteEditor();
   };
   window.toggleNotesMode = function () {
     state.notesMode = state.notesMode === 'PERSONAL' ? 'TEAM' : 'PERSONAL';
@@ -2058,7 +1959,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     const bv = b.innerHTML.trim();
     if (!bv && !tv) return;
     if (state.notesMode === 'TEAM' && !state.currentAccount) {
-      zeusAlert("Join workspace first.");
+      alert("Join workspace first.");
       return;
     }
     const tmpId = 'temp_' + Date.now();
@@ -2078,24 +1979,23 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     t.value = '';
     b.innerHTML = '';
     renderNotes();
-    const aid = state.currentAccount ? state.currentAccount.id : undefined;
-    (async () => { try { const res = await runMutation("notes:saveNote", { email: state.userEmail, noteId: undefined, title: tv, content: bv, scope: state.notesMode, accountId: aid, nickname: state.userNickname || undefined }); Promise.resolve().then(() => { const _cb = (n => {
+    const aid = state.currentAccount ? state.currentAccount.id : null;
+    (async () => { try { const res = await runMutation("notes:saveNote", { email: state.userEmail, noteId: null, title: tv, content: bv, scope: state.notesMode, accountId: aid, nickname: state.userNickname }); Promise.resolve().then(() => { const _cb = (n => {
       if (state.notesMode === 'TEAM') state.currentAccount.notes = n;
       else state.notes = n;
       renderNotes();
-    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); zeusAlert(err.message || String(err)); } })();
+    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
   };
   window.deleteNoteAction = function (id) {
-    window.zeusConfirm("Delete note?", () => {
-      if (state.notesMode === 'TEAM') state.currentAccount.notes = state.currentAccount.notes.filter(n => n.id !== id);
-      else state.notes = state.notes.filter(n => n.id !== id);
-      renderNotes();
-      const aid = state.currentAccount ? state.currentAccount.id : undefined;
-      (async () => { try { const res = await runMutation("notes:deleteNote", { email: state.userEmail, noteId: id, scope: state.notesMode, accountId: aid }); Promise.resolve().then(() => { const _cb = (n => {
-        if (state.notesMode === 'TEAM') state.currentAccount.notes = n;
-        else state.notes = n;
-      }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); zeusAlert(err.message || String(err)); } })();
-    });
+    if (!confirm("Delete note?")) return;
+    if (state.notesMode === 'TEAM') state.currentAccount.notes = state.currentAccount.notes.filter(n => n.id !== id);
+    else state.notes = state.notes.filter(n => n.id !== id);
+    renderNotes();
+    const aid = state.currentAccount ? state.currentAccount.id : null;
+    (async () => { try { const res = await runMutation("notes:deleteNote", { email: state.userEmail, noteId: id, scope: state.notesMode, accountId: aid }); Promise.resolve().then(() => { const _cb = (n => {
+      if (state.notesMode === 'TEAM') state.currentAccount.notes = n;
+      else state.notes = n;
+    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
   };
   /* ------------------------------------------------------------------
      ORG CHART LOGIC
@@ -2428,12 +2328,11 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     if (!m) return;
     window.setBtnLoading('reminder-send-btn', true);
     const isRecurring = rec !== 'NONE';
-    const durNum = d ? Number(d) : undefined;
-    (async () => { try { const res = await runMutation("reminders:postReminder", { callerEmail: state.userEmail, targetAccount: t, message: m, imageUrl: state.currentReminderImageBase64, sender: s, durationHours: durNum, scheduledTime: sc, isRecurring: isRecurring, recurrenceRule: rec }); Promise.resolve().then(() => { const _cb = (() => {
+    (async () => { try { const res = await runMutation("reminders:postReminder", { callerEmail: state.userEmail, targetAccount: t, message: m, imageUrl: state.currentReminderImageBase64, sender: s, durationHours: d, scheduledTime: sc, isRecurring: isRecurring, recurrenceRule: rec }); Promise.resolve().then(() => { const _cb = (() => {
       window.setBtnLoading('reminder-send-btn', false);
       closeModals();
       if (state.currentAccount) window.loadAccount(state.currentAccount.id);
-    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); zeusAlert(err.message || String(err)); } })();
+    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
   };
   window.previewReminderImage = function (e) {
     const f = e.target.files[0];
@@ -2455,11 +2354,10 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     document.getElementById('reminder-image').value = '';
   };
   window.deleteReminder = function (id) {
-    window.zeusConfirm("Delete this reminder?", () => {
-      (async () => { try { const res = await runMutation("reminders:deleteReminder", { callerEmail: state.userEmail, reminderId: id }); Promise.resolve().then(() => { const _cb = (() => {
-        if (state.currentAccount) window.loadAccount(state.currentAccount.id);
-      }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); zeusAlert(err.message || String(err)); } })();
-    });
+    if (!confirm("Delete this reminder?")) return;
+    (async () => { try { const res = await runMutation("reminders:deleteReminder", { callerEmail: state.userEmail, reminderId: id }); Promise.resolve().then(() => { const _cb = (() => {
+      if (state.currentAccount) window.loadAccount(state.currentAccount.id);
+    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
   };
   window.setBtnLoading = function (id, l, txt) {
     const b = document.getElementById(id);
@@ -2530,7 +2428,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     // Sync AUX status to server
     (async () => { try { const res = await runMutation("users:updateUserAuxStatus", { email: state.userEmail, auxStatus: status }); Promise.resolve().then(() => { const _cb = (() => {
       checkOnlineStatus();
-    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); zeusAlert(err.message || String(err)); } })();
+    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
     // Close dropdown
     const dd = document.getElementById('aux-dropdown');
     if (dd) dd.classList.add('hidden');
@@ -2725,50 +2623,16 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     inputEl.style.height = 'auto'; // reset height
     aiChatState.isWaiting = true;
     window.showAITypingIndicator();
-    // Note: AI bot endpoint — keep unknown prefix until AI module is set up
-    (async () => { try { const res = await runMutation("unknown:askAIBot", { args: [question] }); Promise.resolve().then(() => { const _cb = ((response) => {
+    (async () => { try { const res = await runMutation("ai:askAIBot", { question: question }); Promise.resolve().then(() => { const _cb = ((response) => {
       window.removeAITypingIndicator();
       aiChatState.isWaiting = false;
       window.addAIMessageToUI('ai', response);
     }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); Promise.resolve().then(() => { const _fc = ((err) => {
       window.removeAITypingIndicator();
       aiChatState.isWaiting = false;
-      window.addAIMessageToUI('ai', 'Sorry, AI is temporarily unavailable.');
-    }); if(typeof _fc === 'function') _fc(err); else zeusAlert(err.message || String(err)); }); } })();
+      window.addAIMessageToUI('ai', 'Error: ' + err.message);
+    }); if(typeof _fc === 'function') _fc(err); else alert(err.message || String(err)); }); } })();
   }
-
-  // --- ADMIN ASSIGN USER TO ACCOUNT ---
-  window.openAdminAssignModal = function (email, nickname) {
-    const modal = document.getElementById('admin-assign-modal');
-    if (!modal) return;
-    document.getElementById('admin-assign-target-name').innerText = nickname + ' (' + email + ')';
-    document.getElementById('admin-assign-email').value = email;
-    // Render account checkboxes
-    const list = document.getElementById('admin-assign-account-list');
-    list.innerHTML = '';
-    state.availableAccounts.forEach(acc => {
-      const item = document.createElement('label');
-      item.className = 'flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700';
-      item.innerHTML = `<input type="checkbox" value="${acc.id}" class="admin-assign-checkbox w-4 h-4 rounded accent-blue-600"><span class="text-xs font-black uppercase tracking-tight text-slate-700 dark:text-slate-200">${acc.name}</span><span class="text-[9px] text-slate-400 ml-auto font-bold">${acc.id}</span>`;
-      list.appendChild(item);
-    });
-    document.getElementById('overlay').classList.remove('hidden');
-    modal.classList.remove('hidden');
-  };
-
-  window.submitAdminAssign = function () {
-    const email = document.getElementById('admin-assign-email').value;
-    const checked = Array.from(document.querySelectorAll('.admin-assign-checkbox:checked')).map(cb => cb.value);
-    if (checked.length === 0) { zeusAlert('Select at least one account.'); return; }
-    window.setBtnLoading('admin-assign-submit-btn', true);
-    (async () => { try {
-      const registry = await runMutation("accounts:adminAssignUser", { callerEmail: state.userEmail, targetEmail: email, accountIds: checked });
-      renderAdminRegistry(registry);
-      document.getElementById('admin-assign-modal').classList.add('hidden');
-      document.getElementById('overlay').classList.add('hidden');
-      window.setBtnLoading('admin-assign-submit-btn', false, 'Assign');
-    } catch(err) { console.error(err); zeusAlert(err.message || String(err)); window.setBtnLoading('admin-assign-submit-btn', false, 'Assign'); } })();
-  };
 
   window.addAIMessageToUI = function (role, text) {
     const container = document.getElementById('ai-chat-messages');
