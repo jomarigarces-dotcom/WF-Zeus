@@ -327,7 +327,7 @@ import { convex, runQuery, runMutation, watchQuery } from './convex-client.js';
     } else {
       const cards = reminders.map(r => {
         const canDelete = r.senderEmail === state.userEmail;
-        const deleteBtn = canDelete ? `<span class="material-icons text-lg text-slate-300 hover:text-red-500 cursor-pointer transition-colors" onclick="deleteReminder('${r.id}')">delete</span>` : '';
+        const deleteBtn = canDelete ? `<span class="material-icons text-lg text-slate-300 hover:text-red-500 cursor-pointer transition-colors" onclick="deleteReminder('${r._id}')">delete</span>` : '';
         // Avatar fallback
         const initial = r.sender ? r.sender.charAt(0) : 'A';
         return `
