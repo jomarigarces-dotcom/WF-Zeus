@@ -203,7 +203,7 @@ export const saveAccountData = mutation({
     return {
       id: updatedAcc.accountId,
       name: updatedAcc.name,
-      categories: updatedAcc.categories || [],
+      categories: [{ id: "HOME", name: "Home Dashboard" }, ...(updatedAcc.categories || [])],
       icons: updatedAcc.icons || [],
       announcements: updatedAcc.announcements || [],
       notes: updatedAcc.notes || [],

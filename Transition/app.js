@@ -900,11 +900,47 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     } else {
       main.classList.remove('overflow-hidden');
       const filteredIcons = (state.currentAccount.icons || []).filter(i => i.catId == state.currentCat);
-      if (filteredIcons.length === 0 && !state.isManage) { grid.innerHTML = `<div class="flex flex-col items-center justify-center min-h-[40vh] text-center opacity-40"><span class="material-icons text-6xl mb-4 text-slate-200">grid_view</span><p class="font-black uppercase text-xs tracking-[0.2em] text-slate-400">Blank Workspace. Initialize tools via Manage Mode.</p></div>`; return; }
-      const iconContainer = document.createElement('div'); iconContainer.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-20';
-      filteredIcons.forEach(icon => { const card = document.createElement('div'); card.className = 'tool-card group cursor-pointer'; card.onclick = () => window.open(icon.url, '_blank'); if (state.isManage) card.oncontextmenu = (e) => showContextMenu(e, 'icon', icon.id); card.innerHTML = `<div class="w-12 h-12 bg-primary-50 dark:bg-primary-900/20 rounded-2xl flex items-center justify-center text-2xl mb-5 group-hover:bg-primary-600 group-hover:text-white shadow-sm"><span>${icon.iconType || '🔗'}</span></div><h3 class="font-black text-slate-800 dark:text-white text-base mb-1 tracking-tight group-hover:text-primary-600 transition-colors uppercase">${icon.title}</h3><p class="text-[10px] text-slate-400 dark:text-slate-500 truncate uppercase font-bold tracking-widest">${icon.url.replace('https://', '')}</p>`; iconContainer.appendChild(card); });
-      if (state.isManage) { const addBtn = document.createElement('div'); addBtn.className = 'tool-card border-dashed border-2 border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center text-slate-300 py-12 cursor-pointer hover:border-primary-600'; addBtn.innerHTML = '<span class="material-icons mb-2">add_circle_outline</span><span class="font-black text-[10px] uppercase tracking-widest">Register Zeus Tool</span>'; addBtn.onclick = () => { state.context = { type: 'icon', id: null }; window.openModal(); }; iconContainer.appendChild(addBtn); }
-      grid.appendChild(iconContainer);
+      if (filteredIcons.length === 0 && !state.isManage) {
+        grid.innerHTML = `<div class="flex flex-col items-center justify-center min-h-[40vh] text-center opacity-40"><span class="material-icons text-6xl mb-4 text-slate-200">grid_view</span><p class="font-black uppercase text-xs tracking-[0.2em] text-slate-400">Blank Workspace. Initialize tools via Manage Mode.</p></div>`;
+        return;
+      }
+      
+      try {
+        const iconContainer = document.createElement('div');
+        iconContainer.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-20';
+        
+        filteredIcons.forEach(icon => {
+          try {
+            const card = document.createElement('div'); 
+            card.className = 'tool-card group cursor-pointer'; 
+            card.onclick = () => window.open(icon.url || '#', '_blank'); 
+            if (state.isManage) card.oncontextmenu = (e) => showContextMenu(e, 'icon', icon.id); 
+            
+            const displayUrl = (icon.url || '').replace('https://', '');
+            const title = icon.title || icon.name || 'Untitled Tool';
+            const iconType = icon.iconType || '🔗';
+            
+            card.innerHTML = `<div class="w-12 h-12 bg-primary-50 dark:bg-primary-900/20 rounded-2xl flex items-center justify-center text-2xl mb-5 group-hover:bg-primary-600 group-hover:text-white shadow-sm"><span>${iconType}</span></div><h3 class="font-black text-slate-800 dark:text-white text-base mb-1 tracking-tight group-hover:text-primary-600 transition-colors uppercase">${title}</h3><p class="text-[10px] text-slate-400 dark:text-slate-500 truncate uppercase font-bold tracking-widest">${displayUrl}</p>`; 
+            
+            iconContainer.appendChild(card); 
+          } catch(errIcon) {
+            console.error('[Zeus] Failed to render individual tool card', errIcon, icon);
+          }
+        });
+        
+        if (state.isManage) { 
+          const addBtn = document.createElement('div'); 
+          addBtn.className = 'tool-card border-dashed border-2 border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center text-slate-300 py-12 cursor-pointer hover:border-primary-600'; 
+          addBtn.innerHTML = '<span class="material-icons mb-2">add_circle_outline</span><span class="font-black text-[10px] uppercase tracking-widest">Register Zeus Tool</span>'; 
+          addBtn.onclick = () => { state.context = { type: 'icon', id: null }; window.openModal(); }; 
+          iconContainer.appendChild(addBtn); 
+        }
+        
+        grid.appendChild(iconContainer);
+      } catch (errGrid) {
+        console.error('[Zeus] Tool Grid render failure:', errGrid);
+        grid.innerHTML = `<div class="p-8 text-center text-red-500"><span class="material-icons text-4xl">error</span><p class="mt-2 font-bold uppercase text-xs tracking-widest">Error populating workspace views. Please contact support.</p></div>`;
+      }
     }
   }
 
@@ -1186,7 +1222,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
       (async () => {
         try {
           const res = await runMutation("accounts:saveAccountData", { accountId: state.currentAccount.id, type: 'cat', item: { id: itemId, name: n } });
-          state.currentAccount = res;
+          state.currentAccount = res; console.log('BUG LOG:', res);
           renderCategories();
           renderContent();
           window.setBtnLoading('modal-apply-btn', false);
@@ -1524,6 +1560,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     // clear any editing state
     state.currentEditingAnn = null;
     state.currentImageBase64 = null;
+    state.context = Object.assign(state.context || {}, { id: null });
     const preview = document.getElementById('ann-image-preview-container'); if (preview) preview.classList.add('hidden');
   };
   window.openBroadcaster = function (forceServer) {
