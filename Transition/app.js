@@ -1163,34 +1163,57 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     const contextType = state.context.type; // 'icon', 'cat', or 'account'
     window.setBtnLoading('modal-apply-btn', true);
     if (contextType === 'account') {
-      // Rename account
-      (async () => { try { const res = await runMutation("accounts:saveAccountData", { accountId: state.context.id, type: 'account', item: { id: state.context.id, name: n } }); Promise.resolve().then(() => { const _cb = (d => {
-        // d is the updated account object. Find and update it in availableAccounts list.
-        const accIdx = state.availableAccounts.findIndex(a => a.id === d.id);
-        if (accIdx !== -1) state.availableAccounts[accIdx].name = d.name;
-        if (state.currentAccount && state.currentAccount.id === d.id) state.currentAccount.name = d.name;
-        window.showAccountSelector();
-        window.setBtnLoading('modal-apply-btn', false);
-        closeModals();
-      }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); window.setBtnLoading('modal-apply-btn', false); } })();
+      const accId = state.context.id;
+      if (!accId) return;
+      (async () => {
+        try {
+          const res = await runMutation("accounts:saveAccountData", { accountId: accId, type: 'account', item: { id: accId, name: n } });
+          const d = res;
+          const accIdx = state.availableAccounts.findIndex(a => a.id === d.id);
+          if (accIdx !== -1) state.availableAccounts[accIdx].name = d.name;
+          if (state.currentAccount && state.currentAccount.id === d.id) state.currentAccount = d;
+          window.showAccountSelector();
+          window.setBtnLoading('modal-apply-btn', false);
+          closeModals();
+        } catch (err) {
+          console.error('[Zeus] Account save error:', err);
+          alert(err.message || String(err));
+          window.setBtnLoading('modal-apply-btn', false);
+        }
+      })();
     } else if (contextType === 'cat') {
-      // Add/edit category
-      (async () => { try { const res = await runMutation("accounts:saveAccountData", { accountId: state.currentAccount.id, type: 'cat', item: { id: itemId, name: n } }); Promise.resolve().then(() => { const _cb = (d => {
-        state.currentAccount = d;
-        renderCategories();
-        renderContent();
-        window.setBtnLoading('modal-apply-btn', false);
-        closeModals();
-      }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); window.setBtnLoading('modal-apply-btn', false); } })();
+      if (!state.currentAccount) return;
+      (async () => {
+        try {
+          const res = await runMutation("accounts:saveAccountData", { accountId: state.currentAccount.id, type: 'cat', item: { id: itemId, name: n } });
+          state.currentAccount = res;
+          renderCategories();
+          renderContent();
+          window.setBtnLoading('modal-apply-btn', false);
+          closeModals();
+        } catch (err) {
+          console.error('[Zeus] Category save error:', err);
+          alert(err.message || String(err));
+          window.setBtnLoading('modal-apply-btn', false);
+        }
+      })();
     } else {
-      // Add/edit icon (default)
-      (async () => { try { const res = await runMutation("accounts:saveAccountData", { accountId: state.currentAccount.id, type: 'icon', item: { id: itemId, title: n, url: u, iconType: i || '🔗', catId: targetCat || state.currentCat } }); Promise.resolve().then(() => { const _cb = (d => {
-        state.currentAccount = d;
-        renderCategories();
-        renderContent();
-        window.setBtnLoading('modal-apply-btn', false);
-        closeModals();
-      }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); window.setBtnLoading('modal-apply-btn', false); } })();
+      if (!state.currentAccount) return;
+      (async () => {
+        try {
+          const finalCatId = (targetCat && targetCat.length > 0) ? targetCat : (state.currentCat || 'HOME');
+          const res = await runMutation("accounts:saveAccountData", { accountId: state.currentAccount.id, type: 'icon', item: { id: itemId, title: n, url: u, iconType: i || '🔗', catId: finalCatId } });
+          state.currentAccount = res;
+          renderCategories();
+          renderContent();
+          window.setBtnLoading('modal-apply-btn', false);
+          closeModals();
+        } catch (err) {
+          console.error('[Zeus] Icon save error:', err);
+          alert(err.message || String(err));
+          window.setBtnLoading('modal-apply-btn', false);
+        }
+      })();
     }
   };
   window.deleteItemAction = function () {
@@ -1203,11 +1226,23 @@ import { convex, runQuery, runMutation } from './convex-client.js';
       }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
       return;
     }
-    if (confirm("Remove item?")) (async () => { try { const res = await runMutation("accounts:deleteAccountItem", { accountId: state.currentAccount?.id, type: state.context.type, itemId: state.context.id }); Promise.resolve().then(() => { const _cb = (d => {
-      state.currentAccount = d;
-      renderCategories();
-      renderContent();
-    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
+    if (confirm("Remove item?")) {
+      (async () => {
+        try {
+          const res = await runMutation("accounts:deleteAccountItem", { 
+            accountId: state.currentAccount?.id, 
+            type: state.context.type, 
+            itemId: state.context.id 
+          });
+          state.currentAccount = res;
+          renderCategories();
+          renderContent();
+        } catch (err) {
+          console.error('[Zeus] Delete item error:', err);
+          alert(err.message || String(err));
+        }
+      })();
+    }
   };
   window.renderAnnouncements = function () {
     const c = document.getElementById('ann-scroll-area');
@@ -1448,14 +1483,12 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     document.getElementById('edit-name').value = '';
     document.getElementById('edit-url').value = '';
     document.getElementById('edit-icon').value = '';
-    // Populate Category Select
+    // Populate Category Select — include ALL categories including HOME
     const catSelect = document.getElementById('edit-category-select');
     catSelect.innerHTML = '';
     if (state.currentAccount && state.currentAccount.categories) {
       state.currentAccount.categories.forEach(cat => {
-        if (cat.id !== 'HOME') { // Don't allow saving to Home dashboard directly as per tool logic
-          catSelect.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
-        }
+        catSelect.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
       });
     }
     // Hide category selector if creating a new category itself or an account
@@ -1477,8 +1510,8 @@ import { convex, runQuery, runMutation } from './convex-client.js';
       document.getElementById('edit-name').value = "Broadcast Link";
       document.getElementById('edit-icon').value = "🔗";
     } else {
-      // Default new item behavior
-      if (!ic && !isAcc) catSelect.value = state.currentCat !== 'HOME' ? state.currentCat : (catSelect.options[0]?.value || '');
+      // Default new item behavior: pre-select the current active category
+      if (!ic && !isAcc) catSelect.value = state.currentCat || 'HOME';
     }
     document.getElementById('modal').classList.remove('hidden');
     document.getElementById('overlay').classList.remove('hidden');

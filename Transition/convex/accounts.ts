@@ -145,7 +145,8 @@ export const saveAccountData = mutation({
       await ctx.db.patch(acc._id, { name: item.name ?? acc.name });
     } else {
       const key = type === "cat" ? "categories" : "icons";
-      const list: any[] = [...((acc as any)[key] || [])];
+      const existingData = (acc as any)[key];
+      const list: any[] = Array.isArray(existingData) ? [...existingData] : [];
       const idx = list.findIndex((i) => String(i.id) === String(item.id));
 
       if (type === "cat") {
@@ -154,16 +155,24 @@ export const saveAccountData = mutation({
         else list.push(catItem);
         await ctx.db.patch(acc._id, { categories: list });
       } else {
+        const validCatIds = new Set((acc.categories || []).map((c: any) => c.id));
         const iconItem = {
           id: item.id,
           title: item.title ?? item.name ?? "",
           url: item.url ?? "",
           iconType: item.iconType ?? "🔗",
-          catId: item.catId ?? "HOME",
+          catId: item.catId && item.catId.length > 0 ? item.catId : "HOME",
         };
         if (idx !== -1) list[idx] = iconItem;
         else list.push(iconItem);
-        await ctx.db.patch(acc._id, { icons: list });
+        // Self-heal: fix any existing icons with invalid catId
+        const healedList = list.map((icon: any) => {
+          if (!icon.catId || !validCatIds.has(icon.catId)) {
+            return { ...icon, catId: "HOME" };
+          }
+          return icon;
+        });
+        await ctx.db.patch(acc._id, { icons: healedList });
       }
     }
 
@@ -204,7 +213,44 @@ export const saveAccountData = mutation({
   },
 });
 
-// Delete a category or icon from account
+// Repair any icons with missing/invalid catId — reassign to HOME (SUPER_ADMIN only)
+export const repairAccountIcons = mutation({
+  args: { callerEmail: v.string(), accountId: v.string() },
+  handler: async (ctx, { callerEmail, accountId }) => {
+    callerEmail = callerEmail.toLowerCase().trim();
+    if (!SUPER_ADMINS.includes(callerEmail)) throw new Error("Unauthorized");
+
+    const acc = await ctx.db
+      .query("accounts")
+      .withIndex("by_accountId", (q) => q.eq("accountId", accountId))
+      .first();
+    if (!acc) throw new Error("Account not found");
+
+    const validCatIds = new Set((acc.categories || []).map((c) => c.id));
+    const repairedIcons = (acc.icons || []).map((icon: any) => {
+      if (!icon.catId || !validCatIds.has(icon.catId)) {
+        return { ...icon, catId: "HOME" };
+      }
+      return icon;
+    });
+
+    await ctx.db.patch(acc._id, { icons: repairedIcons });
+
+    const updatedAcc = await ctx.db.get(acc._id);
+    if (!updatedAcc) throw new Error("Account resolution failure");
+    return {
+      id: updatedAcc.accountId,
+      name: updatedAcc.name,
+      categories: updatedAcc.categories || [],
+      icons: updatedAcc.icons || [],
+      announcements: updatedAcc.announcements || [],
+      notes: updatedAcc.notes || [],
+      users: updatedAcc.users || [],
+    };
+  },
+});
+
+
 export const deleteAccountItem = mutation({
   args: { accountId: v.string(), type: v.string(), itemId: v.string() },
   handler: async (ctx, { accountId, type, itemId }) => {
