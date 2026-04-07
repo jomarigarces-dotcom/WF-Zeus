@@ -11,7 +11,10 @@ const SUPER_ADMINS = [
   "jtrias@ececontactcenters.com",
 ];
 
-// Helper to fetch full account data with active reminders and sanitized categories
+/**
+ * Helper to fetch full account data with active reminders and sanitized categories.
+ * This is the single source of truth for the workspace data structure.
+ */
 async function fetchFullAccount(ctx: any, accountId: string) {
   const acc = await ctx.db
     .query("accounts")
@@ -111,7 +114,7 @@ export const createAccount = mutation({
     const all = await ctx.db.query("accounts").collect();
     return {
       accountId,
-      accounts: all.map(a => ({ id: a.accountId, name: a.name }))
+      accounts: all.map((a: any) => ({ id: a.accountId, name: a.name }))
     };
   },
 });
@@ -125,7 +128,7 @@ export const deleteAccount = mutation({
 
     const acc = await ctx.db
       .query("accounts")
-      .withIndex("by_accountId", (q) => q.eq("accountId", accountId))
+      .withIndex("by_accountId", (q: any) => q.eq("accountId", accountId))
       .first();
     if (acc) await ctx.db.delete(acc._id);
     return true;
@@ -147,9 +150,10 @@ export const saveAccountData = mutation({
     }),
   },
   handler: async (ctx, { accountId, type, item }) => {
+    accountId = accountId.trim();
     const acc = await ctx.db
       .query("accounts")
-      .withIndex("by_accountId", (q) => q.eq("accountId", accountId))
+      .withIndex("by_accountId", (q: any) => q.eq("accountId", accountId))
       .first();
     if (!acc) throw new Error("Account not found");
 
@@ -158,9 +162,9 @@ export const saveAccountData = mutation({
       await ctx.db.patch(acc._id, { name: item.name ?? acc.name });
     } else {
       const key = type === "cat" ? "categories" : "icons";
-      const existingData = (acc as any)[key];
-      const list: any[] = Array.isArray(existingData) ? [...existingData] : [];
-      const idx = list.findIndex((i) => String(i.id) === String(item.id));
+      const existingData: any[] = (acc as any)[key] || [];
+      const list = [...existingData];
+      const idx = list.findIndex((i: any) => String(i.id) === String(item.id));
 
       if (type === "cat") {
         const catItem = { id: item.id, name: item.name ?? "" };
@@ -178,6 +182,7 @@ export const saveAccountData = mutation({
         };
         if (idx !== -1) list[idx] = iconItem;
         else list.push(iconItem);
+
         // Self-heal: fix any existing icons with invalid catId
         const healedList = list.map((icon: any) => {
           if (!icon.catId || !validCatIds.has(icon.catId)) {
@@ -202,11 +207,11 @@ export const repairAccountIcons = mutation({
 
     const acc = await ctx.db
       .query("accounts")
-      .withIndex("by_accountId", (q) => q.eq("accountId", accountId))
+      .withIndex("by_accountId", (q: any) => q.eq("accountId", accountId))
       .first();
     if (!acc) throw new Error("Account not found");
 
-    const validCatIds = new Set((acc.categories || []).map((c) => c.id));
+    const validCatIds = new Set((acc.categories || []).map((c: any) => c.id));
     const repairedIcons = (acc.icons || []).map((icon: any) => {
       if (!icon.catId || !validCatIds.has(icon.catId)) {
         return { ...icon, catId: "HOME" };
@@ -219,25 +224,25 @@ export const repairAccountIcons = mutation({
   },
 });
 
-
-
+// Delete item action (category or icon)
 export const deleteAccountItem = mutation({
   args: { accountId: v.string(), type: v.string(), itemId: v.string() },
   handler: async (ctx, { accountId, type, itemId }) => {
+    accountId = accountId.trim();
     const acc = await ctx.db
       .query("accounts")
-      .withIndex("by_accountId", (q) => q.eq("accountId", accountId))
+      .withIndex("by_accountId", (q: any) => q.eq("accountId", accountId))
       .first();
     if (!acc) throw new Error("Account not found");
 
     if (type === "cat") {
       await ctx.db.patch(acc._id, {
-        categories: (acc.categories || []).filter((c) => c.id !== itemId),
-        icons: (acc.icons || []).filter((i) => i.catId !== itemId),
+        categories: (acc.categories || []).filter((c: any) => c.id !== itemId),
+        icons: (acc.icons || []).filter((i: any) => i.catId !== itemId),
       });
     } else {
       await ctx.db.patch(acc._id, {
-        icons: (acc.icons || []).filter((i) => i.id !== itemId),
+        icons: (acc.icons || []).filter((i: any) => i.id !== itemId),
       });
     }
 
@@ -256,11 +261,11 @@ export const getUsersRegistry = query({
     const registry: Record<string, { name: string; users: { email: string; nickname: string }[] }> = {};
 
     for (const acc of accounts) {
-      const users = [];
+      const users: any[] = [];
       for (const email of acc.users) {
         const profile = await ctx.db
           .query("userProfiles")
-          .withIndex("by_email", (q) => q.eq("email", email))
+          .withIndex("by_email", (q: any) => q.eq("email", email))
           .first();
         users.push({ email, nickname: profile?.nickname ?? email.split("@")[0] });
       }
@@ -285,9 +290,9 @@ export const adminAssignUser = mutation({
     for (const accId of accountIds) {
       const acc = await ctx.db
         .query("accounts")
-        .withIndex("by_accountId", (q) => q.eq("accountId", accId))
+        .withIndex("by_accountId", (q: any) => q.eq("accountId", accId))
         .first();
-      if (acc && !acc.users.map((u) => u.toLowerCase()).includes(targetEmail)) {
+      if (acc && !acc.users.map((u: string) => u.toLowerCase()).includes(targetEmail)) {
         await ctx.db.patch(acc._id, { users: [...acc.users, targetEmail] });
       }
     }
@@ -296,11 +301,11 @@ export const adminAssignUser = mutation({
     const allAccs = await ctx.db.query("accounts").collect();
     const registry: Record<string, { name: string; users: { email: string; nickname: string }[] }> = {};
     for (const a of allAccs) {
-      const usersList = [];
+      const usersList: any[] = [];
       for (const uEmail of a.users) {
         const profile = await ctx.db
           .query("userProfiles")
-          .withIndex("by_email", (q) => q.eq("email", uEmail))
+          .withIndex("by_email", (q: any) => q.eq("email", uEmail))
           .first();
         usersList.push({ email: uEmail, nickname: profile?.nickname ?? uEmail.split("@")[0] });
       }
@@ -320,23 +325,23 @@ export const unregisterUser = mutation({
 
     const acc = await ctx.db
       .query("accounts")
-      .withIndex("by_accountId", (q) => q.eq("accountId", accountId))
+      .withIndex("by_accountId", (q: any) => q.eq("accountId", accountId))
       .first();
     if (acc) {
       await ctx.db.patch(acc._id, {
-        users: acc.users.filter((u) => u.toLowerCase() !== email),
+        users: acc.users.filter((u: string) => u.toLowerCase() !== email),
       });
     }
-    
+
     // Return full registry after unregistering user
     const allAccs = await ctx.db.query("accounts").collect();
     const registry: Record<string, { name: string; users: { email: string; nickname: string }[] }> = {};
     for (const a of allAccs) {
-      const usersList = [];
+      const usersList: any[] = [];
       for (const uEmail of a.users) {
         const profile = await ctx.db
           .query("userProfiles")
-          .withIndex("by_email", (q) => q.eq("email", uEmail))
+          .withIndex("by_email", (q: any) => q.eq("email", uEmail))
           .first();
         usersList.push({ email: uEmail, nickname: profile?.nickname ?? uEmail.split("@")[0] });
       }
