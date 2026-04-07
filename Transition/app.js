@@ -262,10 +262,15 @@ import { convex, runQuery, runMutation } from './convex-client.js';
   };
   // Poll Workspace Data (Reminders, Notes, Announcements)
   window.pollWorkspaceUpdates = function (onComplete) {
-    if (!state.userEmail || !state.currentAccount) { if (onComplete) onComplete(); return; }
+    if (!state.userEmail || !state.currentAccount || !state.currentAccount.id) { 
+      if (onComplete) onComplete(); 
+      return; 
+    }
     (async () => { try { const res = await runQuery("accounts:getAccountData", { accountId: state.currentAccount.id }); Promise.resolve().then(() => { const _cb = (data => {
       // IMPORTANT: If data is null (server busy), DO NOT update state. Keep old data visible.
-      if (!data) return;
+      if (!data || !data.id) return;
+      // Ensure we are still looking at the same account to avoid race conditions
+      if (state.currentAccount && state.currentAccount.id !== data.id) return;
       // 1. Reminders
       if (data.activeReminders && Array.isArray(data.activeReminders)) {
         const oldRem = JSON.stringify(state.currentAccount.activeReminders);
@@ -1205,6 +1210,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
         try {
           const res = await runMutation("accounts:saveAccountData", { accountId: accId, type: 'account', item: { id: accId, name: n } });
           const d = res;
+          if (!d || !d.id) throw new Error("Invalid account data returned from server.");
           const accIdx = state.availableAccounts.findIndex(a => a.id === d.id);
           if (accIdx !== -1) state.availableAccounts[accIdx].name = d.name;
           if (state.currentAccount && state.currentAccount.id === d.id) state.currentAccount = d;
@@ -1222,7 +1228,8 @@ import { convex, runQuery, runMutation } from './convex-client.js';
       (async () => {
         try {
           const res = await runMutation("accounts:saveAccountData", { accountId: state.currentAccount.id, type: 'cat', item: { id: itemId, name: n } });
-          state.currentAccount = res; console.log('BUG LOG:', res);
+          if (!res || !res.id) throw new Error("Server communication failure (invalid cat response).");
+          state.currentAccount = res; 
           renderCategories();
           renderContent();
           window.setBtnLoading('modal-apply-btn', false);
@@ -1239,6 +1246,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
         try {
           const finalCatId = (targetCat && targetCat.length > 0) ? targetCat : (state.currentCat || 'HOME');
           const res = await runMutation("accounts:saveAccountData", { accountId: state.currentAccount.id, type: 'icon', item: { id: itemId, title: n, url: u, iconType: i || '🔗', catId: finalCatId } });
+          if (!res || !res.id) throw new Error("Server communication failure (invalid icon response).");
           state.currentAccount = res;
           renderCategories();
           renderContent();
@@ -1353,9 +1361,16 @@ import { convex, runQuery, runMutation } from './convex-client.js';
         alert('Error: Cannot determine account context for deletion');
         return;
       }
-      (async () => { try { const res = await runMutation("announcements:deleteAccountAnnouncement", { callerEmail: state.userEmail, accountId: accountId, annId: id }); Promise.resolve().then(() => { const _cb = (d => {
-        state.currentAccount = d;
-        renderAnnouncements();
+      (async () => { try { const res = await runMutation("announcements:deleteAccountAnnouncement", { callerEmail: state.userEmail, accountId: accountId, annId: id }); Promise.resolve().then(() => { const _cb = (async (d) => {
+        try {
+          const updated = await runQuery("accounts:getAccountData", { accountId: accountId });
+          if (updated) {
+            state.currentAccount = updated;
+            renderAnnouncements();
+          }
+        } catch (e) {
+          console.error('[Zeus] Failed to refetch account after announcement deletion', e);
+        }
       }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
     }
   };
@@ -1402,9 +1417,11 @@ import { convex, runQuery, runMutation } from './convex-client.js';
   window.togglePinAction = function (id, cb) {
     // Toggle pin on the server, update state and re-render. Optional callback runs after update.
     const accId = state.currentAccount ? state.currentAccount.id : null;
-    (async () => { try { const res = await runMutation("announcements:toggleAnnouncementPin", { callerEmail: state.userEmail, accountId: accId, annId: id }); Promise.resolve().then(() => { const _cb = (d => {
+    if (!accId) return;
+    (async () => { try { const res = await runMutation("announcements:toggleAnnouncementPin", { callerEmail: state.userEmail, accountId: accId, annId: id }); Promise.resolve().then(() => { const _cb = (async (d) => {
       try {
-        state.currentAccount = d;
+        const updated = await runQuery("accounts:getAccountData", { accountId: accId });
+        if (updated) state.currentAccount = updated;
         renderAnnouncements();
         if (typeof cb === 'function') cb();
       } catch (e) {
@@ -1425,14 +1442,15 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     // Check if editing existing announcement
     if (state.currentEditingAnn) {
       const accId = state.currentEditingAnn.accountId;
-      (async () => { try { const res = await runMutation("unknown:editAccountAnnouncement", { args: [accId, state.currentEditingAnn.id, m, s, state.currentImageBase64, link] }); Promise.resolve().then(() => { const _cb = (d => {
-        if (d && d.status === 'error') {
-          alert('Error: ' + d.message);
+      (async () => { try { const res = await runMutation("announcements:editAccountAnnouncement", { callerEmail: state.userEmail, accountId: accId, annId: state.currentEditingAnn.id, newMsg: m, newSeverity: s, newImageUrl: state.currentImageBase64, newLinkUrl: link }); Promise.resolve().then(() => { const _cb = (async (d) => {
+        if (d === false) {
+          alert('Failed to authorize update to the announcement.');
           return;
         }
         try {
-          state.currentAccount = d;
-          state.currentEditingAnn = null; // Clear editing state
+          const updated = await runQuery("accounts:getAccountData", { accountId: accId });
+          if (updated) state.currentAccount = updated;
+          state.currentEditingAnn = null;
           renderAnnouncements();
           closeModals();
         } catch (err) {
@@ -1455,31 +1473,37 @@ import { convex, runQuery, runMutation } from './convex-client.js';
       const v = targetSel.value;
       if (v) target = v;
     }
-    (async () => { try { const res = await runMutation("unknown:postAccountAnnouncement", { args: [target, m, s, snd, state.currentImageBase64, link] }); Promise.resolve().then(() => { const _cb = (d => {
+    if (!target) return;
+    (async () => { try { const res = await runMutation("announcements:postAccountAnnouncement", { callerEmail: state.userEmail, accountId: target, message: m, severity: s, sender: snd, imageUrl: state.currentImageBase64, linkUrl: link }); Promise.resolve().then(() => { const _cb = (async (d) => {
       try {
-        // If global broadcast returned lightweight ok object
-        if (d && d.ok) {
-          // Refresh workspace data, then re-render announcements when done
-          try {
-            pollWorkspaceUpdates(() => {
-              try { renderAnnouncements(); } catch (e) { console.error('renderAnnouncements after poll failed', e); }
-              try { closeModals(); } catch (e) { console.error('closeModals after poll failed', e); }
-            });
-          } catch (e) {
-            console.error('pollWorkspaceUpdates call failed', e);
-          }
-          return;
-        }
         if (d && d.status === 'forbidden') {
           alert('Unauthorized to post global announcement');
+          window.setBtnLoading('ann-post-btn', false);
           return;
         }
         if (d && d.status === 'error') {
           alert('Error: ' + d.message);
+          window.setBtnLoading('ann-post-btn', false);
           return;
         }
-        // otherwise server returned the updated account
-        state.currentAccount = d;
+        if (target === 'ALL' || (d && d.ok)) {
+          try {
+            if (state.currentAccount && state.currentAccount.id) {
+               const updated = await runQuery("accounts:getAccountData", { accountId: state.currentAccount.id });
+               if (updated) state.currentAccount = updated;
+            }
+            renderAnnouncements();
+            closeModals();
+          } catch (e) {
+            console.error('Failed to sync global broadcast locally', e);
+          }
+          return;
+        }
+        // fallback
+        if (state.currentAccount && state.currentAccount.id) {
+            const updated = await runQuery("accounts:getAccountData", { accountId: state.currentAccount.id });
+            if (updated) state.currentAccount = updated;
+        }
         renderAnnouncements();
         closeModals();
       } catch (err) {
@@ -2400,7 +2424,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     const t = document.getElementById('reminder-target').value;
     const m = document.getElementById('reminder-text').value;
     const s = document.getElementById('reminder-sender').value;
-    const d = document.getElementById('reminder-duration').value;
+    const d = parseFloat(document.getElementById('reminder-duration').value) || 24;
     const sc = document.getElementById('reminder-schedule').value;
     const rec = document.getElementById('reminder-recurrence').value;
     if (!m) return;

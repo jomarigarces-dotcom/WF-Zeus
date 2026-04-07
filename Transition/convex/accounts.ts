@@ -99,7 +99,11 @@ export const createAccount = mutation({
       users: [],
     });
 
-    return accountId;
+    const all = await ctx.db.query("accounts").collect();
+    return {
+      accountId,
+      accounts: all.map(a => ({ id: a.accountId, name: a.name }))
+    };
   },
 });
 
@@ -200,10 +204,14 @@ export const saveAccountData = mutation({
         return isTarget && isValid;
       });
 
+    const cats = updatedAcc.categories || [];
+    const sanitizedCategories = cats.map(c => c.id === 'HOME' ? { ...c, name: "Home Dashboard" } : c);
+    if (!sanitizedCategories.some(c => c.id === 'HOME')) sanitizedCategories.unshift({ id: "HOME", name: "Home Dashboard" });
+
     return {
       id: updatedAcc.accountId,
       name: updatedAcc.name,
-      categories: [{ id: "HOME", name: "Home Dashboard" }, ...(updatedAcc.categories || [])],
+      categories: sanitizedCategories,
       icons: updatedAcc.icons || [],
       announcements: updatedAcc.announcements || [],
       notes: updatedAcc.notes || [],
@@ -295,14 +303,18 @@ export const deleteAccountItem = mutation({
         return isTarget && isValid;
       });
 
+    const cats = updatedAcc.categories || [];
+    const sanitizedCategories = cats.map(c => c.id === 'HOME' ? { ...c, name: "Home Dashboard" } : c);
+    if (!sanitizedCategories.some(c => c.id === 'HOME')) sanitizedCategories.unshift({ id: "HOME", name: "Home Dashboard" });
+
     return {
       id: updatedAcc.accountId,
       name: updatedAcc.name,
-      categories: updatedAcc.categories,
-      icons: updatedAcc.icons,
-      announcements: updatedAcc.announcements,
-      notes: updatedAcc.notes,
-      users: updatedAcc.users,
+      categories: sanitizedCategories,
+      icons: updatedAcc.icons || [],
+      announcements: updatedAcc.announcements || [],
+      notes: updatedAcc.notes || [],
+      users: updatedAcc.users || [],
       activeReminders,
     };
   },
