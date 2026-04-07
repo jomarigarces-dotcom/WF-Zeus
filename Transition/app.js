@@ -1227,7 +1227,10 @@ import { convex, runQuery, runMutation, watchQuery } from './convex-client.js';
       (async () => {
         try {
           const res = await runMutation("accounts:saveAccountData", { accountId: state.currentAccount.id, type: 'cat', item: { id: itemId, name: n } });
-          if (!res || !res.id || !res.categories) throw new Error("Server communication failure (invalid cat response).");
+          if (!res || !res.id || !res.categories) {
+            console.error("[Zeus] Invalid category response:", res);
+            throw new Error(`Server returned incomplete data (categories missing: ${!res?.categories}). Please refresh.`);
+          }
           state.currentAccount = res; 
           renderCategories();
           renderContent();
@@ -1245,7 +1248,10 @@ import { convex, runQuery, runMutation, watchQuery } from './convex-client.js';
         try {
           const finalCatId = (targetCat && targetCat.length > 0) ? targetCat : (state.currentCat || 'HOME');
           const res = await runMutation("accounts:saveAccountData", { accountId: state.currentAccount.id, type: 'icon', item: { id: itemId, title: n, url: u, iconType: i || '🔗', catId: finalCatId } });
-          if (!res || !res.id || !res.categories) throw new Error("Server communication failure (invalid icon response).");
+          if (!res || !res.id || !res.categories) {
+            console.error("[Zeus] Invalid icon response:", res);
+            throw new Error(`Server returned incomplete data (id/categories missing). Details in console.`);
+          }
           state.currentAccount = res;
           renderCategories();
           renderContent();
@@ -1277,7 +1283,10 @@ import { convex, runQuery, runMutation, watchQuery } from './convex-client.js';
             type: state.context.type, 
             itemId: state.context.id 
           });
-          if (!res || !res.id || !res.categories) throw new Error("Server communication failure (invalid delete response).");
+          if (!res || !res.id || !res.categories) {
+            console.error("[Zeus] Invalid delete response:", res);
+            throw new Error("Server communication failure (invalid delete response). Details in console.");
+          }
           state.currentAccount = res;
           renderCategories();
           renderContent();

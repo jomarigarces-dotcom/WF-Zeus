@@ -189,44 +189,7 @@ export const saveAccountData = mutation({
       }
     }
 
-    const updatedAcc = await ctx.db.get(acc._id);
-    if (!updatedAcc) throw new Error("Account resolution failure");
-
-    // Fetch and return full account data to satisfy frontend expectations
-    const allReminders = await ctx.db.query("reminders").collect();
-    const now = new Date();
-    const activeReminders = allReminders
-      .filter((r) => {
-        const isTarget = r.targetAccount === "ALL" || r.targetAccount === accountId;
-        let isStarted = true;
-        if (r.scheduledTime) if (new Date(r.scheduledTime) > now) isStarted = false;
-        let isValid = false;
-        if (r.isRecurring) {
-          const sTime = new Date(r.scheduledTime);
-          if (isStarted) {
-            if (r.recurrenceRule === "WEEKLY" && now.getDay() === sTime.getDay()) isValid = true;
-            if (r.recurrenceRule === "MONTHLY" && now.getDate() === sTime.getDate()) isValid = true;
-          }
-        } else if (isStarted) {
-          isValid = r.expiryTimestamp ? new Date(r.expiryTimestamp) > now : true;
-        }
-        return isTarget && isValid;
-      });
-
-    const cats = updatedAcc.categories || [];
-    const sanitizedCategories = cats.map(c => c.id === 'HOME' ? { ...c, name: "Home Dashboard" } : c);
-    if (!sanitizedCategories.some(c => c.id === 'HOME')) sanitizedCategories.unshift({ id: "HOME", name: "Home Dashboard" });
-
-    return {
-      id: updatedAcc.accountId,
-      name: updatedAcc.name,
-      categories: sanitizedCategories,
-      icons: updatedAcc.icons || [],
-      announcements: updatedAcc.announcements || [],
-      notes: updatedAcc.notes || [],
-      users: updatedAcc.users || [],
-      activeReminders,
-    };
+    return await fetchFullAccount(ctx, accountId);
   },
 });
 
@@ -252,20 +215,10 @@ export const repairAccountIcons = mutation({
     });
 
     await ctx.db.patch(acc._id, { icons: repairedIcons });
-
-    const updatedAcc = await ctx.db.get(acc._id);
-    if (!updatedAcc) throw new Error("Account resolution failure");
-    return {
-      id: updatedAcc.accountId,
-      name: updatedAcc.name,
-      categories: updatedAcc.categories || [],
-      icons: updatedAcc.icons || [],
-      announcements: updatedAcc.announcements || [],
-      notes: updatedAcc.notes || [],
-      users: updatedAcc.users || [],
-    };
+    return await fetchFullAccount(ctx, accountId);
   },
 });
+
 
 
 export const deleteAccountItem = mutation({
@@ -288,44 +241,7 @@ export const deleteAccountItem = mutation({
       });
     }
 
-    const updatedAcc = await ctx.db.get(acc._id);
-    if (!updatedAcc) throw new Error("Account resolution failure");
-
-    // Fetch and return full account data after item deletion
-    const allReminders = await ctx.db.query("reminders").collect();
-    const now = new Date();
-    const activeReminders = allReminders
-      .filter((r) => {
-        const isTarget = r.targetAccount === "ALL" || r.targetAccount === accountId;
-        let isStarted = true;
-        if (r.scheduledTime) if (new Date(r.scheduledTime) > now) isStarted = false;
-        let isValid = false;
-        if (r.isRecurring) {
-          const sTime = new Date(r.scheduledTime);
-          if (isStarted) {
-            if (r.recurrenceRule === "WEEKLY" && now.getDay() === sTime.getDay()) isValid = true;
-            if (r.recurrenceRule === "MONTHLY" && now.getDate() === sTime.getDate()) isValid = true;
-          }
-        } else if (isStarted) {
-          isValid = r.expiryTimestamp ? new Date(r.expiryTimestamp) > now : true;
-        }
-        return isTarget && isValid;
-      });
-
-    const cats = updatedAcc.categories || [];
-    const sanitizedCategories = cats.map(c => c.id === 'HOME' ? { ...c, name: "Home Dashboard" } : c);
-    if (!sanitizedCategories.some(c => c.id === 'HOME')) sanitizedCategories.unshift({ id: "HOME", name: "Home Dashboard" });
-
-    return {
-      id: updatedAcc.accountId,
-      name: updatedAcc.name,
-      categories: sanitizedCategories,
-      icons: updatedAcc.icons || [],
-      announcements: updatedAcc.announcements || [],
-      notes: updatedAcc.notes || [],
-      users: updatedAcc.users || [],
-      activeReminders,
-    };
+    return await fetchFullAccount(ctx, accountId);
   },
 });
 
