@@ -1,4 +1,4 @@
-import { convex, runQuery, runMutation } from './convex-client.js';
+import { convex, runQuery, runMutation, watchQuery } from './convex-client.js';
 
   /* ------------------------------------------------------------------
      STATE MANAGEMENT
