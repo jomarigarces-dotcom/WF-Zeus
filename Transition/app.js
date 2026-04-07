@@ -1227,7 +1227,7 @@ import { convex, runQuery, runMutation, watchQuery } from './convex-client.js';
       (async () => {
         try {
           const res = await runMutation("accounts:saveAccountData", { accountId: state.currentAccount.id, type: 'cat', item: { id: itemId, name: n } });
-          if (!res || !res.id) throw new Error("Server communication failure (invalid cat response).");
+          if (!res || !res.id || !res.categories) throw new Error("Server communication failure (invalid cat response).");
           state.currentAccount = res; 
           renderCategories();
           renderContent();
@@ -1245,7 +1245,7 @@ import { convex, runQuery, runMutation, watchQuery } from './convex-client.js';
         try {
           const finalCatId = (targetCat && targetCat.length > 0) ? targetCat : (state.currentCat || 'HOME');
           const res = await runMutation("accounts:saveAccountData", { accountId: state.currentAccount.id, type: 'icon', item: { id: itemId, title: n, url: u, iconType: i || '🔗', catId: finalCatId } });
-          if (!res || !res.id) throw new Error("Server communication failure (invalid icon response).");
+          if (!res || !res.id || !res.categories) throw new Error("Server communication failure (invalid icon response).");
           state.currentAccount = res;
           renderCategories();
           renderContent();
@@ -1277,6 +1277,7 @@ import { convex, runQuery, runMutation, watchQuery } from './convex-client.js';
             type: state.context.type, 
             itemId: state.context.id 
           });
+          if (!res || !res.id || !res.categories) throw new Error("Server communication failure (invalid delete response).");
           state.currentAccount = res;
           renderCategories();
           renderContent();

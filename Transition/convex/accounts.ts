@@ -11,58 +11,67 @@ const SUPER_ADMINS = [
   "jtrias@ececontactcenters.com",
 ];
 
+// Helper to fetch full account data with active reminders and sanitized categories
+async function fetchFullAccount(ctx: any, accountId: string) {
+  const acc = await ctx.db
+    .query("accounts")
+    .withIndex("by_accountId", (q: any) => q.eq("accountId", accountId))
+    .first();
+  if (!acc) return null;
+
+  const now = new Date();
+  const allReminders = await ctx.db.query("reminders").collect();
+
+  const activeReminders = allReminders
+    .filter((r: any) => {
+      const isTarget = r.targetAccount === "ALL" || r.targetAccount === accountId;
+      let isStarted = true;
+      if (r.scheduledTime) {
+        const sTime = new Date(r.scheduledTime);
+        if (sTime > now) isStarted = false;
+      }
+      let isValid = false;
+      if (r.isRecurring) {
+        const sTime = new Date(r.scheduledTime);
+        const rule = r.recurrenceRule || "WEEKLY";
+        if (isStarted) {
+          if (rule === "WEEKLY" && now.getDay() === sTime.getDay()) isValid = true;
+          if (rule === "MONTHLY" && now.getDate() === sTime.getDate()) isValid = true;
+        }
+      } else {
+        if (isStarted) {
+          isValid = r.expiryTimestamp ? new Date(r.expiryTimestamp) > now : true;
+        }
+      }
+      return isTarget && isValid;
+    })
+    .sort((a: any, b: any) => new Date(b.scheduledTime).getTime() - new Date(a.scheduledTime).getTime());
+
+  const cats = acc.categories || [];
+  const sanitizedCategories = cats.map((c: any) =>
+    c.id === "HOME" ? { ...c, name: "Home Dashboard" } : c
+  );
+  if (!sanitizedCategories.some((c: any) => c.id === "HOME")) {
+    sanitizedCategories.unshift({ id: "HOME", name: "Home Dashboard" });
+  }
+
+  return {
+    id: acc.accountId,
+    name: acc.name,
+    categories: sanitizedCategories,
+    icons: acc.icons || [],
+    announcements: acc.announcements || [],
+    notes: acc.notes || [],
+    users: acc.users || [],
+    activeReminders,
+  };
+}
+
 // Get full account data including active reminders
 export const getAccountData = query({
   args: { accountId: v.string() },
   handler: async (ctx, { accountId }) => {
-    const acc = await ctx.db
-      .query("accounts")
-      .withIndex("by_accountId", (q) => q.eq("accountId", accountId))
-      .first();
-    if (!acc) return null;
-
-    const now = new Date();
-
-    // Compute active reminders
-    const allReminders = await ctx.db
-      .query("reminders")
-      .collect();
-
-    const activeReminders = allReminders
-      .filter((r) => {
-        const isTarget = r.targetAccount === "ALL" || r.targetAccount === accountId;
-        let isStarted = true;
-        if (r.scheduledTime) {
-          const sTime = new Date(r.scheduledTime);
-          if (sTime > now) isStarted = false;
-        }
-        let isValid = false;
-        if (r.isRecurring) {
-          const sTime = new Date(r.scheduledTime);
-          const rule = r.recurrenceRule || "WEEKLY";
-          if (isStarted) {
-            if (rule === "WEEKLY" && now.getDay() === sTime.getDay()) isValid = true;
-            if (rule === "MONTHLY" && now.getDate() === sTime.getDate()) isValid = true;
-          }
-        } else {
-          if (isStarted) {
-            isValid = r.expiryTimestamp ? new Date(r.expiryTimestamp) > now : true;
-          }
-        }
-        return isTarget && isValid;
-      })
-      .sort((a, b) => new Date(b.scheduledTime).getTime() - new Date(a.scheduledTime).getTime());
-
-    return {
-      id: acc.accountId,
-      name: acc.name,
-      categories: acc.categories,
-      icons: acc.icons,
-      announcements: acc.announcements,
-      notes: acc.notes,
-      users: acc.users,
-      activeReminders,
-    };
+    return await fetchFullAccount(ctx, accountId);
   },
 });
 
@@ -79,7 +88,7 @@ export const createAccount = mutation({
     await ctx.db.insert("accounts", {
       accountId,
       name: accountName,
-      categories: [{ id: "HOME", name: "Home" }],
+      categories: [{ id: "HOME", name: "Home Dashboard" }],
       icons: [],
       announcements: [
         {
