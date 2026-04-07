@@ -263,7 +263,7 @@ import { convex, runQuery, runMutation, watchQuery } from './convex-client.js';
     if (state.subscriptions.account) state.subscriptions.account(); // Unsubscribe existing
     
     state.subscriptions.account = watchQuery("accounts:getAccountData", { accountId: accountId }, (data) => {
-      if (!data || !data.id || (state.currentAccount && state.currentAccount.id !== data.id)) return;
+      if (!data || !data.id || !state.currentAccount || state.currentAccount.id !== data.id) return;
       
       // 1. Reminders
       if (Array.isArray(data.activeReminders)) {
