@@ -43,7 +43,11 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     systemTimeZone: 'America/New_York',
     lastEmojis: JSON.parse(localStorage.getItem('zeus_last_emojis') || '["👍", "❤️", "😂"]'),
     isMaintenanceMode: false,
-    canToggleMaintenance: false
+    canToggleMaintenance: false,
+    subscriptions: {
+      personal: null,
+      account: null
+    }
   };
   // helper to update assign button in header
   window.updateAssignButton = function () {
@@ -114,10 +118,9 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     initSession();
     // OPTIMIZED POLLING INTERVALS
     // Staggered to prevent hitting Google Apps Script burst quotas
-    // 1. Workspace Data (Reminders, Notes, Announcements): Moderate (7s)
-    setTimeout(() => setInterval(pollWorkspaceUpdates, 7000), 1000);
-    // 3. Personal Tasks (Checklist, Status Heartbeat): Moderate (10s)
-    setTimeout(() => setInterval(pollPersonalUpdates, 10000), 2500);
+    // 1. Workspace Data (Reminders, Notes, Announcements): Handled by Subscription in loadAccount
+    // 3. Personal Tasks (Checklist, Status Heartbeat): Handled by Subscription in initSession
+
     // 4. Weather Analysis: Refresh every 30 minutes
     setInterval(() => {
       if (state.currentCat === 'HOME') window.fetchWeatherRisk();
@@ -209,14 +212,16 @@ import { convex, runQuery, runMutation } from './convex-client.js';
     if (sb && st && sb.classList.contains('left-0') && !sb.contains(event.target) && !st.contains(event.target)) window.toggleSidebar();
   }
 
-  // --- POLLING FUNCTIONS ---
-  // Poll Personal Data (Checklist & Heartbeat)
-  window.pollPersonalUpdates = function (onComplete) {
-    if (!state.userEmail) { if (onComplete) onComplete(); return; }
-    (async () => { try { const res = await runQuery("tasks:fetchPersonalUpdates", { email: state.userEmail }); Promise.resolve().then(() => { const _cb = (data => {
-      // Validate data before updating to prevent wiping the UI on error
-      // API now returns null if it couldn't get a lock
-      if (data && Array.isArray(data.checklist)) {
+  // --- REACTIVE SUBSCRIPTIONS ---
+  window.subscribePersonalUpdates = function () {
+    if (!state.userEmail) return;
+    if (state.subscriptions.personal) state.subscriptions.personal(); // Unsubscribe existing
+    
+    state.subscriptions.personal = watchQuery("tasks:fetchPersonalUpdates", { email: state.userEmail }, (data) => {
+      if (!data) return;
+      
+      // 1. Checklist
+      if (Array.isArray(data.checklist)) {
         const oldJson = JSON.stringify(state.checklist);
         const newJson = JSON.stringify(data.checklist);
         if (oldJson !== newJson) {
@@ -224,8 +229,9 @@ import { convex, runQuery, runMutation } from './convex-client.js';
           if (state.currentCat === 'HOME') updateChecklistUI();
         }
       }
-      // handle access notifications
-      if (data && Array.isArray(data.notifications) && data.notifications.length) {
+      
+      // 2. Notifications
+      if (Array.isArray(data.notifications) && data.notifications.length) {
         data.notifications.forEach(n => {
           if (n.type === 'access') {
             const typeLabel = n.requestType === 'REMOVAL' ? 'removal' : 'access';
@@ -233,18 +239,8 @@ import { convex, runQuery, runMutation } from './convex-client.js';
               const accName = state.availableAccounts.find(a => a.id === n.accountId)?.name || n.accountId;
               if (n.requestType === 'REMOVAL' && state.currentAccount && state.currentAccount.id === n.accountId) {
                 alert(`Your removal request for workspace ${accName} has been approved.`);
-                (async () => { try { const res = await runQuery("users:getSessionInfo", { email: state.userEmail || localStorage.getItem('zeus_user_email') || "" }); Promise.resolve().then(() => { const _cb = (function (info) {
-                  state.userAccounts = info.userAccounts || [];
-                  state.role = info.role;
-                  if (state.userAccounts.length > 0) {
-                    window.loadAccount(state.userAccounts[0].id);
-                  } else {
-                    window.showAccountSelector();
-                    window.showRegistration();
-                  }
-                }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
+                window.location.reload(); // Hard reload on removal approval to clear state
               } else if (n.requestType === 'ACCESS' || !n.requestType) {
-                // For access approval, trigger loading and route
                 alert(`Your access request for workspace ${accName} has been approved.`);
                 window.loadAccount(n.accountId);
               } else {
@@ -257,69 +253,68 @@ import { convex, runQuery, runMutation } from './convex-client.js';
           }
         });
       }
-      if (onComplete) onComplete();
-    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); Promise.resolve().then(() => { const _fc = (() => { if (onComplete) onComplete(); }); if(typeof _fc === 'function') _fc(err); else alert(err.message || String(err)); }); } })();
+    }, (err) => {
+      console.error("[Zeus] Personal subscription error:", err);
+    });
   };
-  // Poll Workspace Data (Reminders, Notes, Announcements)
-  window.pollWorkspaceUpdates = function (onComplete) {
-    if (!state.userEmail || !state.currentAccount || !state.currentAccount.id) { 
-      if (onComplete) onComplete(); 
-      return; 
-    }
-    (async () => { try { const res = await runQuery("accounts:getAccountData", { accountId: state.currentAccount.id }); Promise.resolve().then(() => { const _cb = (data => {
-      // IMPORTANT: If data is null (server busy), DO NOT update state. Keep old data visible.
-      if (!data || !data.id) return;
-      // Ensure we are still looking at the same account to avoid race conditions
-      if (state.currentAccount && state.currentAccount.id !== data.id) return;
+
+  window.subscribeAccountUpdates = function (accountId) {
+    if (!state.userEmail || !accountId) return;
+    if (state.subscriptions.account) state.subscriptions.account(); // Unsubscribe existing
+    
+    state.subscriptions.account = watchQuery("accounts:getAccountData", { accountId: accountId }, (data) => {
+      if (!data || !data.id || (state.currentAccount && state.currentAccount.id !== data.id)) return;
+      
       // 1. Reminders
-      if (data.activeReminders && Array.isArray(data.activeReminders)) {
-        const oldRem = JSON.stringify(state.currentAccount.activeReminders);
+      if (Array.isArray(data.activeReminders)) {
+        const oldRem = state.currentAccount ? JSON.stringify(state.currentAccount.activeReminders) : '';
         const newRem = JSON.stringify(data.activeReminders);
         if (oldRem !== newRem) {
           state.currentAccount.activeReminders = data.activeReminders;
           if (state.currentCat === 'HOME') updateRemindersUI();
         }
       }
+      
       // 2. Notes (Team)
-      if (data.notes && Array.isArray(data.notes)) {
-        const oldNotes = JSON.stringify(state.currentAccount.notes);
+      if (Array.isArray(data.notes)) {
+        const oldNotes = state.currentAccount ? JSON.stringify(state.currentAccount.notes) : '';
         const newNotes = JSON.stringify(data.notes);
         if (oldNotes !== newNotes) {
           state.currentAccount.notes = data.notes;
           if (state.notesOpen && state.notesMode === 'TEAM') renderNotes();
         }
       }
+      
       // 3. Broadcasts
-      if (data.announcements && Array.isArray(data.announcements)) {
-        const oldAnn = JSON.stringify(state.currentAccount.announcements);
+      if (Array.isArray(data.announcements)) {
+        const oldAnn = state.currentAccount ? JSON.stringify(state.currentAccount.announcements) : '';
         const newAnn = JSON.stringify(data.announcements);
         if (oldAnn !== newAnn) {
           state.currentAccount.announcements = data.announcements;
           if (state.currentCat === 'HOME') renderAnnouncements();
         }
       }
-      if (onComplete) onComplete();
-    }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); Promise.resolve().then(() => { const _fc = (() => { if (onComplete) onComplete(); }); if(typeof _fc === 'function') _fc(err); else alert(err.message || String(err)); }); } })();
+    }, (err) => {
+      console.error("[Zeus] Account subscription error:", err);
+    });
   };
+
   window.refreshDashboard = function () {
     const icons = document.querySelectorAll('.refresh-spin-icon');
     icons.forEach(i => i.classList.add('animate-spin'));
     // Clear cache to force re-render
     state.htmlCache = { reminders: null, checklist: null, notes: null, announcements: null };
-    // Minimum spin time of 0.5s for visual feedback
-    const minTimePromise = new Promise(resolve => setTimeout(resolve, 500));
-    // Trigger both polls
-    let completed = 0;
-    const checkDone = () => {
-      completed++;
-      if (completed >= 2) {
-        minTimePromise.then(() => {
-          icons.forEach(i => i.classList.remove('animate-spin'));
-        });
-      }
-    };
-    pollPersonalUpdates(checkDone);
-    pollWorkspaceUpdates(checkDone);
+    
+    // Re-trigger subscriptions to force a fresh fetch
+    window.subscribePersonalUpdates();
+    if (state.currentAccount && state.currentAccount.id) {
+       window.subscribeAccountUpdates(state.currentAccount.id);
+    }
+
+    // Minimum spin time of 0.8s for visual feedback
+    setTimeout(() => {
+      icons.forEach(i => i.classList.remove('animate-spin'));
+    }, 800);
   };
   // Granular Reminders Update with HTML Caching to Stop Flickering & Attribution
   window.updateRemindersUI = function () {
@@ -681,6 +676,7 @@ import { convex, runQuery, runMutation } from './convex-client.js';
       renderMaintenanceUI();
       updateAssignButton();
       checkOnlineStatus();
+      window.subscribePersonalUpdates();
 
       const lastAccountId = localStorage.getItem('zeus_last_account');
       if (info.role === 'SUPER_ADMIN') {
@@ -820,6 +816,9 @@ import { convex, runQuery, runMutation } from './convex-client.js';
       // Org Chart Button Visibility (Walmart Only)
       const isWalmart = data.name.toLowerCase().includes('walmart');
       document.getElementById('orgChartBtn').classList.toggle('hidden', !isWalmart);
+      
+      window.subscribeAccountUpdates(accountId);
+      
       renderCategories();
       renderContent();
     }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
@@ -1831,7 +1830,8 @@ import { convex, runQuery, runMutation } from './convex-client.js';
       state.bulkTaskQueue = [];
       renderTaskQueue();
       // Refresh personal updates to show new tasks
-      pollPersonalUpdates();
+
+
     }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); Promise.resolve().then(() => { const _fc = (err => {
       console.error('Failed to dispatch tasks', err);
     }); if(typeof _fc === 'function') _fc(err); else alert(err.message || String(err)); }); } })();

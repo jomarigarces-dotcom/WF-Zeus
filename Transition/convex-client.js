@@ -32,3 +32,11 @@ export async function runQuery(queryFn, args = {}) {
 export async function runMutation(mutationFn, args = {}) {
   return await convex.mutation(mutationFn, args);
 }
+
+/**
+ * Helper: Watch a Convex query for changes.
+ * Returns an unsubscribe function.
+ */
+export function watchQuery(queryFn, args = {}, onUpdate, onError) {
+  return convex.onUpdate(queryFn, args, onUpdate, onError);
+}
