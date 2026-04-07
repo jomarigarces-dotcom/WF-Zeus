@@ -1928,7 +1928,7 @@ import { convex, runQuery, runMutation, watchQuery } from './convex-client.js';
         state.notes.unshift(obj);
       }
       const aid = state.currentAccount ? state.currentAccount.id : null;
-      (async () => { try { const res = await runMutation("notes:saveNote", { email: state.userEmail, noteId: null, title: t, content: b, scope: state.notesMode, accountId: aid, nickname: state.userNickname }); Promise.resolve().then(() => { const _cb = (n => {
+      (async () => { try { const res = await runMutation("notes:saveNote", { email: state.userEmail, noteId: undefined, title: t, content: b, scope: state.notesMode, accountId: aid || undefined, nickname: state.userNickname || undefined }); Promise.resolve().then(() => { const _cb = (n => {
         if (state.notesMode === 'TEAM') state.currentAccount.notes = n;
         else state.notes = n;
         renderNotes();
@@ -2000,7 +2000,7 @@ import { convex, runQuery, runMutation, watchQuery } from './convex-client.js';
       n.content = b;
     }
     const aid = state.currentAccount ? state.currentAccount.id : null;
-    (async () => { try { const res = await runMutation("notes:saveNote", { email: state.userEmail, noteId: state.currentNoteId, title: t, content: b, scope: state.notesMode, accountId: aid, nickname: state.userNickname }); Promise.resolve().then(() => { const _cb = (nx => {
+    (async () => { try { const res = await runMutation("notes:saveNote", { email: state.userEmail, noteId: state.currentNoteId || undefined, title: t, content: b, scope: state.notesMode, accountId: aid || undefined, nickname: state.userNickname || undefined }); Promise.resolve().then(() => { const _cb = (nx => {
       if (state.notesMode === 'TEAM') state.currentAccount.notes = nx;
       else state.notes = nx;
       renderNotes();
@@ -2092,7 +2092,7 @@ import { convex, runQuery, runMutation, watchQuery } from './convex-client.js';
     b.innerHTML = '';
     renderNotes();
     const aid = state.currentAccount ? state.currentAccount.id : null;
-    (async () => { try { const res = await runMutation("notes:saveNote", { email: state.userEmail, noteId: null, title: tv, content: bv, scope: state.notesMode, accountId: aid, nickname: state.userNickname }); Promise.resolve().then(() => { const _cb = (n => {
+    (async () => { try { const res = await runMutation("notes:saveNote", { email: state.userEmail, noteId: undefined, title: tv, content: bv, scope: state.notesMode, accountId: aid || undefined, nickname: state.userNickname || undefined }); Promise.resolve().then(() => { const _cb = (n => {
       if (state.notesMode === 'TEAM') state.currentAccount.notes = n;
       else state.notes = n;
       renderNotes();
@@ -2104,7 +2104,7 @@ import { convex, runQuery, runMutation, watchQuery } from './convex-client.js';
     else state.notes = state.notes.filter(n => n.id !== id);
     renderNotes();
     const aid = state.currentAccount ? state.currentAccount.id : null;
-    (async () => { try { const res = await runMutation("notes:deleteNote", { email: state.userEmail, noteId: id, scope: state.notesMode, accountId: aid }); Promise.resolve().then(() => { const _cb = (n => {
+    (async () => { try { const res = await runMutation("notes:deleteNote", { email: state.userEmail, noteId: id, scope: state.notesMode, accountId: aid || undefined }); Promise.resolve().then(() => { const _cb = (n => {
       if (state.notesMode === 'TEAM') state.currentAccount.notes = n;
       else state.notes = n;
     }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();

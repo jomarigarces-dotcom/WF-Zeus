@@ -5,12 +5,12 @@ import { mutation } from "./_generated/server";
 export const saveNote = mutation({
   args: {
     email: v.string(),
-    noteId: v.optional(v.string()),
+    noteId: v.optional(v.union(v.string(), v.null())),
     title: v.string(),
     content: v.string(),
     scope: v.string(), // PERSONAL | TEAM
-    accountId: v.optional(v.string()),
-    nickname: v.optional(v.string()),
+    accountId: v.optional(v.union(v.string(), v.null())),
+    nickname: v.optional(v.union(v.string(), v.null())),
   },
   handler: async (ctx, { email, noteId, title, content, scope, accountId, nickname }) => {
     email = email.toLowerCase().trim();
