@@ -28,7 +28,9 @@ export const postReminder = mutation({
     callerEmail = callerEmail.toLowerCase().trim();
     if (!SUPER_ADMINS.includes(callerEmail)) throw new Error("Unauthorized");
 
-    const startTime = scheduledTime ? new Date(scheduledTime) : new Date();
+    let startTime = new Date(scheduledTime && scheduledTime.trim() ? scheduledTime : Date.now());
+    if (isNaN(startTime.getTime())) startTime = new Date();
+    
     const hours = durationHours ?? 24;
 
     // Magic number 87600 = ~10 years = "forever"
