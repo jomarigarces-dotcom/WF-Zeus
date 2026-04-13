@@ -2862,6 +2862,9 @@ import { convex, runQuery, runMutation, runAction, watchQuery } from './convex-c
     if (isHidden) {
       win.classList.remove('hidden');
       fab.classList.add('active');
+      // Pop-in animation only on first open
+      win.classList.add('pop-in');
+      win.addEventListener('animationend', () => win.classList.remove('pop-in'), { once: true });
       // Focus input
       setTimeout(() => document.getElementById('sop-input')?.focus(), 100);
     } else {
@@ -2888,10 +2891,18 @@ import { convex, runQuery, runMutation, runAction, watchQuery } from './convex-c
         overlay.className = 'sop-chat-overlay';
         overlay.onclick = () => window.toggleZeusAIFullscreen();
         document.body.appendChild(overlay);
+        // Trigger fade-in on next frame for smooth transition
+        requestAnimationFrame(() => overlay.classList.add('visible'));
       }
       if (icon) icon.innerText = 'close_fullscreen';
     } else {
-      if (overlay) document.body.removeChild(overlay);
+      if (overlay) {
+        overlay.classList.remove('visible');
+        // Wait for overlay fade-out before removing from DOM
+        overlay.addEventListener('transitionend', () => {
+          if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+        }, { once: true });
+      }
       if (icon) icon.innerText = 'open_in_full';
     }
   };
