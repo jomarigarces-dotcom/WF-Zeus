@@ -78,7 +78,7 @@ ${contextText}`;
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "openai/gpt-4o",
+        model: "openrouter/free",
         messages: [
           { role: "system", content: systemPrompt },
           ...args.history,
