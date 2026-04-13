@@ -40,3 +40,9 @@ export async function runMutation(mutationFn, args = {}) {
 export function watchQuery(queryFn, args = {}, onUpdate, onError) {
   return convex.onUpdate(queryFn, args, onUpdate, onError);
 }
+/**
+ * Helper: Run a Convex action and return the result.
+ */
+export async function runAction(actionFn, args = {}) {
+  return await convex.action(actionFn, args);
+}

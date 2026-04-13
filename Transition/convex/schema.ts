@@ -130,4 +130,20 @@ export default defineSchema({
     updatedBy: v.optional(v.string()),
     updatedAt: v.optional(v.string()),
   }),
+
+  // SOP Knowledge Base for AI
+  sops: defineTable({
+    fileName: v.string(),
+    text: v.string(),
+    embedding: v.array(v.number()),
+    metadata: v.optional(
+      v.object({
+        pageNumber: v.optional(v.number()),
+        source: v.optional(v.string()),
+      })
+    ),
+  }).vectorIndex("by_embedding", {
+    vectorField: "embedding",
+    dimensions: 1536, // Match openai/text-embedding-3-small
+  }),
 });

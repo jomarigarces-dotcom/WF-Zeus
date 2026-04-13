@@ -1,4 +1,4 @@
-import { convex, runQuery, runMutation, watchQuery } from './convex-client.js';
+import { convex, runQuery, runMutation, runAction, watchQuery } from './convex-client.js';
 
   /* ------------------------------------------------------------------
      STATE MANAGEMENT
@@ -152,6 +152,7 @@ import { convex, runQuery, runMutation, watchQuery } from './convex-client.js';
     document.addEventListener('keydown', window.updateActivity);
     document.addEventListener('click', window.updateActivity);
     // Chat input: send on Enter, allow Shift+Enter for newline
+    window.syncSOPs();
   };
   // Global error handler to surface runtime errors in the UI for debugging
   window.onerror = function (message, source, lineno, colno, error) {
@@ -890,17 +891,21 @@ import { convex, runQuery, runMutation, watchQuery } from './convex-client.js';
         remindersCol.innerHTML = `<div class="flex items-center justify-between mb-3"><div class="flex items-center gap-2"><h2 class="text-[9px] font-black text-slate-400 tracking-[0.2em] uppercase flex items-center gap-2"><span class="material-icons text-xs">edit_notifications</span> Team Reminders</h2><button onclick="refreshDashboard()" class="text-slate-400 hover:text-primary-600 transition-colors" title="Refresh"><span class="material-icons text-sm refresh-spin-icon">refresh</span></button></div></div><div id="reminders-container" class="h-full overflow-hidden flex flex-col"></div>`;
         const checklistCol = document.createElement('div'); checklistCol.className = 'w-[35%] flex flex-col h-full overflow-hidden min-w-[300px]';
         checklistCol.id = 'checklist-wrapper';
-        bottomRow.appendChild(remindersCol); bottomRow.appendChild(checklistCol);
+        
+        bottomRow.appendChild(remindersCol); bottomRow.appendChild(checklistCol); 
+        
         rightCol.appendChild(bottomRow);
         splitContent.appendChild(announcementsCol); splitContent.appendChild(rightCol);
         homeLayout.appendChild(heroSection); homeLayout.appendChild(splitContent);
         grid.appendChild(homeLayout);
+        renderSOPChat(); // Initial render of the chat box
       }
       updateWeatherUI();
       if (!state.weatherRisk) window.fetchWeatherRisk();
       updateRemindersUI();
       updateChecklistUI();
       renderAnnouncements();
+      renderSOPChat();
     } else {
       main.classList.remove('overflow-hidden');
       const filteredIcons = (state.currentAccount.icons || []).filter(i => i.catId == state.currentCat);
@@ -2786,3 +2791,168 @@ import { convex, runQuery, runMutation, watchQuery } from './convex-client.js';
   }
 
   // --- END AI BOT LOGIC ---
+
+  /* ------------------------------------------------------------------
+     SOP ASSISTANT LOGIC
+     ------------------------------------------------------------------ */
+  /* ------------------------------------------------------------------
+     SOP ASSISTANT LOGIC (FLOATING)
+     ------------------------------------------------------------------ */
+  window.renderSOPChat = function() {
+    // 1. Ensure FAB exists
+    let fab = document.getElementById('sop-chat-fab');
+    if (!fab) {
+      fab = document.createElement('div');
+      fab.id = 'sop-chat-fab';
+      fab.className = 'sop-chat-fab hover-pop active-shrink';
+      fab.innerHTML = `<span class="material-icons">bolt</span>`;
+      fab.onclick = (e) => {
+        e.stopPropagation();
+        window.toggleSOPChat();
+      };
+      document.body.appendChild(fab);
+    }
+
+    // 2. Ensure Window exists
+    let win = document.getElementById('sop-chat-window');
+    if (!win) {
+      win = document.createElement('div');
+      win.id = 'sop-chat-window';
+      win.className = 'sop-chat-window hidden';
+      win.innerHTML = `
+        <div class="sop-chat-header-floating">
+          <div class="flex items-center gap-2">
+            <span class="material-icons text-blue-500 text-sm">bolt</span>
+            <span class="text-[10px] font-black uppercase tracking-widest text-slate-500">Zeus AI</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="window.toggleZeusAIFullscreen()" class="text-slate-400 hover:text-primary-600 transition-colors" id="sop-fs-btn">
+              <span class="material-icons text-sm" id="sop-fs-icon">open_in_full</span>
+            </button>
+            <button onclick="window.toggleSOPChat()" class="text-slate-400 hover:text-red-500 transition-colors">
+              <span class="material-icons text-sm">close</span>
+            </button>
+          </div>
+        </div>
+        <div id="sop-messages" class="custom-scrollbar overflow-y-auto p-4 space-y-3">
+           <div class="sop-message ai">
+              Hi ${state.userNickname || 'Agent'}! I'm Zeus AI. Ask me anything about our procedures.
+           </div>
+        </div>
+        <div class="sop-input-area">
+           <input type="text" id="sop-input" placeholder="Ask a question..." onkeypress="if(event.key === 'Enter') sendMessageToSOP()">
+           <div class="sop-send-btn" onclick="sendMessageToSOP()">
+              <span class="material-icons text-sm">send</span>
+           </div>
+        </div>
+      `;
+      document.body.appendChild(win);
+      
+      // Prevent clicks inside window from bubbling to body (which might close it if we added a global listener)
+      win.onclick = (e) => e.stopPropagation();
+    }
+  };
+
+  window.toggleSOPChat = function() {
+    const win = document.getElementById('sop-chat-window');
+    const fab = document.getElementById('sop-chat-fab');
+    if (!win) return;
+    
+    const isHidden = win.classList.contains('hidden');
+    if (isHidden) {
+      win.classList.remove('hidden');
+      fab.classList.add('active');
+      // Focus input
+      setTimeout(() => document.getElementById('sop-input')?.focus(), 100);
+    } else {
+      win.classList.add('hidden');
+      fab.classList.remove('active');
+      // Ensure we clean up expanded mode if closed
+      if (win.classList.contains('expanded')) window.toggleZeusAIFullscreen();
+    }
+  };
+
+  window.toggleZeusAIFullscreen = function() {
+    const win = document.getElementById('sop-chat-window');
+    const icon = document.getElementById('sop-fs-icon');
+    if (!win) return;
+    
+    const isExpanded = win.classList.toggle('expanded');
+    
+    // Toggle Overlay
+    let overlay = document.getElementById('sop-chat-overlay');
+    if (isExpanded) {
+      if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'sop-chat-overlay';
+        overlay.className = 'sop-chat-overlay';
+        overlay.onclick = () => window.toggleZeusAIFullscreen();
+        document.body.appendChild(overlay);
+      }
+      if (icon) icon.innerText = 'close_fullscreen';
+    } else {
+      if (overlay) document.body.removeChild(overlay);
+      if (icon) icon.innerText = 'open_in_full';
+    }
+  };
+
+  let sopChatHistory = [];
+
+  window.sendMessageToSOP = async function() {
+    const inp = document.getElementById('sop-input');
+    const msg = inp.value.trim();
+    if (!msg) return;
+    
+    inp.value = '';
+    const msgContainer = document.getElementById('sop-messages');
+    
+    // 1. Add User Message
+    const userDiv = document.createElement('div');
+    userDiv.className = 'sop-message user';
+    userDiv.innerText = msg;
+    msgContainer.appendChild(userDiv);
+    msgContainer.scrollTop = msgContainer.scrollHeight;
+    
+    // 2. Add Typing Indicator
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'sop-message ai sop-typing-box';
+    typingDiv.innerHTML = `<div class="sop-typing"><div class="sop-dot"></div><div class="sop-dot"></div><div class="sop-dot"></div></div>`;
+    msgContainer.appendChild(typingDiv);
+    msgContainer.scrollTop = msgContainer.scrollHeight;
+    
+    try {
+        const response = await runAction("sopActions:chatWithSOPs", {
+            message: msg,
+            history: sopChatHistory.slice(-10) // Keep last 10 messages for context
+        });
+        
+        // Remove typing indicator
+        if (typingDiv.parentNode) msgContainer.removeChild(typingDiv);
+        
+        // 3. Add AI Response
+        const aiDiv = document.createElement('div');
+        aiDiv.className = 'sop-message ai';
+        aiDiv.innerHTML = response.replace(/\n/g, '<br>'); // Simple formatting
+        msgContainer.appendChild(aiDiv);
+        
+        // Update history
+        sopChatHistory.push({ role: 'user', content: msg });
+        sopChatHistory.push({ role: 'assistant', content: response });
+        
+        msgContainer.scrollTop = msgContainer.scrollHeight;
+        
+    } catch (err) {
+        console.error("SOP Chat Error:", err);
+        if (typingDiv.parentNode) msgContainer.removeChild(typingDiv);
+        const errDiv = document.createElement('div');
+        errDiv.className = 'sop-message ai text-red-500';
+        errDiv.innerText = "Error: " + (err.message || "Failed to get response.");
+        msgContainer.appendChild(errDiv);
+    }
+  };
+
+  window.syncSOPs = async function() {
+    console.log("[Zeus] Checking SOP sync...");
+    // Per user request, this runs on refresh.
+    // In a real scenario, this could trigger a backend sync if needed.
+  };

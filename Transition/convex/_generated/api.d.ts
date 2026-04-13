@@ -13,6 +13,8 @@ import type * as announcements from "../announcements.js";
 import type * as feedback from "../feedback.js";
 import type * as notes from "../notes.js";
 import type * as reminders from "../reminders.js";
+import type * as sopActions from "../sopActions.js";
+import type * as sops from "../sops.js";
 import type * as status from "../status.js";
 import type * as tasks from "../tasks.js";
 import type * as users from "../users.js";
@@ -29,6 +31,8 @@ declare const fullApi: ApiFromModules<{
   feedback: typeof feedback;
   notes: typeof notes;
   reminders: typeof reminders;
+  sopActions: typeof sopActions;
+  sops: typeof sops;
   status: typeof status;
   tasks: typeof tasks;
   users: typeof users;
