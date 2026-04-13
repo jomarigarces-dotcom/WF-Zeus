@@ -1057,8 +1057,8 @@ import { convex, runQuery, runMutation, runAction, watchQuery } from './convex-c
         </div>
       </div>
       <div class="flex gap-2 mt-1">
-        <button onclick="approveRequest('${r.id}')" class="flex-1 py-1.5 bg-emerald-600 text-white text-[10px] font-black uppercase tracking-widest rounded-lg hover:bg-emerald-700 transition-colors">Approve</button>
-        <button onclick="rejectRequest('${r.id}')" class="flex-1 py-1.5 bg-red-500 text-white text-[10px] font-black uppercase tracking-widest rounded-lg hover:bg-red-600 transition-colors">Decline</button>
+        <button onclick="approveRequest('${r._id}')" class="flex-1 py-1.5 bg-emerald-600 text-white text-[10px] font-black uppercase tracking-widest rounded-lg hover:bg-emerald-700 transition-colors">Approve</button>
+        <button onclick="rejectRequest('${r._id}')" class="flex-1 py-1.5 bg-red-500 text-white text-[10px] font-black uppercase tracking-widest rounded-lg hover:bg-red-600 transition-colors">Decline</button>
       </div>
     </div>`).join('');
   };
@@ -1069,7 +1069,7 @@ import { convex, runQuery, runMutation, runAction, watchQuery } from './convex-c
     }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
   };
   window.rejectRequest = function (requestId) {
-    (async () => { try { const res = await runMutation("users:rejectAccountAccess", { args: [requestId] }); Promise.resolve().then(() => { const _cb = (() => {
+    (async () => { try { const res = await runMutation("users:rejectAccountAccess", { callerEmail: state.userEmail, requestId: requestId }); Promise.resolve().then(() => { const _cb = (() => {
       fetchAccessRequests();
     }); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
   };
