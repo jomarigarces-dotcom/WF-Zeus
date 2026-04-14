@@ -6,7 +6,7 @@ const { ConvexHttpClient } = require('convex/browser');
 // Configuration
 const SOP_DIR = path.join(__dirname, '..', 'Appscript', 'SOP');
 const CONVEX_URL = "https://joyous-ant-26.convex.cloud";
-const OPENROUTER_API_KEY = "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";
+const OPENROUTER_API_KEY = "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";
 
 // Initialize Convex Client
 const client = new ConvexHttpClient(CONVEX_URL);
