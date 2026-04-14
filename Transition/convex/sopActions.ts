@@ -2,9 +2,7 @@ import { v } from "convex/values";
 import { action } from "./_generated/server";
 import { api } from "./_generated/api";
 
-const OPENROUTER_API_KEY: string | undefined =
-  // eslint-disable-next-line no-undef
-  typeof process !== "undefined" ? (process as NodeJS.Process).env.OPENROUTER_API_KEY : undefined;
+
 
 type SOPChunk = {
   text: string;
@@ -19,7 +17,7 @@ export const searchSOPs = action({
     const embeddingResponse = await fetch("https://openrouter.ai/api/v1/embeddings", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${OPENROUTER_API_KEY}`,
+        Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -84,7 +82,7 @@ ${contextText}`;
     const chatResponse = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${OPENROUTER_API_KEY}`,
+        Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
