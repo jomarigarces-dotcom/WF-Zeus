@@ -1126,10 +1126,10 @@ import { convex, runQuery, runMutation, runAction, watchQuery } from './convex-c
       updateAssignButton();
     };
     if (state.role === 'SUPER_ADMIN') {
-      (async () => { try { const res = await runMutation("users:registerUserToAccounts", { args: [ids, n] }); Promise.resolve().then(() => { const _cb = (callback); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
+      (async () => { try { const res = await runMutation("users:registerUserToAccounts", { callerEmail: state.userEmail, accountIds: ids, nickname: n }); Promise.resolve().then(() => { const _cb = (callback); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
     } else {
       // send approval request instead
-      (async () => { try { const res = await runMutation("users:requestAccountAccess", { email: state.userEmail, accountIds: ids, nickname: state.userNickname }); Promise.resolve().then(() => { const _cb = (callback); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
+      (async () => { try { const res = await runMutation("users:requestAccountAccess", { email: state.userEmail, accountIds: ids, nickname: n }); Promise.resolve().then(() => { const _cb = (callback); if(typeof _cb === 'function') _cb(res); }); } catch(err) { console.error(err); alert(err.message || String(err)); } })();
     }
   };
   window.openAccountSwitcher = function () {

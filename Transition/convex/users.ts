@@ -101,7 +101,7 @@ export const registerUserToAccounts = mutation({
   args: { callerEmail: v.string(), accountIds: v.array(v.string()), nickname: v.string() },
   handler: async (ctx, { callerEmail, accountIds, nickname }) => {
     callerEmail = callerEmail.toLowerCase().trim();
-    const isSuperAdminCaller = SUPER_ADMINS.includes(callerEmail);
+    const isSuperAdminCaller = SUPER_ADMINS.map(e => e.toLowerCase()).includes(callerEmail);
     if (!isSuperAdminCaller) throw new Error("Unauthorized");
 
     // Ensure profile exists
@@ -228,7 +228,7 @@ export const getAccessRequests = query({
   args: { callerEmail: v.string() },
   handler: async (ctx, { callerEmail }) => {
     callerEmail = callerEmail.toLowerCase().trim();
-    if (!SUPER_ADMINS.includes(callerEmail)) throw new Error("Unauthorized");
+    if (!SUPER_ADMINS.map(e => e.toLowerCase()).includes(callerEmail)) throw new Error("Unauthorized");
 
     const requests = await ctx.db.query("accessRequests").collect();
     const result = [];
@@ -256,7 +256,7 @@ export const approveAccountAccess = mutation({
   args: { callerEmail: v.string(), requestId: v.id("accessRequests") },
   handler: async (ctx, { callerEmail, requestId }) => {
     callerEmail = callerEmail.toLowerCase().trim();
-    if (!SUPER_ADMINS.includes(callerEmail)) throw new Error("Unauthorized");
+    if (!SUPER_ADMINS.map(e => e.toLowerCase()).includes(callerEmail)) throw new Error("Unauthorized");
 
     const req = await ctx.db.get(requestId);
     if (!req) return false;
@@ -308,7 +308,7 @@ export const rejectAccountAccess = mutation({
   args: { callerEmail: v.string(), requestId: v.id("accessRequests") },
   handler: async (ctx, { callerEmail, requestId }) => {
     callerEmail = callerEmail.toLowerCase().trim();
-    if (!SUPER_ADMINS.includes(callerEmail)) throw new Error("Unauthorized");
+    if (!SUPER_ADMINS.map(e => e.toLowerCase()).includes(callerEmail)) throw new Error("Unauthorized");
 
     const req = await ctx.db.get(requestId);
     if (!req) return false;
