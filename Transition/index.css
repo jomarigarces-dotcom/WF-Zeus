@@ -1254,6 +1254,25 @@
       border-color: #334155;
   }
 
+  .sop-citation {
+      display: inline-block;
+      background: #e2e8f0;
+      color: #475569;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin: 2px 0;
+      border: 1px solid #cbd5e1;
+      font-family: monospace;
+  }
+
+  .dark .sop-citation {
+      background: #334155;
+      color: #94a3b8;
+      border-color: #475569;
+  }
+
   .sop-input-area {
       padding: 16px;
       border-top: 1px solid #f1f5f9;

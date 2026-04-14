@@ -2749,7 +2749,22 @@ import { convex, runQuery, runMutation, runAction, watchQuery } from './convex-c
       aiChatState.isWaiting = false;
       window.addAIMessageToUI('ai', 'Error: ' + err.message);
     }); if(typeof _fc === 'function') _fc(err); else alert(err.message || String(err)); }); } })();
-  }
+  window.formatZeusMarkdown = function (text) {
+    if (!text) return '';
+    return text
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      // Bold + Italic: ***text***
+      .replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>')
+      // Bold: **text**
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      // Italic: *text*
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      // Citations: ([filename.pdf])
+      .replace(/\(\[(.*?)\]\)/g, '<span class="sop-citation">$1</span>')
+      // Newlines
+      .replace(/\n/g, '<br/>');
+  };
 
   window.addAIMessageToUI = function (role, text) {
     const container = document.getElementById('ai-chat-messages');
@@ -2761,10 +2776,7 @@ import { convex, runQuery, runMutation, runAction, watchQuery } from './convex-c
       msgDiv.innerHTML = `<div class="max-w-[85%] bg-primary-600 text-white p-3 text-xs rounded-2xl rounded-tr-sm shadow-md whitespace-pre-wrap break-words flex-shrink-0">${safeText}</div>`;
     } else {
       msgDiv.className = 'flex justify-start';
-      let formattedText = text.replace(/</g, '&lt;').replace(/>/g, '&gt;')
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*(.*?)\*/g, '<em>$1</em>')
-        .replace(/\n/g, '<br/>');
+      let formattedText = window.formatZeusMarkdown(text);
       msgDiv.innerHTML = `<div class="max-w-[85%] bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 p-3 text-xs rounded-2xl rounded-tl-sm shadow-sm whitespace-pre-wrap break-words border border-slate-200 dark:border-slate-700">${formattedText}</div>`;
     }
     container.appendChild(msgDiv);
@@ -2943,7 +2955,7 @@ import { convex, runQuery, runMutation, runAction, watchQuery } from './convex-c
         // 3. Add AI Response
         const aiDiv = document.createElement('div');
         aiDiv.className = 'sop-message ai';
-        aiDiv.innerHTML = response.replace(/\n/g, '<br>'); // Simple formatting
+        aiDiv.innerHTML = window.formatZeusMarkdown(response);
         msgContainer.appendChild(aiDiv);
         
         // Update history
