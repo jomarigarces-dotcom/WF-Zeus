@@ -2751,9 +2751,53 @@ import { convex, runQuery, runMutation, runAction, watchQuery } from './convex-c
     }); if(typeof _fc === 'function') _fc(err); else alert(err.message || String(err)); }); } })();
   window.formatZeusMarkdown = function (text) {
     if (!text) return '';
-    return text
+    
+    // First, escape HTML to prevent XSS
+    let html = text
+      .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
+      .replace(/>/g, '&gt;');
+
+    const lines = html.split('\n');
+    
+    const processedLines = lines.map(line => {
+      let trimmed = line.trim();
+      
+      // Headers
+      if (trimmed.startsWith('### ')) {
+        return `<h3 class="font-black text-slate-800 dark:text-white mt-4 mb-2 text-[11px] uppercase tracking-wider">${window.formatInlineMarkdown(trimmed.substring(4))}</h3>`;
+      }
+      if (trimmed.startsWith('## ')) {
+        return `<h2 class="font-black text-slate-800 dark:text-white mt-6 mb-3 text-sm uppercase tracking-wider">${window.formatInlineMarkdown(trimmed.substring(3))}</h2>`;
+      }
+      if (trimmed.startsWith('# ')) {
+        return `<h1 class="font-black text-slate-800 dark:text-white mt-8 mb-4 text-base uppercase tracking-wider">${window.formatInlineMarkdown(trimmed.substring(2))}</h1>`;
+      }
+      
+      // Unordered Lists
+      if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
+        return `<div class="flex gap-2 ml-2 my-0.5 py-0.5 items-start"><span class="text-primary-500 font-black leading-tight">•</span><span class="flex-1">${window.formatInlineMarkdown(trimmed.substring(2))}</span></div>`;
+      }
+      
+      // Ordered Lists
+      const olMatch = trimmed.match(/^(\d+)\.\s+(.*)$/);
+      if (olMatch) {
+        return `<div class="flex gap-2 ml-2 my-0.5 py-0.5 items-start"><span class="font-black text-primary-500 min-w-[14px] text-[10px] leading-tight">${olMatch[1]}.</span><span class="flex-1">${window.formatInlineMarkdown(olMatch[2])}</span></div>`;
+      }
+      
+      // Empty line
+      if (trimmed === '') return '<div class="h-2"></div>';
+      
+      // Regular text
+      return `<div class="mb-1 leading-relaxed">${window.formatInlineMarkdown(line)}</div>`;
+    });
+
+    return processedLines.join('');
+  };
+
+  window.formatInlineMarkdown = function(text) {
+    if (!text) return '';
+    return text
       // Bold + Italic: ***text***
       .replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>')
       // Bold: **text**
@@ -2761,9 +2805,7 @@ import { convex, runQuery, runMutation, runAction, watchQuery } from './convex-c
       // Italic: *text*
       .replace(/\*(.*?)\*/g, '<em>$1</em>')
       // Citations: ([filename.pdf])
-      .replace(/\(\[(.*?)\]\)/g, '<span class="sop-citation">$1</span>')
-      // Newlines
-      .replace(/\n/g, '<br/>');
+      .replace(/\(\[(.*?)\]\)/g, '<span class="sop-citation">$1</span>');
   };
 
   window.addAIMessageToUI = function (role, text) {
